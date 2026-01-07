@@ -1,66 +1,108 @@
-# Real-Debrid Manager Extension
+<p align="center">
+  <img src=".github/assets/logo.png" width="120" alt="Real-Debrid Manager">
+</p>
 
-A browser extension for [Real-Debrid](https://real-debrid.com) that provides quick link unrestriction, torrent management, and account monitoring.
+<h1 align="center">Real-Debrid Manager</h1>
+
+<p align="center">
+  Browser extension for Real-Debrid - unrestrict links, manage torrents, and monitor your account.
+</p>
+
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/Chrome-Install-4285F4?logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Firefox-Install-FF7139?logo=firefox&logoColor=white" alt="Firefox Add-ons"></a>
+  <img src="https://img.shields.io/badge/Safari-supported-006CFF?logo=safari&logoColor=white" alt="Safari Supported">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
+</p>
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src=".github/assets/img1.png" height="350" alt="Popup">
+  &nbsp;&nbsp;&nbsp;
+  <img src=".github/assets/img3.png" height="350" alt="Dashboard">
+</p>
+
+<details>
+<summary>More screenshots</summary>
+<br>
+
+| | |
+|:---:|:---:|
+| <img src=".github/assets/img2.png" height="300" alt="File Selection"> | <img src=".github/assets/img10.png" height="300" alt="Context Menu"> |
+| Popup - File selection | Context menu |
+| <img src=".github/assets/img4.png" height="300" alt="Torrents"> | <img src=".github/assets/img5.png" height="300" alt="Add Torrent Modal"> |
+| Dashboard - Torrents | Dashboard - Add torrent |
+| <img src=".github/assets/img6.png" height="300" alt="Select Files Modal"> | <img src=".github/assets/img7.png" height="300" alt="Downloads"> |
+| Dashboard - Select files | Dashboard - Downloads |
+| <img src=".github/assets/img8.png" height="300" alt="Hosts"> | <img src=".github/assets/img9.png" height="300" alt="Settings"> |
+| Dashboard - Hosts | Dashboard - Settings |
+
+</details>
+
+---
 
 ## Features
 
-- **Quick Unrestrict** - Paste any supported link to get a premium download link instantly
-- **Page Scanner** - Scan any webpage for supported hoster links and unrestrict them in batch
-- **Torrent Management** - Add magnets, monitor progress, and manage your torrent queue
-- **Download History** - View and re-download previously unrestricted links
-- **Context Menu** - Right-click any link to unrestrict or add magnets directly
-- **Notifications** - Get notified when torrents finish downloading
-- **Dashboard** - Full account overview with stats, settings, and management tools
+### Link Unrestriction
+- Paste any supported hoster link to get premium download speeds
+- Scan webpages for supported links and unrestrict them in batch
+- Right-click any link to unrestrict directly
+
+### Torrent Management
+- Add magnet links and torrent files
+- Select specific files to download
+- Monitor progress with real-time status updates
+- Get notified when downloads complete
+
+### Account Dashboard
+- View premium status, points, and expiration
+- Browse download history
+- Check supported hosts
+- Manage settings
+
+---
 
 ## Installation
 
-### Development
+### Browser Stores
 
-```bash
-# Install dependencies
-bun install
+- **Chrome**: [Chrome Web Store](#) <!-- TODO: Add link -->
+- **Firefox**: [Firefox Add-ons](#) <!-- TODO: Add link -->
 
-# Start development server
-bun run dev
+### Manual Installation
 
-# For Safari
-bun run dev:safari
-```
+For Safari or to build from source:
 
-Load the extension from `build/chrome-mv3-dev` in your browser's extension settings.
+1. Clone the repository
+2. Install dependencies: `bun install`
+3. Build: `bun run build` (or `bun run build:safari` for Safari)
+4. Load the extension from `build/chrome-mv3-prod` (or `build/safari-mv3-prod` for Safari)
 
-### Production Build
+---
 
-```bash
-# Build for Chrome/Firefox
-bun run build
-
-# Build for Safari
-bun run build:safari
-
-# Package for store submission
-bun run package
-```
-
-## Setup
+## Getting Started
 
 1. Install the extension
 2. Click the extension icon
-3. Sign in with your Real-Debrid account (OAuth)
+3. Sign in with your Real-Debrid account
 4. Start unrestricting links
 
-## Tech Stack
+---
 
-- [Plasmo](https://plasmo.com) - Browser extension framework
-- React 18 + TypeScript
-- Tailwind CSS
-- [Lucide React](https://lucide.dev) - Icons
+## Development
 
-## Browser Support
+```bash
+bun install          # Install dependencies
+bun run dev          # Development server
+bun run dev:safari   # Safari development
+bun run build        # Production build
+bun run package      # Package for store
+```
 
-- Safari
-- Chrome
-- Firefox
+---
 
 ## License
 
