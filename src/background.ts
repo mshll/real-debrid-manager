@@ -17,6 +17,14 @@ import {
   getUser,
   unrestrictLink,
   unrestrictFolder,
+  checkLink,
+  decryptContainerFile,
+  decryptContainerLink,
+  getTranscodeLinks,
+  getMediaInfo,
+  convertPoints,
+  getTraffic,
+  getTrafficDetails,
   listTorrents,
   getTorrentInfo,
   addMagnet,
@@ -28,6 +36,7 @@ import {
   deleteDownload,
   getHostsRegex,
   getHostsDomains,
+  getHosts,
   RealDebridApiError,
 } from "~lib/api";
 import type { TorrentItem, TorrentStatus } from "~lib/api/torrents";
@@ -349,6 +358,16 @@ const handleGetUserProfile: MessageHandler<"GET_USER_PROFILE"> = async () => {
   return success(profile);
 };
 
+const handleConvertPoints: MessageHandler<"CONVERT_POINTS"> = async () => {
+  const token = await getValidToken();
+  const result = await withErrorHandling(async () => {
+    await convertPoints(token);
+    // Clear cached profile so next fetch gets updated points/premium
+    await storage.clearUserProfileCache();
+  });
+  return result;
+};
+
 const handleUnrestrictLink: MessageHandler<"UNRESTRICT_LINK"> = async (payload) => {
   const token = await getValidToken();
   return withErrorHandling(() =>
@@ -363,6 +382,31 @@ const handleUnrestrictLink: MessageHandler<"UNRESTRICT_LINK"> = async (payload) 
 const handleUnrestrictFolder: MessageHandler<"UNRESTRICT_FOLDER"> = async (payload) => {
   const token = await getValidToken();
   return withErrorHandling(() => unrestrictFolder(token, payload.link));
+};
+
+const handleCheckLink: MessageHandler<"CHECK_LINK"> = async (payload) => {
+  const token = await getValidToken();
+  return withErrorHandling(() => checkLink(token, payload.link));
+};
+
+const handleDecryptContainerFile: MessageHandler<"DECRYPT_CONTAINER_FILE"> = async (payload) => {
+  const token = await getValidToken();
+  return withErrorHandling(() => decryptContainerFile(token, payload.fileData));
+};
+
+const handleDecryptContainerLink: MessageHandler<"DECRYPT_CONTAINER_LINK"> = async (payload) => {
+  const token = await getValidToken();
+  return withErrorHandling(() => decryptContainerLink(token, payload.link));
+};
+
+const handleGetTranscodeLinks: MessageHandler<"GET_TRANSCODE_LINKS"> = async (payload) => {
+  const token = await getValidToken();
+  return withErrorHandling(() => getTranscodeLinks(token, payload.id));
+};
+
+const handleGetMediaInfo: MessageHandler<"GET_MEDIA_INFO"> = async (payload) => {
+  const token = await getValidToken();
+  return withErrorHandling(() => getMediaInfo(token, payload.id));
 };
 
 const handleListTorrents: MessageHandler<"LIST_TORRENTS"> = async (payload) => {
@@ -481,6 +525,21 @@ const handleGetHostsDomains: MessageHandler<"GET_HOSTS_DOMAINS"> = async () => {
   });
 };
 
+const handleGetHostsStatus: MessageHandler<"GET_HOSTS_STATUS"> = async () => {
+  // No auth required for this endpoint
+  return withErrorHandling(() => getHosts());
+};
+
+const handleGetTraffic: MessageHandler<"GET_TRAFFIC"> = async () => {
+  const token = await getValidToken();
+  return withErrorHandling(() => getTraffic(token));
+};
+
+const handleGetTrafficDetails: MessageHandler<"GET_TRAFFIC_DETAILS"> = async () => {
+  const token = await getValidToken();
+  return withErrorHandling(() => getTrafficDetails(token));
+};
+
 const handleShowNotification: MessageHandler<"SHOW_NOTIFICATION"> = async (payload) => {
   try {
     const preferences = await storage.getPreferences();
@@ -528,8 +587,14 @@ createMessageListener({
   AUTH_LOGIN: handleLogin,
   AUTH_LOGOUT: handleLogout,
   GET_USER_PROFILE: handleGetUserProfile,
+  CONVERT_POINTS: handleConvertPoints,
   UNRESTRICT_LINK: handleUnrestrictLink,
   UNRESTRICT_FOLDER: handleUnrestrictFolder,
+  CHECK_LINK: handleCheckLink,
+  DECRYPT_CONTAINER_FILE: handleDecryptContainerFile,
+  DECRYPT_CONTAINER_LINK: handleDecryptContainerLink,
+  GET_TRANSCODE_LINKS: handleGetTranscodeLinks,
+  GET_MEDIA_INFO: handleGetMediaInfo,
   LIST_TORRENTS: handleListTorrents,
   GET_TORRENT_INFO: handleGetTorrentInfo,
   ADD_MAGNET: handleAddMagnet,
@@ -541,6 +606,9 @@ createMessageListener({
   DELETE_DOWNLOAD: handleDeleteDownload,
   GET_HOSTS_REGEX: handleGetHostsRegex,
   GET_HOSTS_DOMAINS: handleGetHostsDomains,
+  GET_HOSTS_STATUS: handleGetHostsStatus,
+  GET_TRAFFIC: handleGetTraffic,
+  GET_TRAFFIC_DETAILS: handleGetTrafficDetails,
   SHOW_NOTIFICATION: handleShowNotification,
   REPORT_DETECTED_LINKS: handleReportDetectedLinks,
   GET_DETECTED_LINKS: handleGetDetectedLinks,

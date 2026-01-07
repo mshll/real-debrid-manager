@@ -2,7 +2,19 @@
  * Real-Debrid Unrestrict API endpoints
  */
 
-import { post } from "./client";
+import { post, put } from "./client";
+
+/**
+ * Result from checking a link before unrestricting
+ */
+export interface LinkCheckResult {
+  host: string;
+  host_icon: string;
+  link: string;
+  filename: string;
+  filesize: number;
+  supported: number; // 0 = not supported, 1 = supported
+}
 
 /**
  * Request body for unrestricting a link
@@ -70,6 +82,62 @@ export async function unrestrictFolder(
 ): Promise<string[]> {
   return post<string[], UnrestrictFolderRequest>(
     "/unrestrict/folder",
+    { link },
+    token
+  );
+}
+
+/**
+ * Check if a link is downloadable before unrestricting
+ * POST /unrestrict/check
+ *
+ * @param token - API token
+ * @param link - Link to check
+ * @returns Link check result with file info and support status
+ */
+export async function checkLink(
+  token: string,
+  link: string
+): Promise<LinkCheckResult> {
+  return post<LinkCheckResult, { link: string }>(
+    "/unrestrict/check",
+    { link },
+    token
+  );
+}
+
+/**
+ * Decrypt a container file (RSDF, CCF, CCF3, DLC)
+ * PUT /unrestrict/containerFile
+ *
+ * @param token - API token
+ * @param fileData - Container file data as ArrayBuffer
+ * @returns Array of links extracted from the container
+ */
+export async function decryptContainerFile(
+  token: string,
+  fileData: ArrayBuffer
+): Promise<string[]> {
+  const formData = new FormData();
+  formData.append("file", new Blob([fileData]));
+
+  return put<string[], FormData>("/unrestrict/containerFile", formData, token);
+}
+
+/**
+ * Decrypt a container from URL
+ * POST /unrestrict/containerLink
+ *
+ * @param token - API token
+ * @param link - URL to the container file
+ * @returns Array of links extracted from the container
+ */
+export async function decryptContainerLink(
+  token: string,
+  link: string
+): Promise<string[]> {
+  return post<string[], { link: string }>(
+    "/unrestrict/containerLink",
     { link },
     token
   );

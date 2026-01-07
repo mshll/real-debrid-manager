@@ -20,11 +20,18 @@ export { getUser, getSettings } from "./user";
 export type { UserProfile, UserSettings } from "./user";
 
 // Unrestrict API
-export { unrestrictLink, unrestrictFolder } from "./unrestrict";
+export {
+  unrestrictLink,
+  unrestrictFolder,
+  checkLink,
+  decryptContainerFile,
+  decryptContainerLink,
+} from "./unrestrict";
 export type {
   UnrestrictLinkRequest,
   UnrestrictedLink,
   UnrestrictFolderRequest,
+  LinkCheckResult,
 } from "./unrestrict";
 
 // Torrents API
@@ -55,3 +62,20 @@ export type { DownloadItem, DownloadsPaginationParams } from "./downloads";
 // Hosts API
 export { getHostsRegex, getHostsDomains, getHosts } from "./hosts";
 export type { HostInfo } from "./hosts";
+
+// Streaming API
+export { getTranscodeLinks, getMediaInfo } from "./streaming";
+export type {
+  TranscodeQuality,
+  MediaInfo,
+  VideoInfo,
+  AudioInfo,
+  SubtitleInfo,
+} from "./streaming";
+
+// Settings API
+export { convertPoints } from "./settings";
+
+// Traffic API
+export { getTraffic, getTrafficDetails } from "./traffic";
+export type { TrafficInfo, TrafficDetails, HostTrafficInfo } from "./traffic";

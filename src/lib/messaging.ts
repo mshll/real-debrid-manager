@@ -3,8 +3,11 @@
  */
 
 import type { DownloadItem } from "./api/downloads";
+import type { HostInfo } from "./api/hosts";
+import type { TranscodeQuality, MediaInfo } from "./api/streaming";
+import type { TrafficInfo, TrafficDetails } from "./api/traffic";
 import type { TorrentItem, TorrentInfo, AddMagnetResponse } from "./api/torrents";
-import type { UnrestrictedLink } from "./api/unrestrict";
+import type { UnrestrictedLink, LinkCheckResult } from "./api/unrestrict";
 import type { UserProfile } from "./api/user";
 
 /**
@@ -27,9 +30,16 @@ export type MessageType =
   // User
   | "GET_USER_PROFILE"
   | "GET_USER_SETTINGS"
+  | "CONVERT_POINTS"
   // Unrestrict
   | "UNRESTRICT_LINK"
   | "UNRESTRICT_FOLDER"
+  | "CHECK_LINK"
+  | "DECRYPT_CONTAINER_FILE"
+  | "DECRYPT_CONTAINER_LINK"
+  // Streaming
+  | "GET_TRANSCODE_LINKS"
+  | "GET_MEDIA_INFO"
   // Torrents
   | "LIST_TORRENTS"
   | "GET_TORRENT_INFO"
@@ -44,6 +54,10 @@ export type MessageType =
   // Hosts
   | "GET_HOSTS_REGEX"
   | "GET_HOSTS_DOMAINS"
+  | "GET_HOSTS_STATUS"
+  // Traffic
+  | "GET_TRAFFIC"
+  | "GET_TRAFFIC_DETAILS"
   // Notifications
   | "SHOW_NOTIFICATION"
   // Content Script
@@ -71,9 +85,16 @@ export type Message =
   // User messages
   | BaseMessage<"GET_USER_PROFILE">
   | BaseMessage<"GET_USER_SETTINGS">
+  | BaseMessage<"CONVERT_POINTS">
   // Unrestrict messages
   | BaseMessage<"UNRESTRICT_LINK", { link: string; password?: string; remote?: boolean }>
   | BaseMessage<"UNRESTRICT_FOLDER", { link: string }>
+  | BaseMessage<"CHECK_LINK", { link: string }>
+  | BaseMessage<"DECRYPT_CONTAINER_FILE", { fileData: ArrayBuffer }>
+  | BaseMessage<"DECRYPT_CONTAINER_LINK", { link: string }>
+  // Streaming messages
+  | BaseMessage<"GET_TRANSCODE_LINKS", { id: string }>
+  | BaseMessage<"GET_MEDIA_INFO", { id: string }>
   // Torrent messages
   | BaseMessage<"LIST_TORRENTS", { offset?: number; limit?: number } | undefined>
   | BaseMessage<"GET_TORRENT_INFO", { id: string }>
@@ -88,6 +109,10 @@ export type Message =
   // Host messages
   | BaseMessage<"GET_HOSTS_REGEX">
   | BaseMessage<"GET_HOSTS_DOMAINS">
+  | BaseMessage<"GET_HOSTS_STATUS">
+  // Traffic messages
+  | BaseMessage<"GET_TRAFFIC">
+  | BaseMessage<"GET_TRAFFIC_DETAILS">
   // Notification messages
   | BaseMessage<"SHOW_NOTIFICATION", { title: string; message: string }>
   // Content script messages
@@ -105,8 +130,14 @@ export interface ResponseMap {
   AUTH_LOGOUT: { success: boolean };
   GET_USER_PROFILE: UserProfile;
   GET_USER_SETTINGS: unknown;
+  CONVERT_POINTS: void;
   UNRESTRICT_LINK: UnrestrictedLink;
   UNRESTRICT_FOLDER: string[];
+  CHECK_LINK: LinkCheckResult;
+  DECRYPT_CONTAINER_FILE: string[];
+  DECRYPT_CONTAINER_LINK: string[];
+  GET_TRANSCODE_LINKS: TranscodeQuality;
+  GET_MEDIA_INFO: MediaInfo;
   LIST_TORRENTS: TorrentItem[];
   GET_TORRENT_INFO: TorrentInfo;
   ADD_MAGNET: AddMagnetResponse;
@@ -118,6 +149,9 @@ export interface ResponseMap {
   DELETE_DOWNLOAD: void;
   GET_HOSTS_REGEX: string[];
   GET_HOSTS_DOMAINS: string[];
+  GET_HOSTS_STATUS: Record<string, HostInfo>;
+  GET_TRAFFIC: TrafficInfo;
+  GET_TRAFFIC_DETAILS: TrafficDetails;
   SHOW_NOTIFICATION: void;
   SCAN_PAGE_LINKS: DetectedLink[];
   REPORT_DETECTED_LINKS: void;
@@ -234,12 +268,31 @@ export const messages = {
   getUserProfile: () =>
     sendMessage({ type: "GET_USER_PROFILE", payload: undefined }),
 
+  convertPoints: () =>
+    sendMessage({ type: "CONVERT_POINTS", payload: undefined }),
+
   // Unrestrict
   unrestrictLink: (link: string, password?: string, remote?: boolean) =>
     sendMessage({ type: "UNRESTRICT_LINK", payload: { link, password, remote } }),
 
   unrestrictFolder: (link: string) =>
     sendMessage({ type: "UNRESTRICT_FOLDER", payload: { link } }),
+
+  checkLink: (link: string) =>
+    sendMessage({ type: "CHECK_LINK", payload: { link } }),
+
+  decryptContainerFile: (fileData: ArrayBuffer) =>
+    sendMessage({ type: "DECRYPT_CONTAINER_FILE", payload: { fileData } }),
+
+  decryptContainerLink: (link: string) =>
+    sendMessage({ type: "DECRYPT_CONTAINER_LINK", payload: { link } }),
+
+  // Streaming
+  getTranscodeLinks: (id: string) =>
+    sendMessage({ type: "GET_TRANSCODE_LINKS", payload: { id } }),
+
+  getMediaInfo: (id: string) =>
+    sendMessage({ type: "GET_MEDIA_INFO", payload: { id } }),
 
   // Torrents
   listTorrents: (params?: { offset?: number; limit?: number }) =>
@@ -267,6 +320,16 @@ export const messages = {
 
   getHostsDomains: () =>
     sendMessage({ type: "GET_HOSTS_DOMAINS", payload: undefined }),
+
+  getHostsStatus: () =>
+    sendMessage({ type: "GET_HOSTS_STATUS", payload: undefined }),
+
+  // Traffic
+  getTraffic: () =>
+    sendMessage({ type: "GET_TRAFFIC", payload: undefined }),
+
+  getTrafficDetails: () =>
+    sendMessage({ type: "GET_TRAFFIC_DETAILS", payload: undefined }),
 
   // Notifications
   showNotification: (title: string, message: string) =>

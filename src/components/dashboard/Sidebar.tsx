@@ -1,7 +1,7 @@
-import { ChevronLeft, Download, ExternalLink, HardDrive, Settings, User } from "lucide-react"
+import { Activity, ChevronLeft, Download, ExternalLink, HardDrive, Server, Settings, User } from "lucide-react"
 import { useState, useEffect } from "react"
 
-export type Section = "account" | "torrents" | "downloads" | "settings"
+export type Section = "account" | "traffic" | "torrents" | "downloads" | "hosts" | "settings"
 
 interface SidebarProps {
   activeSection: Section
@@ -21,6 +21,11 @@ const navItems: NavItem[] = [
     icon: <User size={20} />
   },
   {
+    id: "traffic",
+    label: "Traffic",
+    icon: <Activity size={20} />
+  },
+  {
     id: "torrents",
     label: "Torrents",
     icon: <HardDrive size={20} />
@@ -29,6 +34,11 @@ const navItems: NavItem[] = [
     id: "downloads",
     label: "Downloads",
     icon: <Download size={20} />
+  },
+  {
+    id: "hosts",
+    label: "Hosts",
+    icon: <Server size={20} />
   },
   {
     id: "settings",

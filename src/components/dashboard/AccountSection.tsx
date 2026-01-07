@@ -1,5 +1,5 @@
-import { AlertCircle } from "lucide-react"
-import { useState, useEffect } from "react"
+import { AlertCircle, Gift, Loader2 } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
 import { messages } from "~lib/messaging"
 import type { UserProfile } from "~lib/api/user"
 
@@ -61,25 +61,53 @@ export function AccountSection() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isConverting, setIsConverting] = useState(false)
+  const [convertError, setConvertError] = useState<string | null>(null)
+  const [convertSuccess, setConvertSuccess] = useState(false)
 
-  useEffect(() => {
-    async function fetchProfile() {
-      setLoading(true)
-      setError(null)
+  const fetchProfile = useCallback(async () => {
+    setLoading(true)
+    setError(null)
 
-      const response = await messages.getUserProfile()
+    const response = await messages.getUserProfile()
 
-      if (response.success && response.data) {
-        setProfile(response.data)
-      } else {
-        setError(response.error ?? "Failed to load profile")
-      }
-
-      setLoading(false)
+    if (response.success && response.data) {
+      setProfile(response.data)
+    } else {
+      setError(response.error ?? "Failed to load profile")
     }
 
-    fetchProfile()
+    setLoading(false)
   }, [])
+
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
+
+  const handleConvertPoints = async () => {
+    if (!profile || profile.points < 1000) return
+
+    if (!confirm(`Convert ${profile.points.toLocaleString()} fidelity points to premium time?\n\n1000 points = 1 day of premium`)) {
+      return
+    }
+
+    setIsConverting(true)
+    setConvertError(null)
+    setConvertSuccess(false)
+
+    const response = await messages.convertPoints()
+
+    if (response.success) {
+      setConvertSuccess(true)
+      // Refresh profile to get updated points and premium time
+      await fetchProfile()
+      setTimeout(() => setConvertSuccess(false), 3000)
+    } else {
+      setConvertError(response.error || "Failed to convert points")
+    }
+
+    setIsConverting(false)
+  }
 
   if (loading) {
     return (
@@ -131,11 +159,37 @@ export function AccountSection() {
           subtext={isPremium ? "days remaining" : "Not premium"}
           variant={isPremium && premiumDays > 0 ? "accent" : "default"}
         />
-        <StatCard
-          label="Fidelity Points"
-          value={profile.points.toLocaleString()}
-          subtext="Available points"
-        />
+        <div className="p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-1">
+            Fidelity Points
+          </p>
+          <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight tabular-nums">
+            {profile.points.toLocaleString()}
+          </p>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+            1000 points = 1 day premium
+          </p>
+          {profile.points >= 1000 && (
+            <button
+              onClick={handleConvertPoints}
+              disabled={isConverting}
+              className="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-neutral-900 hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            >
+              {isConverting ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Gift size={14} />
+              )}
+              {isConverting ? "Converting..." : "Convert to Premium"}
+            </button>
+          )}
+          {convertSuccess && (
+            <p className="mt-2 text-xs text-primary">Points converted successfully!</p>
+          )}
+          {convertError && (
+            <p className="mt-2 text-xs text-red-500">{convertError}</p>
+          )}
+        </div>
         <StatCard
           label="Account Type"
           value={isPremium ? "Premium" : "Free"}

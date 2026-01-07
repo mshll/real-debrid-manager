@@ -3,8 +3,10 @@ import "~style.css"
 
 import { Sidebar, type Section } from "~components/dashboard/Sidebar"
 import { AccountSection } from "~components/dashboard/AccountSection"
+import { TrafficSection } from "~components/dashboard/TrafficSection"
 import { TorrentsSection } from "~components/dashboard/TorrentsSection"
 import { DownloadsSection } from "~components/dashboard/DownloadsSection"
+import { HostsSection } from "~components/dashboard/HostsSection"
 import { SettingsSection } from "~components/dashboard/SettingsSection"
 import { messages } from "~lib/messaging"
 
@@ -15,7 +17,7 @@ function Dashboard() {
   // Read URL hash for initial section
   useEffect(() => {
     const hash = window.location.hash.slice(1) // Remove #
-    if (hash && ["account", "torrents", "downloads", "settings"].includes(hash)) {
+    if (hash && ["account", "traffic", "torrents", "downloads", "hosts", "settings"].includes(hash)) {
       setActiveSection(hash as Section)
     }
   }, [])
@@ -69,10 +71,14 @@ function Dashboard() {
     switch (activeSection) {
       case "account":
         return <AccountSection />
+      case "traffic":
+        return <TrafficSection />
       case "torrents":
         return <TorrentsSection />
       case "downloads":
         return <DownloadsSection />
+      case "hosts":
+        return <HostsSection />
       case "settings":
         return <SettingsSection />
       default:
