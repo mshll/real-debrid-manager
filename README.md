@@ -72,14 +72,18 @@
 - **Chrome**: [Chrome Web Store](#) <!-- TODO: Add link -->
 - **Firefox**: [Firefox Add-ons](#) <!-- TODO: Add link -->
 
+### Safari
+
+Open `safari-extension/Real-Debrid Manager/Real-Debrid Manager.xcodeproj` in Xcode and build.
+
 ### Manual Installation
 
-For Safari or to build from source:
+To build from source:
 
 1. Clone the repository
 2. Install dependencies: `bun install`
 3. Build: `bun run build` (or `bun run build:safari` for Safari)
-4. Load the extension from `build/chrome-mv3-prod` (or `build/safari-mv3-prod` for Safari)
+4. Load the extension from `build/chrome-mv3-prod`
 
 ---
 
@@ -101,6 +105,21 @@ bun run dev:safari   # Safari development
 bun run build        # Production build
 bun run package      # Package for store
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how to get started:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes
+4. Run the build to ensure everything works: `bun run build`
+5. Commit your changes with a descriptive message
+6. Push to your fork and open a Pull Request
+
+Please open an issue first for major changes to discuss the approach.
 
 ---
 

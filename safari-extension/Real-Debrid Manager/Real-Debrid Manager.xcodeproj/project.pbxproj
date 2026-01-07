@@ -1,0 +1,1029 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5155A9A82F0EE515002373FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9A72F0EE515002373FB /* AppDelegate.swift */; };
+		5155A9AA2F0EE515002373FB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9A92F0EE515002373FB /* SceneDelegate.swift */; };
+		5155A9AD2F0EE515002373FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */; };
+		5155A9B02F0EE515002373FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9AE2F0EE515002373FB /* Main.storyboard */; };
+		5155A9B92F0EE515002373FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9B82F0EE515002373FB /* AppDelegate.swift */; };
+		5155A9BC2F0EE515002373FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9BA2F0EE515002373FB /* Main.storyboard */; };
+		5155A9C32F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5155A9CD2F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5155A9D22F0EE515002373FB /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9972F0EE513002373FB /* Main.html */; };
+		5155A9D32F0EE515002373FB /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9972F0EE513002373FB /* Main.html */; };
+		5155A9D42F0EE515002373FB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9992F0EE513002373FB /* Icon.png */; };
+		5155A9D52F0EE515002373FB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9992F0EE513002373FB /* Icon.png */; };
+		5155A9D62F0EE515002373FB /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99A2F0EE513002373FB /* Style.css */; };
+		5155A9D72F0EE515002373FB /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99A2F0EE513002373FB /* Style.css */; };
+		5155A9D82F0EE515002373FB /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99B2F0EE513002373FB /* Script.js */; };
+		5155A9D92F0EE515002373FB /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99B2F0EE513002373FB /* Script.js */; };
+		5155A9DA2F0EE515002373FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99C2F0EE513002373FB /* ViewController.swift */; };
+		5155A9DB2F0EE515002373FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99C2F0EE513002373FB /* ViewController.swift */; };
+		5155A9DC2F0EE515002373FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99D2F0EE515002373FB /* Assets.xcassets */; };
+		5155A9DD2F0EE515002373FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99D2F0EE515002373FB /* Assets.xcassets */; };
+		5155A9DE2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */; };
+		5155A9DF2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */; };
+		5155A9FC2F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */; };
+		5155A9FD2F0EE515002373FB /* tabs in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F22F0EE515002373FB /* tabs */; };
+		5155A9FE2F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */; };
+		5155A9FF2F0EE515002373FB /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F42F0EE515002373FB /* popup.html */; };
+		5155AA002F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */; };
+		5155AA012F0EE515002373FB /* popup.c5bdfb9c.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */; };
+		5155AA022F0EE515002373FB /* static in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F72F0EE515002373FB /* static */; };
+		5155AA032F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */; };
+		5155AA042F0EE515002373FB /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F92F0EE515002373FB /* manifest.json */; };
+		5155AA052F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */; };
+		5155AA062F0EE515002373FB /* link-scanner.acf839fe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */; };
+		5155AA072F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */; };
+		5155AA082F0EE515002373FB /* tabs in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F22F0EE515002373FB /* tabs */; };
+		5155AA092F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */; };
+		5155AA0A2F0EE515002373FB /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F42F0EE515002373FB /* popup.html */; };
+		5155AA0B2F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */; };
+		5155AA0C2F0EE515002373FB /* popup.c5bdfb9c.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */; };
+		5155AA0D2F0EE515002373FB /* static in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F72F0EE515002373FB /* static */; };
+		5155AA0E2F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */; };
+		5155AA0F2F0EE515002373FB /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F92F0EE515002373FB /* manifest.json */; };
+		5155AA102F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */; };
+		5155AA112F0EE515002373FB /* link-scanner.acf839fe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5155A9C42F0EE515002373FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5155A9912F0EE513002373FB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5155A9C12F0EE515002373FB;
+			remoteInfo = "Real-Debrid Manager Extension (iOS)";
+		};
+		5155A9CE2F0EE515002373FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5155A9912F0EE513002373FB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5155A9CB2F0EE515002373FB;
+			remoteInfo = "Real-Debrid Manager Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5155A9E52F0EE515002373FB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5155A9C32F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9EC2F0EE515002373FB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5155A9CD2F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5155A9982F0EE513002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		5155A9992F0EE513002373FB /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		5155A99A2F0EE513002373FB /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		5155A99B2F0EE513002373FB /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		5155A99C2F0EE513002373FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5155A99D2F0EE515002373FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5155A9A72F0EE515002373FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5155A9A92F0EE515002373FB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		5155A9AC2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5155A9AF2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5155A9B12F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5155A9B82F0EE515002373FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5155A9BB2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5155A9BD2F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5155A9C72F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5155A9D12F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon16.plasmo.3f939841.png; path = "../../../build/safari-mv3-prod/icon16.plasmo.3f939841.png"; sourceTree = "<group>"; };
+		5155A9F22F0EE515002373FB /* tabs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tabs; path = "../../../build/safari-mv3-prod/tabs"; sourceTree = "<group>"; };
+		5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon32.plasmo.b3e782d4.png; path = "../../../build/safari-mv3-prod/icon32.plasmo.b3e782d4.png"; sourceTree = "<group>"; };
+		5155A9F42F0EE515002373FB /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = "../../../build/safari-mv3-prod/popup.html"; sourceTree = "<group>"; };
+		5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon128.plasmo.75675c84.png; path = "../../../build/safari-mv3-prod/icon128.plasmo.75675c84.png"; sourceTree = "<group>"; };
+		5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.c5bdfb9c.js; path = "../../../build/safari-mv3-prod/popup.c5bdfb9c.js"; sourceTree = "<group>"; };
+		5155A9F72F0EE515002373FB /* static */ = {isa = PBXFileReference; lastKnownFileType = folder; name = static; path = "../../../build/safari-mv3-prod/static"; sourceTree = "<group>"; };
+		5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon64.plasmo.2d281304.png; path = "../../../build/safari-mv3-prod/icon64.plasmo.2d281304.png"; sourceTree = "<group>"; };
+		5155A9F92F0EE515002373FB /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../../build/safari-mv3-prod/manifest.json"; sourceTree = "<group>"; };
+		5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon48.plasmo.3cd5ceed.png; path = "../../../build/safari-mv3-prod/icon48.plasmo.3cd5ceed.png"; sourceTree = "<group>"; };
+		5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "link-scanner.acf839fe.js"; path = "../../../build/safari-mv3-prod/link-scanner.acf839fe.js"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5155A9A12F0EE515002373FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9B32F0EE515002373FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9BF2F0EE515002373FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9C92F0EE515002373FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5155A9902F0EE513002373FB = {
+			isa = PBXGroup;
+			children = (
+				5155A9952F0EE513002373FB /* Shared (App) */,
+				5155A99E2F0EE515002373FB /* Shared (Extension) */,
+				5155A9A62F0EE515002373FB /* iOS (App) */,
+				5155A9B72F0EE515002373FB /* macOS (App) */,
+				5155A9C62F0EE515002373FB /* iOS (Extension) */,
+				5155A9D02F0EE515002373FB /* macOS (Extension) */,
+				5155A9A52F0EE515002373FB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5155A9952F0EE513002373FB /* Shared (App) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A99C2F0EE513002373FB /* ViewController.swift */,
+				5155A99D2F0EE515002373FB /* Assets.xcassets */,
+				5155A9962F0EE513002373FB /* Resources */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		5155A9962F0EE513002373FB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9972F0EE513002373FB /* Main.html */,
+				5155A9992F0EE513002373FB /* Icon.png */,
+				5155A99A2F0EE513002373FB /* Style.css */,
+				5155A99B2F0EE513002373FB /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5155A99E2F0EE515002373FB /* Shared (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9F02F0EE515002373FB /* Resources */,
+				5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		5155A9A52F0EE515002373FB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */,
+				5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */,
+				5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */,
+				5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5155A9A62F0EE515002373FB /* iOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9A72F0EE515002373FB /* AppDelegate.swift */,
+				5155A9A92F0EE515002373FB /* SceneDelegate.swift */,
+				5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */,
+				5155A9AE2F0EE515002373FB /* Main.storyboard */,
+				5155A9B12F0EE515002373FB /* Info.plist */,
+			);
+			path = "iOS (App)";
+			sourceTree = "<group>";
+		};
+		5155A9B72F0EE515002373FB /* macOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9B82F0EE515002373FB /* AppDelegate.swift */,
+				5155A9BA2F0EE515002373FB /* Main.storyboard */,
+				5155A9BD2F0EE515002373FB /* Info.plist */,
+			);
+			path = "macOS (App)";
+			sourceTree = "<group>";
+		};
+		5155A9C62F0EE515002373FB /* iOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9C72F0EE515002373FB /* Info.plist */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		5155A9D02F0EE515002373FB /* macOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9D12F0EE515002373FB /* Info.plist */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		5155A9F02F0EE515002373FB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */,
+				5155A9F22F0EE515002373FB /* tabs */,
+				5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */,
+				5155A9F42F0EE515002373FB /* popup.html */,
+				5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */,
+				5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */,
+				5155A9F72F0EE515002373FB /* static */,
+				5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */,
+				5155A9F92F0EE515002373FB /* manifest.json */,
+				5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */,
+				5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */,
+			);
+			name = Resources;
+			path = "Shared (Extension)";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5155A9A32F0EE515002373FB /* Real-Debrid Manager (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5155A9E62F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */;
+			buildPhases = (
+				5155A9A02F0EE515002373FB /* Sources */,
+				5155A9A12F0EE515002373FB /* Frameworks */,
+				5155A9A22F0EE515002373FB /* Resources */,
+				5155A9E52F0EE515002373FB /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5155A9C52F0EE515002373FB /* PBXTargetDependency */,
+			);
+			name = "Real-Debrid Manager (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "Real-Debrid Manager (iOS)";
+			productReference = 5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5155A9B52F0EE515002373FB /* Real-Debrid Manager (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5155A9ED2F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */;
+			buildPhases = (
+				5155A9B22F0EE515002373FB /* Sources */,
+				5155A9B32F0EE515002373FB /* Frameworks */,
+				5155A9B42F0EE515002373FB /* Resources */,
+				5155A9EC2F0EE515002373FB /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5155A9CF2F0EE515002373FB /* PBXTargetDependency */,
+			);
+			name = "Real-Debrid Manager (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "Real-Debrid Manager (macOS)";
+			productReference = 5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5155A9E22F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */;
+			buildPhases = (
+				5155A9BE2F0EE515002373FB /* Sources */,
+				5155A9BF2F0EE515002373FB /* Frameworks */,
+				5155A9C02F0EE515002373FB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Real-Debrid Manager Extension (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "Real-Debrid Manager Extension (iOS)";
+			productReference = 5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5155A9E92F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */;
+			buildPhases = (
+				5155A9C82F0EE515002373FB /* Sources */,
+				5155A9C92F0EE515002373FB /* Frameworks */,
+				5155A9CA2F0EE515002373FB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Real-Debrid Manager Extension (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "Real-Debrid Manager Extension (macOS)";
+			productReference = 5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5155A9912F0EE513002373FB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					5155A9A32F0EE515002373FB = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					5155A9B52F0EE515002373FB = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					5155A9C12F0EE515002373FB = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					5155A9CB2F0EE515002373FB = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 5155A9942F0EE513002373FB /* Build configuration list for PBXProject "Real-Debrid Manager" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5155A9902F0EE513002373FB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5155A9A52F0EE515002373FB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5155A9A32F0EE515002373FB /* Real-Debrid Manager (iOS) */,
+				5155A9B52F0EE515002373FB /* Real-Debrid Manager (macOS) */,
+				5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */,
+				5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5155A9A22F0EE515002373FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9D42F0EE515002373FB /* Icon.png in Resources */,
+				5155A9AD2F0EE515002373FB /* LaunchScreen.storyboard in Resources */,
+				5155A9D22F0EE515002373FB /* Main.html in Resources */,
+				5155A9D82F0EE515002373FB /* Script.js in Resources */,
+				5155A9DC2F0EE515002373FB /* Assets.xcassets in Resources */,
+				5155A9B02F0EE515002373FB /* Main.storyboard in Resources */,
+				5155A9D62F0EE515002373FB /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9B42F0EE515002373FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9D52F0EE515002373FB /* Icon.png in Resources */,
+				5155A9D72F0EE515002373FB /* Style.css in Resources */,
+				5155A9BC2F0EE515002373FB /* Main.storyboard in Resources */,
+				5155A9D92F0EE515002373FB /* Script.js in Resources */,
+				5155A9DD2F0EE515002373FB /* Assets.xcassets in Resources */,
+				5155A9D32F0EE515002373FB /* Main.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9C02F0EE515002373FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155AA0E2F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */,
+				5155AA0C2F0EE515002373FB /* popup.c5bdfb9c.js in Resources */,
+				5155AA092F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */,
+				5155AA0D2F0EE515002373FB /* static in Resources */,
+				5155AA0F2F0EE515002373FB /* manifest.json in Resources */,
+				5155AA0A2F0EE515002373FB /* popup.html in Resources */,
+				5155AA082F0EE515002373FB /* tabs in Resources */,
+				5155AA072F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */,
+				5155AA102F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */,
+				5155AA0B2F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */,
+				5155AA112F0EE515002373FB /* link-scanner.acf839fe.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9CA2F0EE515002373FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155AA032F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */,
+				5155AA012F0EE515002373FB /* popup.c5bdfb9c.js in Resources */,
+				5155A9FE2F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */,
+				5155AA022F0EE515002373FB /* static in Resources */,
+				5155AA042F0EE515002373FB /* manifest.json in Resources */,
+				5155A9FF2F0EE515002373FB /* popup.html in Resources */,
+				5155A9FD2F0EE515002373FB /* tabs in Resources */,
+				5155A9FC2F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */,
+				5155AA052F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */,
+				5155AA002F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */,
+				5155AA062F0EE515002373FB /* link-scanner.acf839fe.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5155A9A02F0EE515002373FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9DA2F0EE515002373FB /* ViewController.swift in Sources */,
+				5155A9A82F0EE515002373FB /* AppDelegate.swift in Sources */,
+				5155A9AA2F0EE515002373FB /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9B22F0EE515002373FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9DB2F0EE515002373FB /* ViewController.swift in Sources */,
+				5155A9B92F0EE515002373FB /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9BE2F0EE515002373FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9DE2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5155A9C82F0EE515002373FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5155A9DF2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5155A9C52F0EE515002373FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */;
+			targetProxy = 5155A9C42F0EE515002373FB /* PBXContainerItemProxy */;
+		};
+		5155A9CF2F0EE515002373FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */;
+			targetProxy = 5155A9CE2F0EE515002373FB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5155A9972F0EE513002373FB /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5155A9982F0EE513002373FB /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5155A9AC2F0EE515002373FB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		5155A9AE2F0EE515002373FB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5155A9AF2F0EE515002373FB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5155A9BA2F0EE515002373FB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5155A9BB2F0EE515002373FB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5155A9E02F0EE515002373FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5155A9E12F0EE515002373FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		5155A9E32F0EE515002373FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager.Extension";
+				PRODUCT_NAME = "Real-Debrid Manager Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5155A9E42F0EE515002373FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager.Extension";
+				PRODUCT_NAME = "Real-Debrid Manager Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5155A9E72F0EE515002373FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager";
+				PRODUCT_NAME = "Real-Debrid Manager";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5155A9E82F0EE515002373FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager";
+				PRODUCT_NAME = "Real-Debrid Manager";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5155A9EA2F0EE515002373FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager.Extension";
+				PRODUCT_NAME = "Real-Debrid Manager Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		5155A9EB2F0EE515002373FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager.Extension";
+				PRODUCT_NAME = "Real-Debrid Manager Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		5155A9EE2F0EE515002373FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager";
+				PRODUCT_NAME = "Real-Debrid Manager";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		5155A9EF2F0EE515002373FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meshal.real-debrid-manager";
+				PRODUCT_NAME = "Real-Debrid Manager";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5155A9942F0EE513002373FB /* Build configuration list for PBXProject "Real-Debrid Manager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5155A9E02F0EE515002373FB /* Debug */,
+				5155A9E12F0EE515002373FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5155A9E22F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5155A9E32F0EE515002373FB /* Debug */,
+				5155A9E42F0EE515002373FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5155A9E62F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5155A9E72F0EE515002373FB /* Debug */,
+				5155A9E82F0EE515002373FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5155A9E92F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5155A9EA2F0EE515002373FB /* Debug */,
+				5155A9EB2F0EE515002373FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5155A9ED2F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5155A9EE2F0EE515002373FB /* Debug */,
+				5155A9EF2F0EE515002373FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5155A9912F0EE513002373FB /* Project object */;
+}
