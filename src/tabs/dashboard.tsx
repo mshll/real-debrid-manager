@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react"
+
+import { useStorage } from "@plasmohq/storage/hook"
+
 import "~style.css"
 
 import { Sidebar, type Section } from "~components/dashboard/Sidebar"
@@ -8,10 +11,18 @@ import { DownloadsSection } from "~components/dashboard/DownloadsSection"
 import { HostsSection } from "~components/dashboard/HostsSection"
 import { SettingsSection } from "~components/dashboard/SettingsSection"
 import { messages } from "~lib/messaging"
+import type { AuthData } from "~lib/auth"
+import { authStorage, STORAGE_KEYS } from "~lib/storage"
 
 function Dashboard() {
   const [activeSection, setActiveSection] = useState<Section>("account")
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+  // Watch for auth changes from other contexts (e.g., signed out in popup)
+  const [authData] = useStorage<AuthData | null>({
+    key: STORAGE_KEYS.AUTH_DATA,
+    instance: authStorage,
+  })
 
   // Read URL hash for initial section
   useEffect(() => {
@@ -29,6 +40,16 @@ function Dashboard() {
     }
     checkAuth()
   }, [])
+
+  // Handle auth state changes from other contexts
+  useEffect(() => {
+    if (authData === null && isAuthenticated === true) {
+      setIsAuthenticated(false)
+    } else if (authData !== null && isAuthenticated === false) {
+      // Auth was restored, refresh auth status
+      setIsAuthenticated(true)
+    }
+  }, [authData, isAuthenticated])
 
   // Show loading while checking auth
   if (isAuthenticated === null) {

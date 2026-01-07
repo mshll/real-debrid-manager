@@ -8,8 +8,6 @@ import {
 import { storage } from "~lib/storage";
 import {
   type AuthData,
-  isTokenExpired,
-  refreshAccessToken,
   OAuthFlow,
   type DeviceCodeResponse,
 } from "~lib/auth";
@@ -261,34 +259,16 @@ async function initializePolling(): Promise<void> {
   await checkAndUpdatePolling();
 }
 
+/**
+ * Get a valid access token
+ * Real-Debrid tokens typically don't expire, so we just return the stored token
+ * Invalid tokens are handled at the API level (401 responses)
+ */
 async function getValidToken(): Promise<string> {
   const authData = await storage.getAuthData();
 
-  if (!authData) {
+  if (!authData || !authData.accessToken) {
     throw new Error("Not authenticated");
-  }
-
-  if (isTokenExpired(authData)) {
-    try {
-      const tokenResponse = await refreshAccessToken(
-        authData.clientId,
-        authData.clientSecret,
-        authData.refreshToken
-      );
-
-      const updatedAuthData: AuthData = {
-        ...authData,
-        accessToken: tokenResponse.access_token,
-        refreshToken: tokenResponse.refresh_token,
-        expiresAt: Date.now() + tokenResponse.expires_in * 1000,
-      };
-
-      await storage.setAuthData(updatedAuthData);
-      return updatedAuthData.accessToken;
-    } catch (err) {
-      await storage.removeAuthData();
-      throw new Error("Session expired. Please log in again.");
-    }
   }
 
   return authData.accessToken;
@@ -302,6 +282,10 @@ async function withErrorHandling<T>(
     return { success: true, data };
   } catch (err) {
     if (err instanceof RealDebridApiError) {
+      // Handle 401 errors - clear auth data
+      if (err.status === 401) {
+        await storage.removeAuthData();
+      }
       return { success: false, error: err.message, errorCode: err.code };
     }
     return { success: false, error: err instanceof Error ? err.message : "Unknown error" };
@@ -330,7 +314,15 @@ const handleLogin: MessageHandler<"AUTH_LOGIN"> = async (payload) => {
   if (payload?.token) {
     try {
       const profile = await getUser(payload.token);
-      await storage.setToken(payload.token);
+      // Store as auth data with minimal required fields
+      // Real-Debrid tokens don't expire, so we don't set expiresAt
+      await storage.setAuthData({
+        accessToken: payload.token,
+        refreshToken: "",
+        clientId: "",
+        clientSecret: "",
+        expiresAt: 0,
+      });
       await storage.cacheUserProfile(profile);
       return success({ success: true });
     } catch (err) {

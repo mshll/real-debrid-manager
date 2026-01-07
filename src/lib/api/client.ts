@@ -137,6 +137,15 @@ export async function request<TResponse, TBody = unknown>(
   const hasJson = contentType?.includes("application/json");
 
   if (!response.ok) {
+    // Handle 401 Unauthorized - token is invalid
+    if (response.status === 401) {
+      throw new RealDebridApiError(
+        "Authentication invalid. Please sign in again.",
+        401,
+        401
+      );
+    }
+
     if (hasJson) {
       const errorData: ApiError = await response.json();
       throw new RealDebridApiError(

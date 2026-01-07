@@ -1,6 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
+
+import { useStorage } from "@plasmohq/storage/hook"
+
 import { messages } from "~lib/messaging"
-import { storage, type UserPreferences } from "~lib/storage"
+import {
+  storage,
+  syncStorage,
+  STORAGE_KEYS,
+  DEFAULT_PREFERENCES,
+  type UserPreferences,
+} from "~lib/storage"
 
 interface ToggleProps {
   checked: boolean
@@ -57,30 +66,25 @@ function SettingRow({ title, description, action }: SettingRowProps) {
 }
 
 export function SettingsSection() {
-  const [preferences, setPreferences] = useState<UserPreferences | null>(null)
-  const [loading, setLoading] = useState(true)
+  // Use reactive storage hook for preferences
+  const [storedPreferences, setStoredPreferences] = useStorage<UserPreferences>({
+    key: STORAGE_KEYS.PREFERENCES,
+    instance: syncStorage,
+  })
+
+  // Merge with defaults for complete preferences object
+  const preferences = { ...DEFAULT_PREFERENCES, ...storedPreferences }
+
   const [saving, setSaving] = useState(false)
   const [clearingCache, setClearingCache] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
-
-  useEffect(() => {
-    async function loadPreferences() {
-      const prefs = await storage.getPreferences()
-      setPreferences(prefs)
-      setLoading(false)
-    }
-    loadPreferences()
-  }, [])
 
   const updatePreference = async <K extends keyof UserPreferences>(
     key: K,
     value: UserPreferences[K]
   ) => {
-    if (!preferences) return
-
     setSaving(true)
-    const updated = await storage.setPreferences({ [key]: value })
-    setPreferences(updated)
+    await setStoredPreferences({ ...preferences, [key]: value })
     setSaving(false)
   }
 
@@ -112,15 +116,14 @@ export function SettingsSection() {
     setSigningOut(false)
   }
 
-  if (loading) {
+  // Show loading state while preferences are being fetched
+  if (storedPreferences === undefined) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
-
-  if (!preferences) return null
 
   return (
     <div className="space-y-6">

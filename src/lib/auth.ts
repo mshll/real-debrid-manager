@@ -288,12 +288,17 @@ export class OAuthFlow {
 }
 
 /**
- * Check if auth data is expired or about to expire
- * Returns true if token expires in less than 5 minutes
+ * Check if auth data is expired
+ * Note: Real-Debrid tokens typically don't expire, so this returns false
+ * unless explicitly set with a valid expiry time that has passed
  */
 export function isTokenExpired(authData: AuthData): boolean {
-  const EXPIRY_BUFFER = 5 * 60 * 1000; // 5 minutes
-  return Date.now() >= authData.expiresAt - EXPIRY_BUFFER;
+  // If no expiry set or set to 0, token is considered valid (doesn't expire)
+  if (!authData.expiresAt || authData.expiresAt === 0) {
+    return false;
+  }
+  // Only return true if actually expired (no buffer needed since tokens rarely expire)
+  return Date.now() >= authData.expiresAt;
 }
 
 /**

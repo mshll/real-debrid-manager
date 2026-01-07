@@ -12,6 +12,7 @@
     "build:safari": "plasmo build --target=safari-mv3"
   },
   "dependencies": {
+    "@plasmohq/storage": "^1.15.0",
     "lucide-react": "^0.562.0",
     "plasmo": "0.90.5",
     "react": "18.2.0",

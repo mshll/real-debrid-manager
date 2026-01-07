@@ -1,7 +1,12 @@
 import { Download, HardDrive, Settings, User, X } from "lucide-react"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 import logoImage from "data-base64:~assets/logo.png"
 import { useEffect, useRef, useState } from "react"
+
+import type { AuthData } from "~lib/auth"
+import { authStorage, STORAGE_KEYS } from "~lib/storage"
 
 import { AccountBar } from "~components/AccountBar"
 import { DetectedLinks } from "~components/DetectedLinks"
@@ -314,6 +319,25 @@ function IndexPopup() {
     showFileModal: false,
     selectedTorrentInfo: null,
   })
+
+  // Watch for auth changes from other contexts (e.g., signed out in dashboard)
+  const [authData] = useStorage<AuthData | null>({
+    key: STORAGE_KEYS.AUTH_DATA,
+    instance: authStorage,
+  })
+
+  // Handle auth state changes from other contexts
+  useEffect(() => {
+    // If auth was removed while we thought we were authenticated, update state
+    if (authData === null && state.isAuthenticated && !state.isLoading) {
+      setState((prev) => ({
+        ...prev,
+        isAuthenticated: false,
+        user: null,
+        torrents: [],
+      }))
+    }
+  }, [authData, state.isAuthenticated, state.isLoading])
 
   // Check auth status and load data on mount
   useEffect(() => {
