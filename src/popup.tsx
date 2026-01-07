@@ -1,4 +1,6 @@
 import { Download, HardDrive, Settings, User, X } from "lucide-react"
+
+import logoImage from "data-base64:~assets/logo.png"
 import { useEffect, useRef, useState } from "react"
 
 import { AccountBar } from "~components/AccountBar"
@@ -227,8 +229,8 @@ function LoginPrompt({ onLoginComplete }: { onLoginComplete: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center h-full px-6 py-8">
       {/* Logo */}
-      <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-primary/20">
-        <span className="text-lg font-bold text-primary">RD</span>
+      <div className="flex items-center justify-center w-12 h-12 mb-4">
+        <img src={logoImage} alt="Real-Debrid" className="w-12 h-12" />
       </div>
 
       <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-1">

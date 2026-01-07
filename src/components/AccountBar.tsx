@@ -1,3 +1,5 @@
+import logoImage from "data-base64:~assets/logo.png"
+
 import type { UserProfile } from "~lib/api/user"
 
 interface AccountBarProps {
@@ -30,9 +32,7 @@ export function AccountBar({ user }: AccountBarProps) {
   return (
     <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
       {/* RD Logo */}
-      <div className="flex items-center justify-center w-6 h-6 rounded bg-primary/20 dark:bg-primary/10">
-        <span className="text-xs font-semibold text-primary">RD</span>
-      </div>
+      <img src={logoImage} alt="Real-Debrid" className="w-6 h-6" />
 
       {/* User info */}
       <div className="flex-1 min-w-0">

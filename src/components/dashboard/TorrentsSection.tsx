@@ -405,13 +405,30 @@ export function TorrentsSection() {
     if (torrent.links.length === 0) return
 
     setActionLoading(torrent.id)
-    const response = await messages.unrestrictLink(torrent.links[0])
-    if (response.success && response.data) {
-      await navigator.clipboard.writeText(response.data.download)
-      setCopiedId(torrent.id)
-      setTimeout(() => setCopiedId(null), 2000)
+    try {
+      const response = await messages.unrestrictLink(torrent.links[0])
+      if (response.success && response.data) {
+        try {
+          await navigator.clipboard.writeText(response.data.download)
+        } catch {
+          // Fallback for when clipboard API fails (e.g., lost user gesture context)
+          const textArea = document.createElement("textarea")
+          textArea.value = response.data.download
+          textArea.style.position = "fixed"
+          textArea.style.left = "-9999px"
+          document.body.appendChild(textArea)
+          textArea.select()
+          document.execCommand("copy")
+          document.body.removeChild(textArea)
+        }
+        setCopiedId(torrent.id)
+        setTimeout(() => setCopiedId(null), 2000)
+      }
+    } catch (err) {
+      console.error("Failed to copy link:", err)
+    } finally {
+      setActionLoading(null)
     }
-    setActionLoading(null)
   }
 
   const filteredTorrents = torrents.filter((torrent) => {

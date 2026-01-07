@@ -188,6 +188,16 @@ export const storage = {
   },
 
   /**
+   * Clear cached user profile (forces refresh on next fetch)
+   */
+  async clearUserProfileCache(): Promise<void> {
+    await this.setCache({
+      userProfile: undefined,
+      userProfileTimestamp: undefined,
+    });
+  },
+
+  /**
    * Get cached supported domains if still valid
    */
   async getCachedDomains(): Promise<string[] | null> {

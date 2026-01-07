@@ -251,7 +251,7 @@ export function SettingsSection() {
       {/* Version Info */}
       <div className="text-center pt-4">
         <p className="text-xs text-neutral-400 dark:text-neutral-500">
-          Real-Debrid Extension v0.0.1
+          Real-Debrid Manager v1.0.0
         </p>
         <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">
           Built by <a href="https://meshal.me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">meshal.me</a>
