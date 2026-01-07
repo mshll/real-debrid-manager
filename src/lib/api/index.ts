@@ -60,7 +60,7 @@ export { listDownloads, deleteDownload } from "./downloads";
 export type { DownloadItem, DownloadsPaginationParams } from "./downloads";
 
 // Hosts API
-export { getHostsRegex, getHostsDomains, getHosts } from "./hosts";
+export { getHostsRegex, getHostsDomains, getHosts, getHostsStatus } from "./hosts";
 export type { HostInfo } from "./hosts";
 
 // Streaming API

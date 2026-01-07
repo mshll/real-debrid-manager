@@ -46,7 +46,7 @@ export interface HostInfo {
 }
 
 /**
- * Get all supported hosts with status
+ * Get all supported hosts (basic info only)
  * GET /hosts
  *
  * No authentication required.
@@ -55,4 +55,17 @@ export interface HostInfo {
  */
 export async function getHosts(): Promise<Record<string, HostInfo>> {
   return get<Record<string, HostInfo>>("/hosts", undefined, true);
+}
+
+/**
+ * Get all supported hosts with status
+ * GET /hosts/status
+ *
+ * Authentication required.
+ *
+ * @param token - API token
+ * @returns Record of host ID to host information with status
+ */
+export async function getHostsStatus(token: string): Promise<Record<string, HostInfo>> {
+  return get<Record<string, HostInfo>>("/hosts/status", token);
 }

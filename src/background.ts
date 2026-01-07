@@ -36,7 +36,7 @@ import {
   deleteDownload,
   getHostsRegex,
   getHostsDomains,
-  getHosts,
+  getHostsStatus,
   RealDebridApiError,
 } from "~lib/api";
 import type { TorrentItem, TorrentStatus } from "~lib/api/torrents";
@@ -526,8 +526,8 @@ const handleGetHostsDomains: MessageHandler<"GET_HOSTS_DOMAINS"> = async () => {
 };
 
 const handleGetHostsStatus: MessageHandler<"GET_HOSTS_STATUS"> = async () => {
-  // No auth required for this endpoint
-  return withErrorHandling(() => getHosts());
+  const token = await getValidToken();
+  return withErrorHandling(() => getHostsStatus(token));
 };
 
 const handleGetTraffic: MessageHandler<"GET_TRAFFIC"> = async () => {
