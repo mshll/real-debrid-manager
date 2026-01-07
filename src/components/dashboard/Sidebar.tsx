@@ -1,7 +1,10 @@
-import { Activity, ChevronLeft, Download, ExternalLink, HardDrive, Server, Settings, User } from "lucide-react"
+import { ChevronLeft, Download, ExternalLink, HardDrive, Server, Settings, User } from "lucide-react"
 import { useState, useEffect } from "react"
 
-export type Section = "account" | "traffic" | "torrents" | "downloads" | "hosts" | "settings"
+// NOTE: "traffic" section disabled - Real-Debrid API returns "not_allowed_method" error (code 4)
+// for GET /traffic endpoint despite documentation saying it should work with OAuth tokens.
+// The feature works on their website but not via API. May be an API restriction.
+export type Section = "account" | "torrents" | "downloads" | "hosts" | "settings"
 
 interface SidebarProps {
   activeSection: Section
@@ -19,11 +22,6 @@ const navItems: NavItem[] = [
     id: "account",
     label: "Account",
     icon: <User size={20} />
-  },
-  {
-    id: "traffic",
-    label: "Traffic",
-    icon: <Activity size={20} />
   },
   {
     id: "torrents",

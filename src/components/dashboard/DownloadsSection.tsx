@@ -1,8 +1,11 @@
-import { AlertCircle, Check, Copy, Download, Film, RefreshCw, Trash2 } from "lucide-react"
+import { AlertCircle, Check, Copy, Download, RefreshCw, Trash2 } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { messages } from "~lib/messaging"
 import type { DownloadItem } from "~lib/api/downloads"
-import { StreamingModal } from "./StreamingModal"
+
+// NOTE: Streaming feature disabled - Real-Debrid API returns "not_allowed_method" error (code 4)
+// for GET /streaming/transcode/{id} and GET /streaming/mediaInfos/{id} endpoints despite
+// documentation saying they should work. The feature works on their website but not via API.
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B"
@@ -35,7 +38,6 @@ export function DownloadsSection() {
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
-  const [streamingFile, setStreamingFile] = useState<{ id: string; filename: string } | null>(null)
 
   const fetchDownloads = useCallback(async () => {
     setLoading(true)
@@ -171,23 +173,12 @@ export function DownloadsSection() {
                 onDownload={() => handleDownload(download)}
                 onCopyLink={() => handleCopyLink(download)}
                 onDelete={() => handleDelete(download.id)}
-                onStream={() => setStreamingFile({ id: download.id, filename: download.filename })}
                 isLoading={actionLoading === download.id}
                 isCopied={copiedId === download.id}
               />
             ))}
           </div>
         </div>
-      )}
-
-      {/* Streaming Modal */}
-      {streamingFile && (
-        <StreamingModal
-          isOpen={true}
-          onClose={() => setStreamingFile(null)}
-          fileId={streamingFile.id}
-          filename={streamingFile.filename}
-        />
       )}
     </div>
   )
@@ -198,12 +189,11 @@ interface DownloadRowProps {
   onDownload: () => void
   onCopyLink: () => void
   onDelete: () => void
-  onStream: () => void
   isLoading: boolean
   isCopied: boolean
 }
 
-function DownloadRow({ download, onDownload, onCopyLink, onDelete, onStream, isLoading, isCopied }: DownloadRowProps) {
+function DownloadRow({ download, onDownload, onCopyLink, onDelete, isLoading, isCopied }: DownloadRowProps) {
   return (
     <div className="px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
       <div className="flex items-start gap-3">
@@ -238,16 +228,6 @@ function DownloadRow({ download, onDownload, onCopyLink, onDelete, onStream, isL
 
         {/* Actions */}
         <div className="flex items-center gap-1 flex-shrink-0">
-          {download.streamable === 1 && (
-            <button
-              onClick={onStream}
-              disabled={isLoading}
-              className="p-1.5 rounded-md text-accent hover:bg-accent/10 transition-colors disabled:opacity-50"
-              title="Stream"
-            >
-              <Film size={16} />
-            </button>
-          )}
           <button
             onClick={onDownload}
             disabled={isLoading}
