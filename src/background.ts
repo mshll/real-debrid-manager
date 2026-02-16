@@ -9,6 +9,7 @@ import { storage } from "~lib/storage";
 import {
   type AuthData,
   OAuthFlow,
+  OAuthError,
   type DeviceCodeResponse,
   refreshAccessToken,
 } from "~lib/auth";
@@ -275,30 +276,33 @@ async function getValidToken(): Promise<string> {
   return authData.accessToken;
 }
 
+let refreshInProgress: Promise<boolean> | null = null;
+
 async function attemptTokenRefresh(): Promise<boolean> {
-  try {
-    const authData = await storage.getAuthData();
-    if (!authData?.clientId || !authData?.clientSecret || !authData?.refreshToken) {
-      return false;
-    }
+  if (refreshInProgress) return refreshInProgress;
+  refreshInProgress = doTokenRefresh().finally(() => { refreshInProgress = null; });
+  return refreshInProgress;
+}
 
-    const tokenResponse = await refreshAccessToken(
-      authData.clientId,
-      authData.clientSecret,
-      authData.refreshToken
-    );
-
-    await storage.setAuthData({
-      ...authData,
-      accessToken: tokenResponse.access_token,
-      refreshToken: tokenResponse.refresh_token,
-      expiresAt: Date.now() + tokenResponse.expires_in * 1000,
-    });
-
-    return true;
-  } catch {
+async function doTokenRefresh(): Promise<boolean> {
+  const authData = await storage.getAuthData();
+  if (!authData?.clientId || !authData?.clientSecret || !authData?.refreshToken) {
     return false;
   }
+
+  const tokenResponse = await refreshAccessToken(
+    authData.clientId,
+    authData.clientSecret,
+    authData.refreshToken
+  );
+
+  await storage.setAuthData({
+    ...authData,
+    accessToken: tokenResponse.access_token,
+    expiresAt: 0,
+  });
+
+  return true;
 }
 
 async function withErrorHandling<T>(
@@ -308,15 +312,14 @@ async function withErrorHandling<T>(
     const data = await fn();
     return { success: true, data };
   } catch (err) {
-    if (err instanceof RealDebridApiError) {
-      if (err.status === 401) {
+    if (err instanceof RealDebridApiError && err.status === 401) {
+      try {
         const refreshed = await attemptTokenRefresh();
         if (refreshed) {
           try {
             const data = await fn();
             return { success: true, data };
           } catch (retryErr) {
-            await storage.removeAuthData();
             if (retryErr instanceof RealDebridApiError) {
               return { success: false, error: retryErr.message, errorCode: retryErr.code };
             }
@@ -324,7 +327,15 @@ async function withErrorHandling<T>(
           }
         }
         await storage.removeAuthData();
+        return { success: false, error: err.message, errorCode: err.code };
+      } catch (refreshErr) {
+        if (refreshErr instanceof OAuthError && refreshErr.status === 403) {
+          await storage.removeAuthData();
+        }
+        return { success: false, error: err.message, errorCode: err.code };
       }
+    }
+    if (err instanceof RealDebridApiError) {
       return { success: false, error: err.message, errorCode: err.code };
     }
     return { success: false, error: err instanceof Error ? err.message : "Unknown error" };

@@ -9,7 +9,7 @@
  * 5. Store tokens and handle refresh when needed
  */
 
-const OAUTH_BASE_URL = "https://api.real-debrid.com/oauth/v2";
+const OAUTH_BASE_URL = "https://app.real-debrid.com/oauth/v2";
 const CLIENT_ID = "X245A4XAIBGVM";
 
 /**
@@ -62,11 +62,13 @@ export interface AuthData {
 
 export class OAuthError extends Error {
   public readonly code?: string;
+  public readonly status?: number;
 
-  constructor(message: string, code?: string) {
+  constructor(message: string, code?: string, status?: number) {
     super(message);
     this.name = "OAuthError";
     this.code = code;
+    this.status = status;
   }
 }
 
@@ -182,7 +184,8 @@ export async function refreshAccessToken(
     const error = await response.json().catch(() => ({}));
     throw new OAuthError(
       error.error || `Failed to refresh token: ${response.status}`,
-      error.error
+      error.error,
+      response.status
     );
   }
 
