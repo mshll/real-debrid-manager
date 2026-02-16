@@ -2,6 +2,7 @@ import { AlertCircle, Check, Copy, Download, FolderOpen, Plus, RefreshCw, Trash2
 import { useState, useEffect, useCallback } from "react"
 import { messages, sendMessage } from "~lib/messaging"
 import type { TorrentItem, TorrentStatus, TorrentInfo } from "~lib/api/torrents"
+import { DownloadPickerModal } from "~components/DownloadPickerModal"
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B"
@@ -315,6 +316,7 @@ export function TorrentsSection() {
   const [fileModalLoading, setFileModalLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [downloadPickerTorrent, setDownloadPickerTorrent] = useState<TorrentItem | null>(null)
 
   const fetchTorrents = useCallback(async () => {
     setLoading(true)
@@ -377,17 +379,18 @@ export function TorrentsSection() {
 
   const handleUnrestrict = async (torrent: TorrentItem) => {
     if (torrent.links.length === 0) return
-    setActionLoading(torrent.id)
 
-    for (const link of torrent.links) {
-      const response = await messages.unrestrictLink(link)
+    if (torrent.links.length === 1) {
+      setActionLoading(torrent.id)
+      const response = await messages.unrestrictLink(torrent.links[0])
       if (response.success && response.data) {
-        // Trigger download
-        window.open(response.data.download, "_blank")
+        messages.downloadFile(response.data.download, response.data.filename)
       }
+      setActionLoading(null)
+      return
     }
 
-    setActionLoading(null)
+    setDownloadPickerTorrent(torrent)
   }
 
   const handleDelete = async (torrentId: string) => {
@@ -563,6 +566,15 @@ export function TorrentsSection() {
         onSelect={handleFileSelection}
         loading={fileModalLoading}
       />
+
+      {downloadPickerTorrent && (
+        <DownloadPickerModal
+          isOpen={true}
+          onClose={() => setDownloadPickerTorrent(null)}
+          torrent={downloadPickerTorrent}
+          variant="dashboard"
+        />
+      )}
     </div>
   )
 }

@@ -16,6 +16,7 @@ import type { TorrentItem, TorrentInfo } from "~lib/api/torrents"
 import type { UnrestrictedLink } from "~lib/api/unrestrict"
 import type { UserProfile } from "~lib/api/user"
 import { messages, scanPageLinks, sendMessage, type DetectedLink } from "~lib/messaging"
+import { DownloadPickerModal } from "~components/DownloadPickerModal"
 
 import "~style.css"
 
@@ -314,6 +315,7 @@ interface PopupState {
   copiedId: string | null
   showFileModal: boolean
   selectedTorrentInfo: TorrentInfo | null
+  downloadPickerTorrent: TorrentItem | null
 }
 
 function IndexPopup() {
@@ -328,6 +330,7 @@ function IndexPopup() {
     copiedId: null,
     showFileModal: false,
     selectedTorrentInfo: null,
+    downloadPickerTorrent: null,
   })
 
   // Watch for auth changes from other contexts (e.g., signed out in dashboard)
@@ -457,14 +460,17 @@ function IndexPopup() {
   const handleDownloadTorrent = async (torrent: TorrentItem) => {
     if (torrent.links.length === 0) return
 
-    setState((prev) => ({ ...prev, torrentLoadingId: torrent.id }))
-    for (const link of torrent.links) {
-      const response = await messages.unrestrictLink(link)
+    if (torrent.links.length === 1) {
+      setState((prev) => ({ ...prev, torrentLoadingId: torrent.id }))
+      const response = await messages.unrestrictLink(torrent.links[0])
       if (response.success && response.data) {
-        window.open(response.data.download, "_blank")
+        messages.downloadFile(response.data.download, response.data.filename)
       }
+      setState((prev) => ({ ...prev, torrentLoadingId: null }))
+      return
     }
-    setState((prev) => ({ ...prev, torrentLoadingId: null }))
+
+    setState((prev) => ({ ...prev, downloadPickerTorrent: torrent }))
   }
 
   const handleDeleteTorrent = async (torrent: TorrentItem) => {
@@ -605,6 +611,16 @@ function IndexPopup() {
         onSelect={handleFileSelection}
         loading={state.torrentLoadingId !== null}
       />
+
+      {/* Download Picker Modal */}
+      {state.downloadPickerTorrent && (
+        <DownloadPickerModal
+          isOpen={true}
+          onClose={() => setState((prev) => ({ ...prev, downloadPickerTorrent: null }))}
+          torrent={state.downloadPickerTorrent}
+          variant="popup"
+        />
+      )}
     </div>
   )
 }

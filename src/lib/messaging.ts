@@ -62,6 +62,8 @@ export type MessageType =
   | "SHOW_NOTIFICATION"
   // Content Script
   | "SCAN_PAGE_LINKS"
+  // Downloads (browser)
+  | "DOWNLOAD_FILE"
   // Auto-scan
   | "REPORT_DETECTED_LINKS"
   | "GET_DETECTED_LINKS";
@@ -117,6 +119,8 @@ export type Message =
   | BaseMessage<"SHOW_NOTIFICATION", { title: string; message: string }>
   // Content script messages
   | BaseMessage<"SCAN_PAGE_LINKS">
+  // Browser download messages
+  | BaseMessage<"DOWNLOAD_FILE", { url: string; filename?: string }>
   // Auto-scan messages
   | BaseMessage<"REPORT_DETECTED_LINKS", { links: DetectedLink[] }>
   | BaseMessage<"GET_DETECTED_LINKS">;
@@ -153,6 +157,7 @@ export interface ResponseMap {
   GET_TRAFFIC: TrafficInfo;
   GET_TRAFFIC_DETAILS: TrafficDetails;
   SHOW_NOTIFICATION: void;
+  DOWNLOAD_FILE: void;
   SCAN_PAGE_LINKS: DetectedLink[];
   REPORT_DETECTED_LINKS: void;
   GET_DETECTED_LINKS: DetectedLink[];
@@ -334,6 +339,10 @@ export const messages = {
   // Notifications
   showNotification: (title: string, message: string) =>
     sendMessage({ type: "SHOW_NOTIFICATION", payload: { title, message } }),
+
+  // Browser downloads
+  downloadFile: (url: string, filename?: string) =>
+    sendMessage({ type: "DOWNLOAD_FILE", payload: { url, filename } }),
 
   // Auto-scan
   getDetectedLinks: () =>

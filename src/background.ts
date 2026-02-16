@@ -598,6 +598,18 @@ const handleShowNotification: MessageHandler<"SHOW_NOTIFICATION"> = async (paylo
   return success(undefined);
 };
 
+const handleDownloadFile: MessageHandler<"DOWNLOAD_FILE"> = async (payload) => {
+  if (typeof chrome.downloads?.download === "function") {
+    await chrome.downloads.download({
+      url: payload.url,
+      ...(payload.filename ? { filename: payload.filename } : {}),
+    });
+  } else {
+    await chrome.tabs.create({ url: payload.url });
+  }
+  return success(undefined);
+};
+
 const handleReportDetectedLinks: MessageHandler<"REPORT_DETECTED_LINKS"> = async (payload, sender) => {
   const tabId = sender.tab?.id;
   if (!tabId) return success(undefined);
@@ -652,6 +664,7 @@ createMessageListener({
   GET_TRAFFIC: handleGetTraffic,
   GET_TRAFFIC_DETAILS: handleGetTrafficDetails,
   SHOW_NOTIFICATION: handleShowNotification,
+  DOWNLOAD_FILE: handleDownloadFile,
   REPORT_DETECTED_LINKS: handleReportDetectedLinks,
   GET_DETECTED_LINKS: handleGetDetectedLinks,
 });
