@@ -326,7 +326,10 @@ async function withErrorHandling<T>(
             return { success: false, error: retryErr instanceof Error ? retryErr.message : "Unknown error" };
           }
         }
-        await storage.removeAuthData();
+        const currentAuth = await storage.getAuthData();
+        if (currentAuth && !currentAuth.refreshToken) {
+          await storage.removeAuthData();
+        }
         return { success: false, error: err.message, errorCode: err.code };
       } catch (refreshErr) {
         if (refreshErr instanceof OAuthError && refreshErr.status === 403) {
@@ -347,16 +350,37 @@ let pendingOAuthResolve: ((result: { success: boolean; error?: string }) => void
 
 const handleAuthStatus: MessageHandler<"AUTH_STATUS"> = async () => {
   const isAuthenticated = await storage.isAuthenticated();
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
+    return success({ authenticated: false });
+  }
+
+  const token = await getValidToken();
+  const result = await withErrorHandling(() => getUser(token));
+
+  if (result.success && result.data) {
+    await storage.cacheUserProfile(result.data);
+    return success({ authenticated: true, profile: result.data });
+  }
+
+  const stillHasAuth = await storage.isAuthenticated();
+  if (stillHasAuth) {
     try {
-      const token = await getValidToken();
-      const profile = await getUser(token);
+      const freshToken = await getValidToken();
+      const profile = await getUser(freshToken);
       await storage.cacheUserProfile(profile);
       return success({ authenticated: true, profile });
     } catch {
-      return success({ authenticated: false });
+      const cached = await storage.getCachedUserProfile();
+      if (cached) {
+        return success({ authenticated: true, profile: cached });
+      }
+      const staleCache = await storage.getCache();
+      if (staleCache.userProfile) {
+        return success({ authenticated: true, profile: staleCache.userProfile });
+      }
     }
   }
+
   return success({ authenticated: false });
 };
 
@@ -395,9 +419,15 @@ const handleGetUserProfile: MessageHandler<"GET_USER_PROFILE"> = async () => {
   if (cached) return success(cached);
 
   const token = await getValidToken();
-  const profile = await getUser(token);
-  await storage.cacheUserProfile(profile);
-  return success(profile);
+  const result = await withErrorHandling(() => getUser(token));
+  if (result.success && result.data) {
+    await storage.cacheUserProfile(result.data);
+    return success(result.data);
+  }
+
+  const staleCache = await storage.getCache();
+  if (staleCache.userProfile) return success(staleCache.userProfile);
+  return error(result.error || "Failed to get profile");
 };
 
 const handleConvertPoints: MessageHandler<"CONVERT_POINTS"> = async () => {
