@@ -1,77 +1,51 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Project Overview
-
-Real-Debrid browser extension built with Plasmo framework. Provides link unrestriction, torrent management, and account dashboard functionality. Safari is the primary target, also supports Chrome and Firefox.
+Real-Debrid browser extension: capture links, manage torrents, run the account. Chromium (Helium) is the primary target and reference build; Firefox and Safari are secondary and get feature-detected fallbacks.
 
 ## Commands
 
 ```bash
-# Development
-bun run dev              # Start development server
-bun run dev:safari       # Dev for Safari (--target=safari-mv3)
-
-# Production
-bun run build            # Production build
-bun run build:safari     # Safari production build
-bun run package          # Package for store submission
+bun run dev              # Chromium dev build with HMR (.output/chrome-mv3-dev)
+bun run dev:firefox      # Firefox MV3
+bun run build            # Chromium production build (.output/chrome-mv3)
+bun run build:firefox    # Firefox MV3
+bun run build:safari     # Safari MV3; Xcode project in safari-extension/ references .output/safari-mv3
+bun run compile          # tsc --noEmit
+bun run test             # vitest (src/lib/__tests__)
+bun run format           # prettier
 ```
 
-Load the dev build from `build/chrome-mv3-dev` in browser.
+## Stack
 
-## Tech Stack
+WXT, React 19, Tailwind v4, Base UI, TanStack Query, sonner, cmdk, hls.js, lucide-react. bun only.
 
-- **Framework**: Plasmo (browser extension framework)
-- **UI**: React 18 + TypeScript + Tailwind CSS
-- **Package Manager**: bun
-- **Icons**: lucide-react
+WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser` and helpers from `wxt/utils/*`.
 
-## Architecture
+## Layout
 
-### Entry Points
+- `src/entrypoints/` - `background.ts`, `popup/`, `manager/` (full-page app, hash routes), `intercept.ts` (unlisted script registered at runtime)
+- `src/background/` - worker modules: capture (context menu, omnibox), sync (alarm polling, badge, notifications, auto-select sweep), login (device flow), notify
+- `src/lib/rd/` - API client, endpoints, auth, errors, types
+- `src/lib/` - add flow, link parsing, file auto-select rules, storage items, queries, outputs (download, aria2, players)
+- `src/components/` - shared UI; `src/components/ui/` - primitives
+- `src/popup/`, `src/manager/` - surface-specific views
 
-- `src/popup.tsx` - Extension popup UI with quick actions
-- `src/background.ts` - Service worker handling all API calls and state
-- `src/tabs/dashboard.tsx` - Full-page dashboard (opens in new tab)
-- `src/contents/link-scanner.ts` - Content script for on-demand page scanning
+## Rules
 
-### Core Libraries (`src/lib/`)
+- Register every worker listener synchronously in `defineBackground`. Context menus are created in `onInstalled`/`onStartup`. Never make a feature depend on the popup having been opened.
+- UI pages call the API directly (host permission bypasses CORS; RD sends no CORS headers). Anything that must survive the popup closing (adding, auto-select, login polling) runs in the worker via `lib/messaging.ts`.
+- Token refresh goes through `refreshAccessToken`, serialized with a Web Lock. Only clear auth after a refresh actually fails.
+- Adds are sequential; RD rate-limits parallel adds (250 req/min).
+- `<all_urls>` stays optional. Magnet interception requests it at opt-in time.
+- Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs.
 
-- `api/client.ts` - Base API client with rate limiting (250 req/min) and auth headers
-- `api/` - Typed wrappers for Real-Debrid API endpoints (user, unrestrict, torrents, downloads, hosts)
-- `auth.ts` - OAuth device code flow implementation
-- `storage.ts` - Type-safe Chrome storage wrapper with caching (5 min TTL)
-- `messaging.ts` - Type-safe message passing between background/popup/content scripts
+## Design
 
-### Data Flow
+Apple-like, minimal: system font, 13px base, grouped inset lists, hairline separators, segmented controls, no pill buttons. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
 
-1. **Popup/Dashboard** sends typed messages via `messages.*` functions
-2. **Background script** receives via `createMessageListener()`, calls API with token
-3. **API client** handles auth headers, rate limiting, error transformation
-4. **Storage** caches responses and manages auth data in Chrome sync/local storage
+## API notes
 
-### Background Service Features
-
-- Token refresh on expiry (5 min buffer)
-- Torrent polling every 30s when active torrents exist
-- Badge count for active torrents
-- Notifications on torrent completion (toggleable)
-- Context menu: "Add to Real-Debrid" on any link
-
-### Path Alias
-
-Use `~` prefix for imports from `src/`: `import { messages } from "~lib/messaging"`
-
-## Brand Colors
-
-- Primary green: #B7D995
-- Accent blue: #9ED1EC
-
-## API Notes
-
-- Base URL: `https://api.real-debrid.com/rest/1.0`
-- Rate limit: 250 requests/minute (tracked client-side)
-- Auth: Bearer token in Authorization header
-- POST body format: URL-encoded form data
+- Base `https://api.real-debrid.com/rest/1.0`, OAuth `https://api.real-debrid.com/oauth/v2`, open-source client id `X245A4XAIBGVM`
+- `instantAvailability` is disabled (error 37); the "only cached" setting probes by adding and checking status instead
+- Torrent `links[]` map 1:1 to selected files only when every selected file is media; otherwise RD returns one archive link
+- Old links fail with `hoster_unavailable` (19); fix by reinserting with the same file selection
