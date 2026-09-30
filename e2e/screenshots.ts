@@ -163,6 +163,9 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   const list = await open(context, `${manager}#/torrents`, `manager torrents ${theme}`, theme);
   await waitForLibrary(list);
   await shoot(list, `manager-torrents-${theme}`);
+  await list.setViewportSize({ width: 2400, height: 1000 });
+  await shoot(list, `manager-torrents-wide-${theme}`);
+  await list.setViewportSize(MANAGER);
 
   await list.getByRole("button", { name: "Choose files" }).click();
   await list.getByRole("button", { name: "Start download" }).waitFor();

@@ -90,7 +90,7 @@ export function DownloadsView(): ReactNode {
       </Toolbar>
       <div className="@container flex min-h-0 flex-1 flex-col">
         {visible.length > 0 && (
-          <div className="flex h-9 shrink-0 items-center gap-3 border-b border-border px-5 text-[12px] font-medium text-fg-3">
+          <div className="gutter flex h-9 shrink-0 items-center gap-3 border-b border-border text-[12px] font-medium text-fg-3">
             <span className={COLUMNS.check}>
               <button
                 type="button"
@@ -117,7 +117,7 @@ export function DownloadsView(): ReactNode {
               {[58, 44, 67, 51, 62].map((width, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 border-b border-border px-5"
+                  className="gutter flex items-center gap-3 border-b border-border"
                   style={{ height: ROW }}
                 >
                   <span className="w-5" />
@@ -156,7 +156,7 @@ export function DownloadsView(): ReactNode {
                       role="row"
                       aria-selected={isSelected}
                       className={clsx(
-                        "group flex items-center gap-3 border-b border-border px-5 transition-colors duration-100",
+                        "group gutter flex items-center gap-3 border-b border-border transition-colors duration-100",
                         isSelected ? "bg-accent-soft" : "hover:bg-fill",
                       )}
                       style={{ height: ROW }}

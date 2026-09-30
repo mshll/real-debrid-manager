@@ -263,7 +263,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
           </Button>
         </Toolbar>
 
-        <div className="flex h-11 shrink-0 items-center gap-4 border-b border-border px-5">
+        <div className="gutter flex h-11 shrink-0 items-center gap-4 border-b border-border">
           <Tabs
             value={filter}
             onChange={(next) => {
@@ -290,7 +290,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
 
         <div className="@container flex min-h-0 flex-1 flex-col">
           {visible.length > 0 && (
-            <div className="flex h-9 shrink-0 items-center gap-3 border-b border-border px-5 text-[12px] font-medium text-fg-3">
+            <div className="gutter flex h-9 shrink-0 items-center gap-3 border-b border-border text-[12px] font-medium text-fg-3">
               <span className={COLUMNS.check}>
                 <button
                   type="button"
@@ -427,7 +427,11 @@ function LoadingRows(): ReactNode {
   return (
     <div>
       {[62, 48, 71, 55, 66, 40, 58, 52].map((width, index) => (
-        <div key={index} className="flex items-center gap-3 border-b border-border px-5" style={{ height: ROW_HEIGHT }}>
+        <div
+          key={index}
+          className="gutter flex items-center gap-3 border-b border-border"
+          style={{ height: ROW_HEIGHT }}
+        >
           <span className="w-5" />
           <Skeleton className="size-3.5 rounded-full" />
           <Skeleton style={{ width: `${width}%` }} />

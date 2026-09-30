@@ -13,7 +13,7 @@ export function Toolbar({
   children?: ReactNode;
 }): ReactNode {
   return (
-    <header className="@container flex h-13 shrink-0 items-center gap-3 border-b border-border px-5">
+    <header className="gutter @container flex h-13 shrink-0 items-center gap-3 border-b border-border">
       <h1 className="shrink-0 text-[14px] font-semibold">{title}</h1>
       {subtitle && <span className="tabular shrink-0 text-[13px] whitespace-nowrap text-fg-3">{subtitle}</span>}
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2">{children}</div>

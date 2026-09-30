@@ -52,7 +52,7 @@ export function TorrentRow({
       aria-selected={selected}
       onClick={(event) => (event.metaKey || event.shiftKey || selecting ? onToggle(event) : onOpen())}
       className={clsx(
-        "group relative flex items-center gap-3 border-b border-border px-5 transition-colors duration-100",
+        "group gutter relative flex items-center gap-3 border-b border-border transition-colors duration-100",
         selected ? "bg-accent-soft" : current ? "bg-fill-strong" : "hover:bg-fill",
         cursor && !current && !selected && "bg-fill",
       )}
