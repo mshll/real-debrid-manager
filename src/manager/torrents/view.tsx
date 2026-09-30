@@ -167,18 +167,26 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
   };
 
   const rowMenu = (torrent: Torrent): MenuEntry[] => {
-    const ready = torrent.status === "downloaded" && torrent.links.length > 0;
+    const ready = torrent.status === "downloaded";
     return [
       ...(ready
         ? [
-            { label: "Download", icon: <DownloadSimpleIcon />, onSelect: () => actions.download(torrent.links) },
+            {
+              label: "Download",
+              icon: <DownloadSimpleIcon />,
+              onSelect: () => actions.torrents([torrent], "download"),
+            },
             {
               label: "Stream",
               icon: <PlayIcon />,
-              onSelect: () => torrent.links[0] && actions.stream(torrent.links[0]),
+              onSelect: () => actions.torrents([torrent], "stream"),
             },
-            { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.copy(torrent.links) },
-            { label: "Send to aria2", icon: <PaperPlaneTiltIcon />, onSelect: () => actions.aria2(torrent.links) },
+            { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.torrents([torrent], "copy") },
+            {
+              label: "Send to aria2",
+              icon: <PaperPlaneTiltIcon />,
+              onSelect: () => actions.torrents([torrent], "aria2"),
+            },
             "separator" as const,
           ]
         : []),
@@ -193,7 +201,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
     ];
   };
 
-  const readyLinks = selected.flatMap((t) => (t.status === "downloaded" ? t.links : []));
+  const readySelected = selected.filter((t) => t.status === "downloaded");
   const allSelected = visible.length > 0 && selection.count === visible.length;
 
   return (
@@ -368,9 +376,9 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                             setCursor(item.index);
                             navigate(`/torrents/${torrent.id}`);
                           },
-                          download: () => actions.download(torrent.links),
-                          copy: () => actions.copy(torrent.links),
-                          stream: () => torrent.links[0] && actions.stream(torrent.links[0]),
+                          download: () => actions.torrents([torrent], "download"),
+                          copy: () => actions.torrents([torrent], "copy"),
+                          stream: () => actions.torrents([torrent], "stream"),
                           reinsert: () => reinsert(torrent),
                           chooseFiles: () => setPicking(torrent.id),
                         }}
@@ -393,8 +401,8 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
               size="sm"
               variant="ghost"
               icon={<DownloadSimpleIcon />}
-              disabled={!readyLinks.length}
-              onClick={() => actions.download(readyLinks)}
+              disabled={!readySelected.length}
+              onClick={() => actions.torrents(readySelected, "download")}
             >
               Download
             </Button>
@@ -402,8 +410,8 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
               size="sm"
               variant="ghost"
               icon={<CopyIcon />}
-              disabled={!readyLinks.length}
-              onClick={() => actions.copy(readyLinks)}
+              disabled={!readySelected.length}
+              onClick={() => actions.torrents(readySelected, "copy")}
             >
               Copy links
             </Button>

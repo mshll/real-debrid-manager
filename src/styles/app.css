@@ -144,9 +144,9 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Lists stay full-bleed (lines, hover) but their content caps at 1120px on wide windows. */
+  /* Lists stay full-bleed (lines, hover) but their content caps at 960px, like Account on wide windows. */
   .gutter {
-    padding-inline: max(20px, calc((100% - 1120px) / 2));
+    padding-inline: max(20px, calc((100% - 960px) / 2));
   }
 
   .press {

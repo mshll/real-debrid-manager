@@ -67,7 +67,7 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
   const actions = useActions();
   const reinsert = useReinsert();
   const queryClient = useQueryClient();
-  const ready = torrent.status === "downloaded" && torrent.links.length > 0;
+  const ready = torrent.status === "downloaded";
 
   const open = (): void => {
     browser.tabs.create({ url: managerUrl(`/torrents/${torrent.id}`) }).catch(console.error);
@@ -101,7 +101,7 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
           </IconButton>
         )}
         {ready && (
-          <IconButton label="Download" onClick={() => actions.download(torrent.links)}>
+          <IconButton label="Download" onClick={() => actions.torrents([torrent], "download")}>
             <DownloadSimpleIcon />
           </IconButton>
         )}
@@ -120,9 +120,9 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
                   {
                     label: "Stream",
                     icon: <PlayIcon />,
-                    onSelect: () => torrent.links[0] && actions.stream(torrent.links[0]),
+                    onSelect: () => actions.torrents([torrent], "stream"),
                   },
-                  { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.copy(torrent.links) },
+                  { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.torrents([torrent], "copy") },
                 ]
               : []),
             ...(isFailed(torrent.status) || ready

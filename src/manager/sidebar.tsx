@@ -10,7 +10,7 @@ import clsx from "clsx";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";
-import { IconButton, Kbd } from "@/components/ui/button";
+import { Kbd } from "@/components/ui/button";
 import { useSettings } from "@/hooks/use-settings";
 import { daysLeft, isActive } from "@/lib/format";
 import { useLibrary, useUser } from "@/lib/queries";
@@ -42,26 +42,28 @@ export function Sidebar({
   const days = user ? daysLeft(user.premium) : 0;
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col px-3 pt-3 pb-3">
-      <div className="flex h-10 items-center gap-2.5 pr-0.5 pl-2">
-        <Logo className="size-6" />
-        <span className="flex-1 text-[14px] font-semibold tracking-[-0.01em]">Real-Debrid</span>
-        <IconButton
-          label="Add torrents or links"
-          shortcut="N"
-          onClick={onAdd}
-          className="bg-surface text-fg-2! shadow-panel hover:bg-subtle dark:hover:bg-raised"
-        >
-          <PlusIcon />
-        </IconButton>
+    <aside className="flex w-64 shrink-0 flex-col px-3 pt-4 pb-3">
+      <div className="flex h-10 items-center gap-3 px-2.5">
+        <Logo className="size-7" />
+        <span className="text-[15px] font-semibold tracking-[-0.01em]">Real-Debrid</span>
       </div>
 
       <button
         type="button"
-        onClick={onSearch}
-        className="press mt-3 flex h-8 items-center gap-2 rounded-[8px] px-2 text-[13px] text-fg-3 hover:bg-fill hover:text-fg-2"
+        onClick={onAdd}
+        className="press mt-5 flex h-10 items-center gap-3 rounded-[8px] bg-surface px-3 text-[14px] font-medium text-fg shadow-panel hover:bg-subtle dark:hover:bg-raised"
       >
-        <MagnifyingGlassIcon className="size-4" />
+        <PlusIcon className="size-[18px] text-fg-2" />
+        Add torrents
+        <Kbd className="ml-auto">N</Kbd>
+      </button>
+
+      <button
+        type="button"
+        onClick={onSearch}
+        className="press mt-2 flex h-10 items-center gap-3 rounded-[8px] px-3 text-[14px] text-fg-3 hover:bg-fill hover:text-fg-2"
+      >
+        <MagnifyingGlassIcon className="size-[18px]" />
         Search
         <span className="ml-auto flex gap-0.5">
           <Kbd>⌘</Kbd>
@@ -69,7 +71,7 @@ export function Sidebar({
         </span>
       </button>
 
-      <nav className="mt-2 flex flex-col gap-0.5">
+      <nav className="mt-4 flex flex-col gap-1">
         {ITEMS.map(({ id, label, icon: Icon }) => {
           const on = section === id;
           return (
@@ -79,11 +81,11 @@ export function Sidebar({
               aria-current={on ? "page" : undefined}
               onClick={() => navigate(`/${id}`)}
               className={clsx(
-                "press flex h-8 items-center gap-2.5 rounded-[8px] px-2 text-[13px] font-medium",
+                "press flex h-10 items-center gap-3 rounded-[8px] px-3 text-[14px] font-medium",
                 on ? "bg-fill-strong text-fg" : "text-fg-2 hover:bg-fill hover:text-fg",
               )}
             >
-              <Icon className={clsx("size-4", on ? "text-fg" : "text-fg-3")} weight={on ? "fill" : "bold"} />
+              <Icon className={clsx("size-[18px]", on ? "text-fg" : "text-fg-3")} weight={on ? "fill" : "bold"} />
               {label}
               {id === "torrents" && active > 0 && (
                 <span className="tabular ml-auto flex h-5 min-w-5 items-center justify-center rounded-[5px] bg-info-soft px-1.5 text-[11px] font-semibold text-info">
@@ -111,11 +113,11 @@ export function Sidebar({
           <button
             type="button"
             onClick={() => navigate("/account")}
-            className="press flex w-full items-center gap-2.5 rounded-[8px] p-2 text-left hover:bg-fill"
+            className="press flex w-full items-center gap-3 rounded-[8px] p-2.5 text-left hover:bg-fill"
           >
-            <img src={user.avatar} alt="" className="size-7 rounded-full bg-fill" />
+            <img src={user.avatar} alt="" className="size-8 rounded-full bg-fill" />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13px] font-medium">{user.username}</span>
+              <span className="block truncate text-[14px] font-medium">{user.username}</span>
               <span className="tabular block truncate text-[12px] text-fg-3">
                 {user.type === "premium" ? `Premium · ${days} days` : "Free account"}
               </span>

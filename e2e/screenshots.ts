@@ -173,6 +173,12 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await list.keyboard.press("Escape");
   await list.getByRole("button", { name: "Start download" }).waitFor({ state: "detached" });
 
+  await list.keyboard.press("n");
+  await list.getByPlaceholder("Paste magnets, hashes or hoster links").waitFor();
+  await shoot(list, `manager-add-dialog-${theme}`);
+  await list.keyboard.press("Escape");
+  await list.getByPlaceholder("Paste magnets, hashes or hoster links").waitFor({ state: "detached" });
+
   await list.keyboard.press("ControlOrMeta+k");
   await list.getByPlaceholder("Search torrents or jump to…").waitFor();
   await shoot(list, `manager-command-palette-${theme}`);
@@ -220,6 +226,23 @@ async function smokeChecks(context: BrowserContext, worker: Worker, base: string
     await page.getByRole("button", { name: "Clear selection" }).click();
     await page.getByText("2 selected").waitFor({ state: "detached", timeout: 3000 });
     return "bar reads '2 selected', 2 rows aria-selected, clear button removes it";
+  });
+
+  await check("ready torrents get quick actions even when the list has no links", async () => {
+    const row = rows.filter({ hasText: "Severance.S02.1080p" });
+    await row.getByRole("button", { name: "Download" }).waitFor({ timeout: 3000 });
+    await row.getByRole("checkbox", { name: "Select", exact: true }).click();
+    const bar = page.getByRole("button", { name: "Download", exact: true }).last();
+    assert(await bar.isEnabled(), "selection bar Download is disabled for a ready torrent");
+    const before = log.handled.length;
+    await bar.click();
+    const deadline = Date.now() + 3000;
+    while (!log.handled.slice(before).some((entry) => entry.path.startsWith("/torrents/info/"))) {
+      assert(Date.now() < deadline, "Download didn't fetch links from torrent info");
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    await page.getByRole("button", { name: "Clear selection" }).click();
+    return "row shows Download; selection bar Download enabled and fetches links from /torrents/info";
   });
 
   await check("search filters the list", async () => {

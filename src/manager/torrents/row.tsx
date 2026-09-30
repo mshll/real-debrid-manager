@@ -55,8 +55,8 @@ export function TorrentRow({
   menu: MenuEntry[];
   actions: RowActions;
 }): ReactNode {
-  const ready = torrent.status === "downloaded" && torrent.links.length > 0;
-  const streamable = ready && torrent.links.length === 1 && isVideo(torrent.filename);
+  const ready = torrent.status === "downloaded";
+  const streamable = ready && torrent.links.length <= 1 && isVideo(torrent.filename);
   return (
     <div
       role="row"

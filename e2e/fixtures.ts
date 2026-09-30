@@ -484,7 +484,10 @@ export function handleRd(log: MockLog) {
       if (method === "GET" && path === "/user") return json(route, user);
       if (method === "GET" && path === "/torrents") {
         const filter = url.searchParams.get("filter");
-        return paged(route, filter === "active" ? activeTorrents : torrents, url);
+        if (filter === "active") return paged(route, activeTorrents, url);
+        // A real account's full-library page came back with empty links; the UI must fetch them from info.
+        const fullLibrary = Number(url.searchParams.get("limit") ?? 100) >= 1000;
+        return paged(route, fullLibrary ? torrents.map((t) => ({ ...t, links: [] })) : torrents, url);
       }
       if (method === "GET" && path === "/torrents/activeCount")
         return json(route, { nb: activeTorrents.length, limit: 35 });
@@ -500,6 +503,22 @@ export function handleRd(log: MockLog) {
             });
       }
       if (method === "GET" && path === "/downloads") return paged(route, downloads, url);
+      if (method === "POST" && path === "/unrestrict/link") {
+        const link = new URLSearchParams(request.postData() ?? "").get("link") ?? "";
+        const id = link.split("/").pop() ?? "LINK";
+        return json(route, {
+          id,
+          filename: `${id}.mkv`,
+          mimeType: "video/x-matroska",
+          filesize: 1024 ** 3,
+          link,
+          host: "real-debrid.com",
+          chunks: 32,
+          crc: 1,
+          download: `https://download.real-debrid.com/d/${id}/file.mkv`,
+          streamable: 1,
+        });
+      }
       if (method === "GET" && path === "/traffic") return json(route, traffic);
       if (method === "GET" && path === "/traffic/details")
         return json(route, trafficDetails(url.searchParams.get("start"), url.searchParams.get("end")));

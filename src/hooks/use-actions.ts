@@ -3,9 +3,9 @@ import { browser } from "wxt/browser";
 
 import { managerUrl } from "@/lib/pages";
 import { downloadInBrowser, externalPlayerUrl, sendToAria2 } from "@/lib/outputs";
-import { unrestrictLink } from "@/lib/rd/api";
+import { getTorrent, unrestrictLink } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
-import type { Unrestricted } from "@/lib/rd/types";
+import type { Torrent, Unrestricted } from "@/lib/rd/types";
 import type { PrimaryAction } from "@/lib/storage";
 
 import { useSettings } from "./use-settings";
@@ -19,6 +19,15 @@ async function toDirect(urls: string[]): Promise<string[]> {
   return direct;
 }
 
+/** The torrent list can come back with empty links; the info endpoint always has them. */
+async function torrentLinks(torrents: Torrent[]): Promise<string[]> {
+  const links: string[] = [];
+  for (const torrent of torrents) {
+    links.push(...(torrent.links.length ? torrent.links : (await getTorrent(torrent.id)).links));
+  }
+  return links;
+}
+
 export interface Actions {
   download: (urls: string[]) => void;
   copy: (urls: string[]) => void;
@@ -26,6 +35,7 @@ export interface Actions {
   stream: (url: string, downloadId?: string) => void;
   primary: (urls: string[]) => void;
   run: (action: PrimaryAction, urls: string[]) => void;
+  torrents: (torrents: Torrent[], action: PrimaryAction) => void;
 }
 
 export function useActions(): Actions {
@@ -80,5 +90,11 @@ export function useActions(): Actions {
     else download(urls);
   };
 
-  return { download, copy, aria2, stream, run, primary: (urls) => run(settings.primaryAction, urls) };
+  const torrents = (list: Torrent[], action: PrimaryAction): void => {
+    torrentLinks(list)
+      .then((urls) => run(action, urls))
+      .catch((error: unknown) => toast.error(errorMessage(error)));
+  };
+
+  return { download, copy, aria2, stream, run, torrents, primary: (urls) => run(settings.primaryAction, urls) };
 }

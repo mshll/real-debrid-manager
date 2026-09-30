@@ -2,11 +2,13 @@ import type { TorrentStatus } from "./rd/types";
 
 const UNITS = ["B", "KB", "MB", "GB", "TB"];
 
+/** Powers of 1024 with GB-style labels, matching the Real-Debrid website. */
 export function formatBytes(bytes: number): string {
   if (!bytes) return "0 B";
-  const exponent = Math.min(UNITS.length - 1, Math.floor(Math.log(bytes) / Math.log(1000)));
-  const value = bytes / 1000 ** exponent;
-  return `${value >= 100 || exponent === 0 ? Math.round(value) : value.toFixed(1)} ${UNITS[exponent]}`;
+  const exponent = Math.min(UNITS.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+  const value = bytes / 1024 ** exponent;
+  const digits = exponent === 0 || value >= 100 ? 0 : value >= 10 ? 1 : 2;
+  return `${value.toFixed(digits)} ${UNITS[exponent]}`;
 }
 
 export function formatSpeed(bytesPerSecond: number): string {
