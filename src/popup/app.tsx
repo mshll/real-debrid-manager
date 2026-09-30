@@ -1,30 +1,33 @@
-import { ArrowRightIcon, GearSixIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, GearSixIcon, PlusIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState, type ReactNode } from "react";
+import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
 import { Composer } from "@/components/composer";
 import { FilePicker } from "@/components/file-picker";
 import { Logo } from "@/components/logo";
-import { mergeOutcomes, OutcomeList } from "@/components/outcome-list";
 import { SignIn } from "@/components/sign-in";
 import { IconButton } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/progress";
+import { Skeleton, Spinner } from "@/components/ui/progress";
+import { Tabs } from "@/components/ui/tabs";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useSettings } from "@/hooks/use-settings";
 import { useStorageItem } from "@/hooks/use-storage";
 import type { AddOutcome } from "@/lib/add";
-import { daysLeft } from "@/lib/format";
+import { daysLeft, isActive } from "@/lib/format";
+import { describeOutcomes } from "@/lib/outcome";
 import { managerUrl } from "@/lib/pages";
-import { useUser } from "@/lib/queries";
+import { keys, useRecentTorrents, useUser } from "@/lib/queries";
+import type { Unrestricted } from "@/lib/rd/types";
 import { authItem } from "@/lib/storage";
 
-import { PageLinks } from "./page-links";
+import { PageLinks, usePageLinks } from "./page-links";
+import { RecentDownloads } from "./recent-downloads";
 import { RecentTorrents } from "./recent-torrents";
-import { SectionHeader } from "./section-header";
 
 const WIDTH = "w-[400px]";
-
 export function PopupApp(): ReactNode {
   const auth = useStorageItem(authItem);
   if (auth === undefined) return <div className={clsx("h-[520px]", WIDTH)} />;
@@ -46,23 +49,49 @@ function openManager(route = "/"): void {
   window.close();
 }
 
+type Tab = "torrents" | "downloads" | "page";
+
 function Home(): ReactNode {
   const [settings] = useSettings();
   const { data: user } = useUser();
-  const [outcomes, setOutcomes] = useState<AddOutcome[]>([]);
+  const { data: recent } = useRecentTorrents(30);
+  const queryClient = useQueryClient();
+  const [tab, setTab] = useState<Tab>("torrents");
+  const [fresh, setFresh] = useState<Unrestricted[]>([]);
   const [picking, setPicking] = useState<string | null>(null);
 
-  const handleResult = (next: AddOutcome[]): void => {
-    setOutcomes((previous) => mergeOutcomes(previous, next));
+  const handleResult = (next: AddOutcome[], from: "composer" | "page"): void => {
+    const notable = next.filter(
+      (outcome) => !outcome.ok || outcome.status === "duplicate" || outcome.status === "not-cached",
+    );
+    if (notable.length) {
+      const summary = describeOutcomes(notable);
+      if (summary.ok) toast(summary.title, { description: summary.message });
+      else toast.error(summary.title, { description: summary.message });
+    }
+
+    const unlocked = next.flatMap((outcome) => (outcome.ok ? (outcome.downloads ?? []) : []));
+    if (unlocked.length) {
+      const ids = new Set(unlocked.map((item) => item.id));
+      setFresh((current) => [...unlocked, ...current.filter((item) => !ids.has(item.id))]);
+      queryClient.invalidateQueries({ queryKey: keys.downloads }).catch(console.error);
+    }
+    if (next.some((outcome) => outcome.ok && (outcome.kind === "magnet" || outcome.kind === "torrent"))) {
+      queryClient.invalidateQueries({ queryKey: keys.torrents }).catch(console.error);
+    }
+    if (from === "composer") setTab(unlocked.length ? "downloads" : "torrents");
+
     const needsFiles = next.find((outcome) => outcome.ok && outcome.status === "choose-files");
     if (needsFiles?.ok && needsFiles.torrentId && next.length === 1) setPicking(needsFiles.torrentId);
   };
+  const page = usePageLinks(settings.scanOnOpen, (next) => handleResult(next, "page"));
 
   const days = user ? daysLeft(user.premium) : null;
   const low = days !== null && days <= settings.expiryReminderDays;
+  const active = recent?.filter((torrent) => isActive(torrent.status)).length ?? 0;
 
   return (
-    <div className="flex max-h-[600px] flex-col">
+    <div className="flex h-[560px] flex-col">
       <header className="flex h-14 shrink-0 items-center gap-2 px-3">
         <Tooltip label="Open manager">
           <button
@@ -102,29 +131,82 @@ function Home(): ReactNode {
         </div>
       </header>
 
-      <div className="flex shrink-0 flex-col gap-2.5 px-4 pb-3">
-        <Composer onResult={handleResult} />
-        {outcomes.length > 0 && (
-          <OutcomeList outcomes={outcomes} onChooseFiles={setPicking} onClear={() => setOutcomes([])} />
-        )}
+      <div className="shrink-0 px-3">
+        <Composer compact onResult={(next) => handleResult(next, "composer")} />
       </div>
 
-      <PageLinks enabled={settings.scanOnOpen} onResult={handleResult} />
+      <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-3">
+        <Tabs
+          value={tab}
+          onChange={(next) => {
+            setTab(next);
+            if (next === "page") page.request();
+          }}
+          options={[
+            { value: "torrents", label: "Torrents", count: active },
+            { value: "downloads", label: "Downloads", count: fresh.length },
+            { value: "page", label: "On page", count: page.links?.length },
+          ]}
+        />
+        <span className="ml-auto flex items-center">
+          {tab === "torrents" && (
+            <HeaderLink onClick={() => openManager("/torrents")}>
+              View all <ArrowRightIcon className="size-3" />
+            </HeaderLink>
+          )}
+          {tab === "downloads" && (
+            <HeaderLink onClick={() => openManager("/downloads")}>
+              View all <ArrowRightIcon className="size-3" />
+            </HeaderLink>
+          )}
+          {tab === "page" && page.remaining.length > 1 && (
+            <HeaderLink accent disabled={page.busy !== null} onClick={() => page.add(page.remaining, "all")}>
+              {page.busy === "all" ? <Spinner className="size-3" /> : <PlusIcon className="size-3.5" />}
+              {page.remaining.length === page.links?.length ? "Add all" : `Add ${page.remaining.length}`}
+            </HeaderLink>
+          )}
+        </span>
+      </div>
 
-      <SectionHeader title="Recent">
-        <button
-          type="button"
-          className="press -mr-2 inline-flex h-7 items-center gap-1 rounded-[6px] px-2 text-[12px] font-medium text-fg-2 hover:bg-fill hover:text-fg"
-          onClick={() => openManager("/torrents")}
-        >
-          View all <ArrowRightIcon className="size-3" />
-        </button>
-      </SectionHeader>
-      <div className="scroll-fade min-h-0 flex-1 overflow-y-auto px-2 pb-2">
-        <RecentTorrents onChooseFiles={setPicking} />
+      <div className="scroll-fade min-h-0 flex-1 overflow-y-auto p-1.5">
+        <div hidden={tab !== "torrents"}>
+          <RecentTorrents onOpen={openManager} onChooseFiles={setPicking} />
+        </div>
+        <div hidden={tab !== "downloads"}>
+          <RecentDownloads fresh={fresh} />
+        </div>
+        <div hidden={tab !== "page"}>
+          <PageLinks state={page} />
+        </div>
       </div>
 
       <FilePicker torrentId={picking} onClose={() => setPicking(null)} />
     </div>
+  );
+}
+
+function HeaderLink({
+  accent,
+  disabled,
+  onClick,
+  children,
+}: {
+  accent?: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}): ReactNode {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={clsx(
+        "press inline-flex h-7 items-center gap-1 rounded-[6px] px-2 text-[12px] font-medium disabled:opacity-50",
+        accent ? "text-accent hover:bg-accent-soft" : "text-fg-2 hover:bg-fill hover:text-fg",
+      )}
+    >
+      {children}
+    </button>
   );
 }

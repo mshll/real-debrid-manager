@@ -178,28 +178,28 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   const popup = await open(context, `${base}/popup.html`, `popup ${theme}`, theme);
   await popup.getByText("days left").waitFor();
   await popup.getByText(torrents[0]!.filename).waitFor();
-  await popup.getByText("Scanning page").waitFor({ state: "detached" });
   await shootPopup(popup, `popup-${theme}`);
   await popup.close();
 
   const scanned = await open(context, `${base}/popup.html`, `popup page links ${theme}`, theme, fakePageScan);
-  await scanned.getByText("On this page").waitFor();
-  await scanned.getByText("Add all").waitFor();
   await scanned.getByText(torrents[0]!.filename).waitFor();
+  await scanned.getByRole("radio", { name: /On page/ }).click();
+  await scanned.getByText("Add all").waitFor();
   await shootPopup(scanned, `popup-page-links-${theme}`);
   if (theme === "light") {
     await check("scroll fades follow the scroll position", async () => {
       const fades = (): Promise<string> =>
         scanned.evaluate(async () => {
-          const list = document.querySelector("section .scroll-fade");
+          const list = document.querySelector(".scroll-fade");
           if (!list) return "missing";
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           const style = getComputedStyle(list);
           return `${style.getPropertyValue("--fade-start")}/${style.getPropertyValue("--fade-end")}`;
         });
+      await scanned.getByRole("radio", { name: /Torrents/ }).click();
       const top = await fades();
       await scanned.evaluate(() =>
-        document.querySelector("section .scroll-fade")?.scrollTo({ top: 1e4, behavior: "instant" }),
+        document.querySelector(".scroll-fade")?.scrollTo({ top: 1e4, behavior: "instant" }),
       );
       const bottom = await fades();
       assert(
@@ -210,16 +210,20 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
     });
   }
   if (theme === "light") {
-    await check("adding links one by one keeps every result", async () => {
+    await check("unlocking links one by one keeps every link", async () => {
+      await scanned.getByRole("radio", { name: /On page/ }).click();
       await scanned.getByRole("button", { name: "1fichier.com/?b3v8n1z5c6" }).click();
-      await scanned.getByText("Link ready").waitFor();
+      await scanned.getByRole("radio", { name: "Downloads 1" }).waitFor();
       await scanned.getByRole("button", { name: "1fichier.com/?k9x2m4p7q1&af=1" }).click();
-      await scanned.getByText("2 links ready").waitFor();
-      const ready = await scanned.getByText("Link ready").count();
-      assert(ready === 2, `expected 2 ready results, got ${ready}`);
+      await scanned.getByRole("radio", { name: "Downloads 2" }).click();
+      await scanned.getByText("Just unlocked · 2").waitFor();
       await scanned.getByRole("button", { name: "Download all" }).waitFor();
-      await shootPopup(scanned, "popup-outcomes-light");
-      return "2 results listed with Copy all and Download all";
+      await scanned.getByText("Earlier").waitFor();
+      await shootPopup(scanned, "popup-downloads-light");
+      await scanned.getByText("Severance.S02E10").first().hover();
+      await scanned.getByRole("button", { name: "Stream" }).first().waitFor();
+      await shoot(scanned, "popup-row-hover-light");
+      return "both unlocked links lead the Downloads tab with Download all; hover shows row actions";
     });
   }
   await scanned.close();

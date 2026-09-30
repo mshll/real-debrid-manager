@@ -210,6 +210,13 @@
   }
 }
 
+/* Hover actions sit over the row's trailing meta; the solid fill matches a hovered row and fades in from the left. */
+.row-actions {
+  padding-left: 28px;
+  background: linear-gradient(var(--fill), var(--fill)), var(--panel);
+  mask-image: linear-gradient(to right, transparent, #000 24px);
+}
+
 @keyframes shimmer {
   from {
     background-position: 100% 0;

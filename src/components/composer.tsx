@@ -23,7 +23,14 @@ export function summarize(links: ParsedLink[]): string {
   return parts.join(", ");
 }
 
-export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => void }): ReactNode {
+/** `compact` is the popup's one-line field: it grows with pasted lines and swaps its tools for Add. */
+export function Composer({
+  onResult,
+  compact = false,
+}: {
+  onResult: (outcomes: AddOutcome[]) => void;
+  compact?: boolean;
+}): ReactNode {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -76,10 +83,45 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
     }
   };
 
+  const tools = (
+    <>
+      <IconButton label="Paste from clipboard" onClick={() => paste().catch(console.error)}>
+        <ClipboardTextIcon />
+      </IconButton>
+      <IconButton label="Upload .torrent files" onClick={() => fileInput.current?.click()}>
+        <PaperclipIcon />
+      </IconButton>
+      <input
+        ref={fileInput}
+        type="file"
+        accept=".torrent"
+        multiple
+        hidden
+        onChange={(event) => {
+          if (event.target.files) upload(event.target.files).catch(console.error);
+          event.target.value = "";
+        }}
+      />
+    </>
+  );
+  const addButton = (label: ReactNode): ReactNode => (
+    <Button
+      variant="primary"
+      size="sm"
+      className="min-w-16"
+      disabled={!links.length || busy}
+      onClick={() => submit().catch(console.error)}
+    >
+      {busy ? <Spinner className="size-3.5" /> : label}
+    </Button>
+  );
+  const lines = text.split("\n").length;
+
   return (
     <div
       className={clsx(
-        "relative rounded-[12px] bg-surface shadow-panel transition-shadow duration-150 focus-within:shadow-[0_0_0_1px_var(--border-strong)]",
+        "relative flex rounded-[12px] bg-surface shadow-panel transition-shadow duration-150 focus-within:shadow-[0_0_0_1px_var(--border-strong)]",
+        compact ? "items-end" : "flex-col",
         dragging && "shadow-[0_0_0_1px_var(--accent),0_0_0_4px_var(--accent-soft)]",
       )}
       onDragOver={(event) => {
@@ -95,10 +137,13 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
     >
       <TextArea
         autoFocus
-        rows={text.includes("\n") ? 5 : 3}
+        rows={compact ? Math.min(4, lines) : text.includes("\n") ? 5 : 3}
         value={text}
-        placeholder="Paste magnets, hashes or hoster links"
-        className="bg-transparent! px-3.5 pt-3 text-[14px] shadow-none!"
+        placeholder={dragging ? "Drop .torrent files" : "Paste magnets, hashes or hoster links"}
+        className={clsx(
+          "bg-transparent! text-[14px] shadow-none!",
+          compact ? "min-w-0 flex-1 py-2.5 pr-1 pl-3.5" : "px-3.5 pt-3",
+        )}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -107,43 +152,33 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
           }
         }}
       />
-      <div className="flex items-center gap-0.5 px-2 pb-2">
-        <IconButton label="Paste from clipboard" onClick={() => paste().catch(console.error)}>
-          <ClipboardTextIcon />
-        </IconButton>
-        <IconButton label="Upload .torrent files" onClick={() => fileInput.current?.click()}>
-          <PaperclipIcon />
-        </IconButton>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".torrent"
-          multiple
-          hidden
-          onChange={(event) => {
-            if (event.target.files) upload(event.target.files).catch(console.error);
-            event.target.value = "";
-          }}
-        />
-        <span className={clsx("ml-1.5 truncate text-[12px]", links.length ? "font-medium text-fg-2" : "text-fg-3")}>
-          {dragging ? "Drop .torrent files" : links.length ? summarize(links) : text.trim() ? "No supported links" : ""}
-        </span>
-        <Button
-          variant="primary"
-          size="sm"
-          className="ml-auto min-w-16"
-          disabled={!links.length || busy}
-          onClick={() => submit().catch(console.error)}
-        >
-          {busy ? (
-            <Spinner className="size-3.5" />
-          ) : (
-            <>
-              Add <Kbd className="h-4 min-w-4 bg-black/10 text-[10px] text-current">⏎</Kbd>
-            </>
-          )}
-        </Button>
-      </div>
+      {compact ? (
+        <div className="flex h-11 shrink-0 items-center gap-0.5 pr-1.5">
+          {text.trim()
+            ? addButton(links.length > 1 ? `Add ${links.length}` : links.length ? "Add" : "No links")
+            : tools}
+        </div>
+      ) : (
+        <div className="flex items-center gap-0.5 px-2 pb-2">
+          {tools}
+          <span className={clsx("ml-1.5 truncate text-[12px]", links.length ? "font-medium text-fg-2" : "text-fg-3")}>
+            {dragging
+              ? "Drop .torrent files"
+              : links.length
+                ? summarize(links)
+                : text.trim()
+                  ? "No supported links"
+                  : ""}
+          </span>
+          <span className="ml-auto">
+            {addButton(
+              <>
+                Add <Kbd className="h-4 min-w-4 bg-black/10 text-[10px] text-current">⏎</Kbd>
+              </>,
+            )}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
