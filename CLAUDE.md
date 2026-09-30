@@ -26,7 +26,7 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 - `src/entrypoints/` - `background.ts`, `popup/`, `manager/` (full-page app, hash routes), `intercept.ts` (unlisted script registered at runtime)
 - `src/background/` - worker modules: capture (context menu, omnibox), sync (alarm polling, badge, notifications, auto-select sweep), login (device flow), notify
 - `src/lib/rd/` - API client, endpoints, auth, errors, types
-- `src/lib/` - add flow, link parsing, file auto-select rules, storage items, queries, outputs (download, aria2, players)
+- `src/lib/` - add flow, link parsing, file auto-select rules, storage items, queries, outputs (download, players)
 - `src/components/` - shared UI; `src/components/ui/` - primitives
 - `src/popup/`, `src/manager/` - surface-specific views
 
@@ -37,11 +37,12 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 - Token refresh goes through `refreshAccessToken`, serialized with a Web Lock. Only clear auth after a refresh actually fails.
 - Adds are sequential; RD rate-limits parallel adds (250 req/min).
 - `<all_urls>` stays optional. Magnet interception requests it at opt-in time.
+- No aria2 or external downloader support; it was removed on purpose.
 - Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs.
 
 ## Design
 
-Linear-style: flat sidebar on the window background, content in an inset rounded panel, Inter Variable at a 14px base, borders over shadows, table-style lists with real columns, Linear-like status rings (`components/status-icon.tsx`). Account and settings pages are width-capped (`Page` in `manager/toolbar.tsx`). Icons are Phosphor (`*Icon` exports, bold weight via `IconContext`). No native `<select>`; use `components/ui/select.tsx`. Radius: 6px small controls, 8px buttons and inputs, 12px cards, dialogs and panel. Lists use two-line rows (name, then meta) with quick actions always visible and content capped via `.gutter`. Clickable elements get a pointer cursor. No pill buttons, no cream backgrounds. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
+Linear-style: flat sidebar on the window background, content in an inset rounded panel, Inter Variable at a 14px base, borders over shadows, Linear-like status rings (`components/status-icon.tsx`). Account and settings pages are width-capped (`Page` in `manager/toolbar.tsx`). Icons are Phosphor (`*Icon` exports, bold weight via `IconContext`). No native `<select>`; use `components/ui/select.tsx`. Radius: 6px small controls, 8px buttons and inputs, 12px cards, dialogs and panel. Lists use two-line rows (name, then meta) with quick actions always visible, no overflow menu (delete is the last icon), and content capped at 960px via `.gutter`. Clickable elements get a pointer cursor. No pill buttons, no cream backgrounds. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
 
 ## API notes
 

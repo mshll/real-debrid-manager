@@ -13,13 +13,9 @@ export type Auth =
 
 export type FileSelection = "video" | "all" | "largest" | "ask";
 export type Player = "browser" | "iina" | "vlc" | "infuse";
-export type PrimaryAction = "download" | "stream" | "copy" | "aria2";
+export type PrimaryAction = "download" | "stream" | "copy";
 
-export interface Aria2Config {
-  url: string;
-  secret: string;
-  dir: string;
-}
+const PRIMARY_ACTIONS: PrimaryAction[] = ["download", "stream", "copy"];
 
 export interface Settings {
   fileSelection: FileSelection;
@@ -35,7 +31,6 @@ export interface Settings {
   theme: "system" | "light" | "dark";
   primaryAction: PrimaryAction;
   player: Player;
-  aria2: Aria2Config;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -52,7 +47,6 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: "system",
   primaryAction: "download",
   player: "browser",
-  aria2: { url: "http://localhost:6800/jsonrpc", secret: "", dir: "" },
 };
 
 export const authItem = storage.defineItem<Auth | null>("local:auth", { fallback: null });
@@ -62,7 +56,10 @@ export const settingsItem = storage.defineItem<Settings>("sync:settings", {
 });
 
 export async function getSettings(): Promise<Settings> {
-  return { ...DEFAULT_SETTINGS, ...(await settingsItem.getValue()) };
+  const settings = { ...DEFAULT_SETTINGS, ...(await settingsItem.getValue()) };
+  // Earlier builds offered "aria2" here; it was removed.
+  if (!PRIMARY_ACTIONS.includes(settings.primaryAction)) settings.primaryAction = DEFAULT_SETTINGS.primaryAction;
+  return settings;
 }
 
 export async function updateSettings(patch: Partial<Settings>): Promise<void> {

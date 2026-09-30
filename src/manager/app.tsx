@@ -79,7 +79,7 @@ function Shell({ route }: { route: string[] }): ReactNode {
         !event.metaKey &&
         !event.ctrlKey &&
         !event.altKey &&
-        !document.querySelector("[role=dialog]")
+        !document.querySelector("[role=dialog][data-open]")
       ) {
         event.preventDefault();
         setAdding(true);

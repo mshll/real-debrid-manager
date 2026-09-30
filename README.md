@@ -51,7 +51,7 @@
 - Search, filter, sort, bulk actions, dedupe, cleanup of failed torrents, and one-click reinsert for expired links
 
 **Downloads**
-- Download in the browser, stream in a built-in player, copy links, send to aria2/Motrix, or open in IINA, VLC or Infuse
+- Download in the browser, stream in a built-in player, copy links, or open in IINA, VLC or Infuse
 
 **Account**
 - Premium days, fidelity points conversion, 31-day traffic chart, host quotas, Real-Debrid streaming settings

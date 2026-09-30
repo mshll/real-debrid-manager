@@ -5,24 +5,21 @@ import {
   DownloadSimpleIcon,
   MagnetStraightIcon,
   MagnifyingGlassIcon,
-  PaperPlaneTiltIcon,
-  PlayIcon,
   PlusIcon,
   SortAscendingIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import { Confirm, type ConfirmRequest } from "@/components/confirm";
 import { EmptyState } from "@/components/empty-state";
 import { FilePicker } from "@/components/file-picker";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { CheckMark } from "@/components/ui/checkbox";
-import { Menu, type MenuEntry } from "@/components/ui/menu";
+import { Menu } from "@/components/ui/menu";
 import { Skeleton } from "@/components/ui/progress";
 import { Tabs } from "@/components/ui/tabs";
 import { useActions } from "@/hooks/use-actions";
@@ -107,7 +104,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
     const onKey = (event: KeyboardEvent): void => {
       const target = event.target;
       const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
-      if (typing || document.querySelector("[role=dialog],[role=menu]")) return;
+      if (typing || document.querySelector("[role=dialog][data-open],[role=menu][data-open]")) return;
       if ((event.metaKey || event.ctrlKey || event.altKey) && event.key !== "a") return;
       const move = (delta: number): void => {
         event.preventDefault();
@@ -164,41 +161,6 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
       await queryClient.invalidateQueries({ queryKey: keys.torrents });
       toast.success(`Reinserted ${list.length}`, { id });
     })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
-  };
-
-  const rowMenu = (torrent: Torrent): MenuEntry[] => {
-    const ready = torrent.status === "downloaded";
-    return [
-      ...(ready
-        ? [
-            {
-              label: "Download",
-              icon: <DownloadSimpleIcon />,
-              onSelect: () => actions.torrents([torrent], "download"),
-            },
-            {
-              label: "Stream",
-              icon: <PlayIcon />,
-              onSelect: () => actions.torrents([torrent], "stream"),
-            },
-            { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.torrents([torrent], "copy") },
-            {
-              label: "Send to aria2",
-              icon: <PaperPlaneTiltIcon />,
-              onSelect: () => actions.torrents([torrent], "aria2"),
-            },
-            "separator" as const,
-          ]
-        : []),
-      {
-        label: "Copy magnet",
-        icon: <MagnetStraightIcon />,
-        onSelect: () => copyText(`magnet:?xt=urn:btih:${torrent.hash}`),
-      },
-      { label: "Reinsert", icon: <ArrowClockwiseIcon />, onSelect: () => reinsert(torrent) },
-      "separator",
-      { label: "Delete", icon: <TrashIcon />, danger: true, onSelect: () => removeMany([torrent], torrent.filename) },
-    ];
   };
 
   const readySelected = selected.filter((t) => t.status === "downloaded");
@@ -369,7 +331,6 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                         selecting={selection.count > 0}
                         current={torrent.id === detailId}
                         cursor={cursor === item.index}
-                        menu={rowMenu(torrent)}
                         actions={{
                           toggle: (event) => selection.toggle(torrent.id, item.index, event.shiftKey),
                           open: () => {
@@ -381,6 +342,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                           stream: () => actions.torrents([torrent], "stream"),
                           reinsert: () => reinsert(torrent),
                           chooseFiles: () => setPicking(torrent.id),
+                          remove: () => removeMany([torrent], torrent.filename),
                         }}
                       />
                     </div>
@@ -451,11 +413,4 @@ function LoadingRows(): ReactNode {
       ))}
     </div>
   );
-}
-
-function copyText(text: string): void {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => toast.success("Copied"))
-    .catch((error: unknown) => toast.error(errorMessage(error)));
 }

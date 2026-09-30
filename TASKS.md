@@ -19,7 +19,7 @@ From-scratch rewrite. Branch `rebuild`. Helium/Chromium is the reference build; 
 - [x] M4 popup: login, paste/drop box, clipboard chip, active torrents, scan page results, account glance
 - [x] M5 manager: library (torrents + downloads, search/filter/sort, bulk, virtualized), torrent detail + file picker, reinsert, dedupe/cleanup
 - [x] M6 manager: account (days, points convert, traffic + history chart, RD settings, website links), extension settings, Cmd+K palette
-- [x] M7 outputs: browser download, stream player (hls.js + media infos), aria2 RPC, copy, open in IINA/VLC/Infuse
+- [x] M7 outputs: browser download, stream player (hls.js + media infos), copy, open in IINA/VLC/Infuse
 - [x] M8 capture: page scan (activeTab), magnet intercept content script, hash detection, hoster regex, omnibox
 - [x] M9 QA: unit tests, e2e with mocked API + screenshots, Firefox + Safari builds, README/CLAUDE.md
 

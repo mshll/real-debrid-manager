@@ -4,7 +4,7 @@ import { addLinks, type AddOutcome } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
 import { classify, extractLinks, type ParsedLink } from "@/lib/links";
 import { describeOutcomes } from "@/lib/outcome";
-import { downloadInBrowser, sendToAria2 } from "@/lib/outputs";
+import { downloadInBrowser } from "@/lib/outputs";
 import { getSettings } from "@/lib/storage";
 
 import { notify, openManager } from "./notify";
@@ -65,7 +65,6 @@ async function runPrimaryAction(outcomes: AddOutcome[]): Promise<void> {
   const settings = await getSettings();
   try {
     if (settings.primaryAction === "download") await downloadInBrowser(urls);
-    if (settings.primaryAction === "aria2") await sendToAria2(urls, settings.aria2);
   } catch (error) {
     console.warn("Primary action failed", error);
     await notify("added", "Couldn't hand off the download", String(error));

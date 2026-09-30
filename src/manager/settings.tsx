@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { useSettings } from "@/hooks/use-settings";
 import { useStorageItem } from "@/hooks/use-storage";
 import { disableIntercept, enableIntercept } from "@/lib/intercept";
-import { canDownload, requestAria2Access, testAria2 } from "@/lib/outputs";
+import { canDownload } from "@/lib/outputs";
 import { signInWithToken } from "@/lib/rd/auth";
 import { errorMessage } from "@/lib/rd/errors";
 import { authItem, type FileSelection, type Player, type PrimaryAction } from "@/lib/storage";
@@ -139,7 +139,6 @@ export function SettingsView(): ReactNode {
               { value: "download", label: canDownload() ? "Download" : "Open link" },
               { value: "stream", label: "Stream" },
               { value: "copy", label: "Copy link" },
-              { value: "aria2", label: "Send to aria2" },
             ]}
           />
         </Row>
@@ -195,8 +194,6 @@ export function SettingsView(): ReactNode {
         </Group>
       )}
 
-      <Aria2Group />
-
       <Group title="Appearance">
         <Row label="Theme">
           <Segmented
@@ -216,67 +213,6 @@ export function SettingsView(): ReactNode {
 
       <p className="text-center text-[12px] text-fg-4">Real-Debrid Manager {browser.runtime.getManifest().version}</p>
     </Page>
-  );
-}
-
-function Aria2Group(): ReactNode {
-  const [settings, update] = useSettings();
-  const [draft, setDraft] = useState(settings.aria2);
-  const [testing, setTesting] = useState(false);
-
-  const test = async (): Promise<void> => {
-    setTesting(true);
-    try {
-      if (!(await requestAria2Access(draft))) throw new Error("Permission to reach aria2 was denied");
-      const version = await testAria2(draft);
-      update({ aria2: draft });
-      toast.success(`Connected to aria2 ${version}`);
-    } catch (error) {
-      toast.error(`Couldn't reach aria2: ${errorMessage(error)}`);
-    } finally {
-      setTesting(false);
-    }
-  };
-
-  return (
-    <Group
-      title="aria2 / Motrix"
-      description="Send downloads to a download manager on this computer"
-      footer="Motrix listens on http://localhost:16800/jsonrpc by default."
-    >
-      <Row label="RPC URL">
-        <Input
-          aria-label="RPC URL"
-          className="w-72"
-          value={draft.url}
-          onChange={(event) => setDraft({ ...draft, url: event.target.value })}
-        />
-      </Row>
-      <Row label="Secret">
-        <Input
-          aria-label="Secret"
-          type="password"
-          className="w-72"
-          value={draft.secret}
-          onChange={(event) => setDraft({ ...draft, secret: event.target.value })}
-          placeholder="Optional"
-        />
-      </Row>
-      <Row label="Folder">
-        <Input
-          aria-label="Folder"
-          className="w-72"
-          value={draft.dir}
-          onChange={(event) => setDraft({ ...draft, dir: event.target.value })}
-          placeholder="aria2 default"
-        />
-      </Row>
-      <div className="flex justify-end bg-subtle px-4 py-3 dark:bg-transparent">
-        <Button size="sm" disabled={testing} onClick={() => test().catch(console.error)}>
-          {testing ? "Testing" : "Save and test"}
-        </Button>
-      </div>
-    </Group>
   );
 }
 

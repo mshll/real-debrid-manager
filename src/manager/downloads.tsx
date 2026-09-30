@@ -1,10 +1,8 @@
 import {
   CopyIcon,
-  DotsThreeIcon,
   DownloadSimpleIcon,
   LinkSimpleIcon,
   MagnifyingGlassIcon,
-  PaperPlaneTiltIcon,
   PlayIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
@@ -19,7 +17,6 @@ import { EmptyState } from "@/components/empty-state";
 import { FileIcon } from "@/components/file-icon";
 import { Button, IconButton } from "@/components/ui/button";
 import { CheckMark } from "@/components/ui/checkbox";
-import { Menu } from "@/components/ui/menu";
 import { Skeleton } from "@/components/ui/progress";
 import { useActions } from "@/hooks/use-actions";
 import { formatBytes, formatRelative } from "@/lib/format";
@@ -204,22 +201,9 @@ export function DownloadsView(): ReactNode {
                         <IconButton label="Download" onClick={() => actions.download([item.download])}>
                           <DownloadSimpleIcon />
                         </IconButton>
-                        <Menu
-                          trigger={
-                            <IconButton label="More">
-                              <DotsThreeIcon />
-                            </IconButton>
-                          }
-                          items={[
-                            {
-                              label: "Send to aria2",
-                              icon: <PaperPlaneTiltIcon />,
-                              onSelect: () => actions.aria2([item.download]),
-                            },
-                            "separator",
-                            { label: "Remove", icon: <TrashIcon />, danger: true, onSelect: () => remove([item]) },
-                          ]}
-                        />
+                        <IconButton label="Remove" className="hover:text-danger!" onClick={() => remove([item])}>
+                          <TrashIcon />
+                        </IconButton>
                       </span>
                     </div>
                   </div>

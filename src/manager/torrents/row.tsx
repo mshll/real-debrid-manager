@@ -1,10 +1,10 @@
 import {
   ArrowClockwiseIcon,
   CopyIcon,
-  DotsThreeIcon,
   DownloadSimpleIcon,
   ListChecksIcon,
   PlayIcon,
+  TrashIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import type { MouseEvent, ReactNode } from "react";
@@ -13,7 +13,6 @@ import { StatusIcon } from "@/components/status-icon";
 import { isTransferring, TONE_TEXT } from "@/components/torrent-meta";
 import { Button, IconButton } from "@/components/ui/button";
 import { CheckMark } from "@/components/ui/checkbox";
-import { Menu, type MenuEntry } from "@/components/ui/menu";
 import { Progress } from "@/components/ui/progress";
 import { formatBytes, formatRelative, formatSpeed, isFailed, STATUS } from "@/lib/format";
 import type { Torrent } from "@/lib/rd/types";
@@ -36,6 +35,7 @@ export interface RowActions {
   stream: () => void;
   reinsert: () => void;
   chooseFiles: () => void;
+  remove: () => void;
 }
 
 export function TorrentRow({
@@ -44,7 +44,6 @@ export function TorrentRow({
   selecting,
   current,
   cursor,
-  menu,
   actions,
 }: {
   torrent: Torrent;
@@ -52,7 +51,6 @@ export function TorrentRow({
   selecting: boolean;
   current: boolean;
   cursor: boolean;
-  menu: MenuEntry[];
   actions: RowActions;
 }): ReactNode {
   const ready = torrent.status === "downloaded";
@@ -129,14 +127,9 @@ export function TorrentRow({
             </IconButton>
           </>
         )}
-        <Menu
-          trigger={
-            <IconButton label="More">
-              <DotsThreeIcon />
-            </IconButton>
-          }
-          items={menu}
-        />
+        <IconButton label="Delete" className="hover:text-danger!" onClick={actions.remove}>
+          <TrashIcon />
+        </IconButton>
       </span>
     </div>
   );

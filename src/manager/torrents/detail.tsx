@@ -4,7 +4,6 @@ import {
   DownloadSimpleIcon,
   ListChecksIcon,
   MagnetStraightIcon,
-  PaperPlaneTiltIcon,
   PlayIcon,
   TrashIcon,
   XIcon,
@@ -118,9 +117,6 @@ export function TorrentDetail({
                   )}
                   <Button icon={<CopyIcon />} onClick={() => actions.copy(torrent.links)}>
                     Copy
-                  </Button>
-                  <Button icon={<PaperPlaneTiltIcon />} onClick={() => actions.aria2(torrent.links)}>
-                    aria2
                   </Button>
                 </>
               )}

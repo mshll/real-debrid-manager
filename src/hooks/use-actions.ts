@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
 import { managerUrl } from "@/lib/pages";
-import { downloadInBrowser, externalPlayerUrl, sendToAria2 } from "@/lib/outputs";
+import { downloadInBrowser, externalPlayerUrl } from "@/lib/outputs";
 import { getTorrent, unrestrictLink } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 import type { Torrent, Unrestricted } from "@/lib/rd/types";
@@ -31,7 +31,6 @@ async function torrentLinks(torrents: Torrent[]): Promise<string[]> {
 export interface Actions {
   download: (urls: string[]) => void;
   copy: (urls: string[]) => void;
-  aria2: (urls: string[]) => void;
   stream: (url: string, downloadId?: string) => void;
   primary: (urls: string[]) => void;
   run: (action: PrimaryAction, urls: string[]) => void;
@@ -63,12 +62,6 @@ export function useActions(): Actions {
       return urls.length > 1 ? `Copied ${urls.length} links` : "Link copied";
     });
 
-  const aria2 = (urls: string[]): void =>
-    perform("Sending to aria2", async () => {
-      await sendToAria2(await toDirect(urls), settings.aria2);
-      return urls.length > 1 ? `Sent ${urls.length} files to aria2` : "Sent to aria2";
-    });
-
   const stream = (url: string, downloadId?: string): void =>
     perform("Opening", async () => {
       let id = downloadId;
@@ -86,7 +79,6 @@ export function useActions(): Actions {
     const [first] = urls;
     if (action === "stream" && first) stream(first);
     else if (action === "copy") copy(urls);
-    else if (action === "aria2") aria2(urls);
     else download(urls);
   };
 
@@ -96,5 +88,5 @@ export function useActions(): Actions {
       .catch((error: unknown) => toast.error(errorMessage(error)));
   };
 
-  return { download, copy, aria2, stream, run, torrents, primary: (urls) => run(settings.primaryAction, urls) };
+  return { download, copy, stream, run, torrents, primary: (urls) => run(settings.primaryAction, urls) };
 }
