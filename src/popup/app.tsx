@@ -6,7 +6,7 @@ import { browser } from "wxt/browser";
 import { Composer } from "@/components/composer";
 import { FilePicker } from "@/components/file-picker";
 import { Logo } from "@/components/logo";
-import { OutcomeList } from "@/components/outcome-list";
+import { mergeOutcomes, OutcomeList } from "@/components/outcome-list";
 import { SignIn } from "@/components/sign-in";
 import { IconButton } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/progress";
@@ -53,7 +53,7 @@ function Home(): ReactNode {
   const [picking, setPicking] = useState<string | null>(null);
 
   const handleResult = (next: AddOutcome[]): void => {
-    setOutcomes(next);
+    setOutcomes((previous) => mergeOutcomes(previous, next));
     const needsFiles = next.find((outcome) => outcome.ok && outcome.status === "choose-files");
     if (needsFiles?.ok && needsFiles.torrentId && next.length === 1) setPicking(needsFiles.torrentId);
   };
@@ -104,7 +104,9 @@ function Home(): ReactNode {
 
       <div className="flex shrink-0 flex-col gap-2.5 px-4 pb-3">
         <Composer onResult={handleResult} />
-        {outcomes.length > 0 && <OutcomeList outcomes={outcomes} onChooseFiles={setPicking} />}
+        {outcomes.length > 0 && (
+          <OutcomeList outcomes={outcomes} onChooseFiles={setPicking} onClear={() => setOutcomes([])} />
+        )}
       </div>
 
       <PageLinks enabled={settings.scanOnOpen} onResult={handleResult} />

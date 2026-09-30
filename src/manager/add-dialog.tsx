@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 
 import { Composer } from "@/components/composer";
 import { FilePicker } from "@/components/file-picker";
-import { OutcomeList } from "@/components/outcome-list";
+import { mergeOutcomes, OutcomeList } from "@/components/outcome-list";
 import { Dialog } from "@/components/ui/dialog";
 import type { AddOutcome } from "@/lib/add";
 
@@ -22,8 +22,10 @@ export function AddDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
         className="max-w-xl"
       >
         <div className="flex flex-col gap-2 pb-2">
-          <Composer onResult={setOutcomes} />
-          {outcomes.length > 0 && <OutcomeList outcomes={outcomes} onChooseFiles={setPicking} />}
+          <Composer onResult={(next) => setOutcomes((previous) => mergeOutcomes(previous, next))} />
+          {outcomes.length > 0 && (
+            <OutcomeList outcomes={outcomes} onChooseFiles={setPicking} onClear={() => setOutcomes([])} />
+          )}
         </div>
       </Dialog>
       <FilePicker torrentId={picking} onClose={() => setPicking(null)} />

@@ -209,6 +209,19 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
       return `top ${top}, scrolled to end ${bottom}`;
     });
   }
+  if (theme === "light") {
+    await check("adding links one by one keeps every result", async () => {
+      await scanned.getByRole("button", { name: "1fichier.com/?b3v8n1z5c6" }).click();
+      await scanned.getByText("Link ready").waitFor();
+      await scanned.getByRole("button", { name: "1fichier.com/?k9x2m4p7q1&af=1" }).click();
+      await scanned.getByText("2 links ready").waitFor();
+      const ready = await scanned.getByText("Link ready").count();
+      assert(ready === 2, `expected 2 ready results, got ${ready}`);
+      await scanned.getByRole("button", { name: "Download all" }).waitFor();
+      await shootPopup(scanned, "popup-outcomes-light");
+      return "2 results listed with Copy all and Download all";
+    });
+  }
   await scanned.close();
 
   const list = await open(context, `${manager}#/torrents`, `manager torrents ${theme}`, theme);
