@@ -37,8 +37,12 @@ export default defineBackground(() => {
     run("menu", () => handleMenuClick(info, tab?.id));
   });
 
-  browser.commands.onCommand.addListener((command) => {
+  browser.commands.onCommand.addListener((command, tab) => {
     if (command === "scan-page") run("command", () => browser.action.openPopup());
+    // sidePanel.open must run inside the shortcut's user gesture, before any await.
+    if (command === "open-side-panel" && tab?.windowId !== undefined) {
+      browser.sidePanel.open({ windowId: tab.windowId }).catch(console.error);
+    }
   });
 
   browser.alarms.onAlarm.addListener((alarm) => {

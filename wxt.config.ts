@@ -31,6 +31,12 @@ export default defineConfig({
         suggested_key: { default: "Alt+Shift+S" },
         description: "Scan page for links",
       },
+      ...(browser === "chrome" && {
+        "open-side-panel": {
+          suggested_key: { default: "Alt+Shift+P" },
+          description: "Open the side panel",
+        },
+      }),
     },
     ...(browser === "firefox" && {
       browser_specific_settings: {

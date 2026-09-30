@@ -248,6 +248,8 @@
 }
 
 html.popup,
-html.popup body {
+html.popup body,
+html.panel,
+html.panel body {
   background: var(--panel);
 }

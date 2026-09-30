@@ -41,7 +41,8 @@
 **Capture**
 - Paste magnets, info hashes, hoster links or folders; drop `.torrent` files
 - Right-click any link or selected text, or type `rd` in the address bar
-- The popup finds every magnet and supported link on the current page
+- The popup finds every magnet and supported link on the current page; filter, pick some, or add them all
+- A side panel (Chromium, Firefox) stays open while you browse and rescans each page
 - Optionally catch magnet clicks on every site
 
 **Torrents**

@@ -23,7 +23,7 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 
 ## Layout
 
-- `src/entrypoints/` - `background.ts`, `popup/`, `manager/` (full-page app, hash routes), `intercept.ts` (unlisted script registered at runtime)
+- `src/entrypoints/` - `background.ts`, `popup/`, `sidepanel/` (same app as the popup, Chromium and Firefox only), `manager/` (full-page app, hash routes), `intercept.ts` (unlisted script registered at runtime)
 - `src/background/` - worker modules: capture (context menu, omnibox), sync (alarm polling, badge, notifications, auto-select sweep), login (device flow), notify
 - `src/lib/rd/` - API client, endpoints, auth, errors, types
 - `src/lib/` - add flow, link parsing, file auto-select rules, storage items, queries, outputs (download, players)
@@ -38,11 +38,11 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 - Adds are sequential; RD rate-limits parallel adds (250 req/min).
 - `<all_urls>` stays optional. Magnet interception requests it at opt-in time.
 - No aria2 or external downloader support; it was removed on purpose.
-- Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs.
+- Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs. The side panel has no activeTab grant, so page scans there ask for the site's host permission.
 
 ## Design
 
-Linear-style: flat sidebar on the window background, content in an inset rounded panel, Inter Variable at a 14px base, borders over shadows, Linear-like status rings (`components/status-icon.tsx`). Account and settings pages are width-capped (`Page` in `manager/toolbar.tsx`). Icons are Phosphor (`*Icon` exports, bold weight via `IconContext`). No native `<select>`; use `components/ui/select.tsx`. Radius: 6px small controls, 8px buttons and inputs, 12px cards, dialogs and panel. Lists use two-line rows (name, then meta) with quick actions always visible, no overflow menu (delete is the last icon), and content capped at 960px via `.gutter`. Scroll areas get edge fades via `.scroll-fade` (not on bordered cards). The popup is fixed-height: one-line composer, then Torrents / Downloads / On page tabs filling the rest; one-line rows show meta at rest and actions on hover (`.row-actions`). Add results land in those lists; toasts only for failures, duplicates and uncached. Clickable elements get a pointer cursor. No pill buttons, no cream backgrounds. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
+Linear-style: flat sidebar on the window background, content in an inset rounded panel, Inter Variable at a 14px base, borders over shadows, Linear-like status rings (`components/status-icon.tsx`). Account and settings pages are width-capped (`Page` in `manager/toolbar.tsx`). Icons are Phosphor (`*Icon` exports, bold weight via `IconContext`). No native `<select>`; use `components/ui/select.tsx`. Radius: 6px small controls, 8px buttons and inputs, 12px cards, dialogs and panel. Lists use two-line rows (name, then meta) with quick actions always visible, no overflow menu (delete is the last icon), and content capped at 960px via `.gutter`. Scroll areas get edge fades via `.scroll-fade` (not on bordered cards). The popup (fixed 400x560) and side panel (full height, follows the active tab) share `popup/app.tsx`: one-line composer, then Torrents / Downloads / On page tabs filling the rest, opening on On page when the page has links; one-line rows show meta at rest and actions on hover (`.row-actions`). Add results land in those lists; toasts only for failures, duplicates and uncached. Clickable elements get a pointer cursor. No pill buttons, no cream backgrounds. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
 
 ## API notes
 

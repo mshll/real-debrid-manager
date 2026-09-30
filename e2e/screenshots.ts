@@ -110,6 +110,17 @@ async function open(
 }
 
 /** The popup tab has no scannable page behind it, so the scan sees a fake one. */
+/** A page the side panel has no host permission for: the script injection fails and nothing is granted. */
+function fakeBlockedPage(): void {
+  Object.assign(chrome.tabs, { query: async () => [{ id: 1, url: "https://www.example.com/downloads" }] });
+  Object.assign(chrome.scripting, {
+    executeScript: async () => {
+      throw new Error("Cannot access contents of the page");
+    },
+  });
+  Object.assign(chrome.permissions, { contains: async () => false });
+}
+
 function fakePageScan(): void {
   const hrefs = [
     "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Dune.Part.Two.2024.2160p.WEB-DL.DDP5.1",
@@ -117,6 +128,7 @@ function fakePageScan(): void {
     "https://1fichier.com/?k9x2m4p7q1&af=1",
     "https://1fichier.com/?b3v8n1z5c6",
     "https://rapidgator.net/?file/4f2a9c/Arcane.S02E01.mkv.html",
+    ...["a1", "b2", "c3", "d4", "e5"].map((id) => `https://1fichier.com/?forklift-4-6-${id}`),
   ];
   // Object.assign sidesteps the full Tab and InjectionResult shapes the stubs don't need.
   Object.assign(chrome.tabs, { query: async () => [{ id: 1, url: "https://example.com/" }] });
@@ -182,11 +194,41 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await popup.close();
 
   const scanned = await open(context, `${base}/popup.html`, `popup page links ${theme}`, theme, fakePageScan);
-  await scanned.getByText(torrents[0]!.filename).waitFor();
-  await scanned.getByRole("radio", { name: /On page/ }).click();
+  await scanned.getByRole("radio", { name: /On page/, checked: true }).waitFor();
   await scanned.getByText("Add all").waitFor();
   await shootPopup(scanned, `popup-page-links-${theme}`);
   if (theme === "light") {
+    await check("popup opens on the page's links, then filter, select and add", async () => {
+      await scanned.getByLabel("Filter links").fill("forklift");
+      const shown = await scanned.getByRole("button", { name: /^1fichier\.com\/\?forklift/ }).count();
+      assert(shown === 5, `filter 'forklift' should leave 5 rows, got ${shown}`);
+      await scanned.getByText("Add 5").waitFor();
+      await scanned.getByLabel("Clear filter").click();
+
+      await scanned.getByRole("button", { name: "1fichier.com/?b3v8n1z5c6" }).click({ modifiers: ["Meta"] });
+      await scanned.getByRole("button", { name: "rapidgator.net/?file/4f2a9c/Arcane.S02E01.mkv.html" }).click();
+      await scanned.getByRole("button", { name: "Add 2", exact: true }).waitFor();
+      await shootPopup(scanned, "popup-page-select-light");
+      await scanned.getByRole("button", { name: "Add 2", exact: true }).click();
+      await scanned.getByRole("radio", { name: "Downloads 2" }).waitFor();
+
+      await scanned.getByRole("button", { name: "1fichier.com/?k9x2m4p7q1&af=1" }).click();
+      await scanned.getByRole("radio", { name: "Downloads 3" }).waitFor();
+      const onPage = await scanned.getByRole("radio", { name: /On page/, checked: true }).count();
+      assert(onPage === 1, "adding from the page should stay on the On page tab");
+      return "auto-picked On page; filter left 5; select 2 + add; single add; Downloads count 3";
+    });
+    await check("unlocked links lead the Downloads tab with bulk actions", async () => {
+      await scanned.getByRole("radio", { name: "Downloads 3" }).click();
+      await scanned.getByText("Just unlocked · 3").waitFor();
+      await scanned.getByRole("button", { name: "Download all" }).waitFor();
+      await scanned.getByText("Earlier").waitFor();
+      await shootPopup(scanned, "popup-downloads-light");
+      await scanned.getByRole("button", { name: /^Severance\.S02E10/ }).first().hover();
+      await scanned.getByRole("button", { name: "Stream" }).first().waitFor();
+      await shoot(scanned, "popup-row-hover-light");
+      return "3 just unlocked with Download all; hover shows row actions";
+    });
     await check("scroll fades follow the scroll position", async () => {
       const fades = (): Promise<string> =>
         scanned.evaluate(async () => {
@@ -209,24 +251,24 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
       return `top ${top}, scrolled to end ${bottom}`;
     });
   }
+  await scanned.close();
+
+  const panel = await open(context, `${base}/sidepanel.html`, `side panel ${theme}`, theme, fakePageScan);
+  await panel.setViewportSize({ width: 380, height: 860 });
+  await panel.getByRole("radio", { name: /On page/, checked: true }).waitFor();
+  await shoot(panel, `panel-${theme}`);
+  await panel.close();
   if (theme === "light") {
-    await check("unlocking links one by one keeps every link", async () => {
-      await scanned.getByRole("radio", { name: /On page/ }).click();
-      await scanned.getByRole("button", { name: "1fichier.com/?b3v8n1z5c6" }).click();
-      await scanned.getByRole("radio", { name: "Downloads 1" }).waitFor();
-      await scanned.getByRole("button", { name: "1fichier.com/?k9x2m4p7q1&af=1" }).click();
-      await scanned.getByRole("radio", { name: "Downloads 2" }).click();
-      await scanned.getByText("Just unlocked · 2").waitFor();
-      await scanned.getByRole("button", { name: "Download all" }).waitFor();
-      await scanned.getByText("Earlier").waitFor();
-      await shootPopup(scanned, "popup-downloads-light");
-      await scanned.getByText("Severance.S02E10").first().hover();
-      await scanned.getByRole("button", { name: "Stream" }).first().waitFor();
-      await shoot(scanned, "popup-row-hover-light");
-      return "both unlocked links lead the Downloads tab with Download all; hover shows row actions";
+    await check("side panel asks for site access when it can't read the page", async () => {
+      const blocked = await open(context, `${base}/sidepanel.html`, "side panel blocked", theme, fakeBlockedPage);
+      await blocked.setViewportSize({ width: 380, height: 860 });
+      await blocked.getByRole("radio", { name: /On page/ }).click();
+      await blocked.getByRole("button", { name: "Allow on example.com" }).waitFor();
+      await shoot(blocked, "panel-no-access-light");
+      await blocked.close();
+      return "shows 'Allow on example.com'";
     });
   }
-  await scanned.close();
 
   const list = await open(context, `${manager}#/torrents`, `manager torrents ${theme}`, theme);
   await waitForLibrary(list);

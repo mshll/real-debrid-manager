@@ -1,7 +1,14 @@
-import { ArrowRightIcon, GearSixIcon, PlusIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
+import {
+  ArrowRightIcon,
+  ArrowSquareOutIcon,
+  GearSixIcon,
+  PlusIcon,
+  SidebarSimpleIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
@@ -23,40 +30,45 @@ import { keys, useRecentTorrents, useUser } from "@/lib/queries";
 import type { Unrestricted } from "@/lib/rd/types";
 import { authItem } from "@/lib/storage";
 
-import { PageLinks, usePageLinks } from "./page-links";
+import { PageLinks, usePageLinks, type PageLinksState } from "./page-links";
 import { RecentDownloads } from "./recent-downloads";
 import { RecentTorrents } from "./recent-torrents";
 
-const WIDTH = "w-[400px]";
-export function PopupApp(): ReactNode {
-  const auth = useStorageItem(authItem);
-  if (auth === undefined) return <div className={clsx("h-[520px]", WIDTH)} />;
-  return (
-    <div className={WIDTH}>
-      {auth ? (
-        <Home />
-      ) : (
-        <div className="h-[520px]">
-          <SignIn />
-        </div>
-      )}
-    </div>
-  );
-}
+/** The popup and the side panel run the same app; the panel fills its frame and stays open. */
+export type Surface = "popup" | "panel";
 
-function openManager(route = "/"): void {
-  browser.tabs.create({ url: managerUrl(route) }).catch(console.error);
-  window.close();
+const FRAME: Record<Surface, string> = { popup: "h-[560px] w-[400px]", panel: "h-screen w-full" };
+const CAN_OPEN_PANEL = import.meta.env.BROWSER === "chrome" && "sidePanel" in browser;
+
+export function PopupApp({ surface = "popup" }: { surface?: Surface }): ReactNode {
+  const auth = useStorageItem(authItem);
+  return (
+    <div className={FRAME[surface]}>{auth === undefined ? null : auth ? <Home surface={surface} /> : <SignIn />}</div>
+  );
 }
 
 type Tab = "torrents" | "downloads" | "page";
 
-function Home(): ReactNode {
+function Home({ surface }: { surface: Surface }): ReactNode {
+  const openManager = (route = "/"): void => {
+    browser.tabs.create({ url: managerUrl(route) }).catch(console.error);
+    if (surface === "popup") window.close();
+  };
+  const windowId = useCurrentWindowId();
+  const openPanel = (): void => {
+    if (windowId === null) return;
+    // sidePanel.open needs the click's user gesture, so no await may come before it.
+    browser.sidePanel
+      .open({ windowId })
+      .then(() => window.close())
+      .catch(console.error);
+  };
+
   const [settings] = useSettings();
   const { data: user } = useUser();
   const { data: recent } = useRecentTorrents(30);
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<Tab>("torrents");
+  const [chosen, setChosen] = useState<Tab | null>(null);
   const [fresh, setFresh] = useState<Unrestricted[]>([]);
   const [picking, setPicking] = useState<string | null>(null);
 
@@ -79,19 +91,21 @@ function Home(): ReactNode {
     if (next.some((outcome) => outcome.ok && (outcome.kind === "magnet" || outcome.kind === "torrent"))) {
       queryClient.invalidateQueries({ queryKey: keys.torrents }).catch(console.error);
     }
-    if (from === "composer") setTab(unlocked.length ? "downloads" : "torrents");
+    if (from === "composer") setChosen(unlocked.length ? "downloads" : "torrents");
 
     const needsFiles = next.find((outcome) => outcome.ok && outcome.status === "choose-files");
     if (needsFiles?.ok && needsFiles.torrentId && next.length === 1) setPicking(needsFiles.torrentId);
   };
-  const page = usePageLinks(settings.scanOnOpen, (next) => handleResult(next, "page"));
+  const page = usePageLinks(settings.scanOnOpen, surface === "panel", (next) => handleResult(next, "page"));
+  // Until a tab is picked, open where the work is: the page's links when it has any.
+  const tab = chosen ?? (page.links?.length ? "page" : "torrents");
 
   const days = user ? daysLeft(user.premium) : null;
   const low = days !== null && days <= settings.expiryReminderDays;
   const active = recent?.filter((torrent) => isActive(torrent.status)).length ?? 0;
 
   return (
-    <div className="flex h-[560px] flex-col">
+    <div className="flex h-full flex-col">
       <header className="flex h-14 shrink-0 items-center gap-2 px-3">
         <Tooltip label="Open manager">
           <button
@@ -122,8 +136,13 @@ function Home(): ReactNode {
           </button>
         )}
         <div className="ml-auto flex items-center gap-0.5">
+          {surface === "popup" && CAN_OPEN_PANEL && (
+            <IconButton label="Open in side panel" onClick={openPanel}>
+              <SidebarSimpleIcon />
+            </IconButton>
+          )}
           <IconButton label="Open manager" onClick={() => openManager()}>
-            <SidebarSimpleIcon />
+            <ArrowSquareOutIcon />
           </IconButton>
           <IconButton label="Settings" onClick={() => openManager("/settings")}>
             <GearSixIcon />
@@ -139,7 +158,7 @@ function Home(): ReactNode {
         <Tabs
           value={tab}
           onChange={(next) => {
-            setTab(next);
+            setChosen(next);
             if (next === "page") page.request();
           }}
           options={[
@@ -159,12 +178,7 @@ function Home(): ReactNode {
               View all <ArrowRightIcon className="size-3" />
             </HeaderLink>
           )}
-          {tab === "page" && page.remaining.length > 1 && (
-            <HeaderLink accent disabled={page.busy !== null} onClick={() => page.add(page.remaining, "all")}>
-              {page.busy === "all" ? <Spinner className="size-3" /> : <PlusIcon className="size-3.5" />}
-              {page.remaining.length === page.links?.length ? "Add all" : `Add ${page.remaining.length}`}
-            </HeaderLink>
-          )}
+          {tab === "page" && <PageAction page={page} />}
         </span>
       </div>
 
@@ -202,11 +216,48 @@ function HeaderLink({
       disabled={disabled}
       onClick={onClick}
       className={clsx(
-        "press inline-flex h-7 items-center gap-1 rounded-[6px] px-2 text-[12px] font-medium disabled:opacity-50",
+        "press inline-flex h-7 items-center gap-1 rounded-[6px] px-2 text-[12px] font-medium whitespace-nowrap disabled:opacity-50",
         accent ? "text-accent hover:bg-accent-soft" : "text-fg-2 hover:bg-fill hover:text-fg",
       )}
     >
       {children}
     </button>
   );
+}
+
+function PageAction({ page }: { page: PageLinksState }): ReactNode {
+  const busy = page.busy !== null;
+  if (page.selected.size) {
+    const picked = page.remaining.filter((link) => page.selected.has(link.url));
+    return (
+      <>
+        <IconButton size="sm" label="Clear selection" onClick={page.clearSelection}>
+          <XIcon />
+        </IconButton>
+        <HeaderLink accent disabled={busy} onClick={() => page.add(picked, "selected")}>
+          {page.busy === "selected" ? <Spinner className="size-3" /> : <PlusIcon className="size-3.5" />}
+          Add {picked.length}
+        </HeaderLink>
+      </>
+    );
+  }
+  if (page.remaining.length < 2) return null;
+  const everything = !page.filter && page.remaining.length === page.links?.length;
+  return (
+    <HeaderLink accent disabled={busy} onClick={() => page.add(page.remaining, "all")}>
+      {page.busy === "all" ? <Spinner className="size-3" /> : <PlusIcon className="size-3.5" />}
+      {everything ? "Add all" : `Add ${page.remaining.length}`}
+    </HeaderLink>
+  );
+}
+
+function useCurrentWindowId(): number | null {
+  const [id, setId] = useState<number | null>(null);
+  useEffect(() => {
+    browser.windows
+      .getCurrent()
+      .then((current) => setId(current.id ?? null))
+      .catch(console.error);
+  }, []);
+  return id;
 }
