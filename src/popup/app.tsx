@@ -1,4 +1,4 @@
-import { ArrowRightIcon, GearSixIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, GearSixIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState, type ReactNode } from "react";
 import { browser } from "wxt/browser";
@@ -92,9 +92,14 @@ function Home(): ReactNode {
             {user.type === "premium" ? `${days} days left` : "Free account"}
           </button>
         )}
-        <IconButton label="Settings" className="ml-auto" onClick={() => openManager("/settings")}>
-          <GearSixIcon />
-        </IconButton>
+        <div className="ml-auto flex items-center gap-0.5">
+          <IconButton label="Open manager" onClick={() => openManager()}>
+            <SidebarSimpleIcon />
+          </IconButton>
+          <IconButton label="Settings" onClick={() => openManager("/settings")}>
+            <GearSixIcon />
+          </IconButton>
+        </div>
       </header>
 
       <div className="flex shrink-0 flex-col gap-2.5 px-4 pb-3">

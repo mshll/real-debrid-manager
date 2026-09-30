@@ -2,7 +2,7 @@ import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 import type { browser } from "@wxt-dev/browser";
-import { chromium, type BrowserContext, type Page, type Worker } from "playwright";
+import { chromium, type BrowserContext, type Page, type Route, type Worker } from "playwright";
 
 import { FAILED_STATUSES, failedCount, handleRd, ids, torrents, type MockLog } from "./fixtures";
 
@@ -41,6 +41,7 @@ function watch(target: Page | Worker, source: string): void {
     if (type !== "error" && type !== "warning") return;
     // Playwright also relays service-worker console messages to every page listener.
     if (message.worker() && message.worker() !== target) return;
+    if (source.includes("browser sign-in") && /status of 403/.test(message.text())) return;
     const location = message.location();
     const where = location.url
       ? ` (${location.url.replace(/^chrome-extension:\/\/[^/]+/, "")}:${location.lineNumber})`
@@ -252,6 +253,19 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await account.getByText("rapidgator.net").waitFor();
   await shoot(account, `manager-account-${theme}`);
   await account.close();
+
+  const denied = (route: Route): Promise<void> =>
+    route.fulfill({ status: 403, json: { error: "permission_denied", error_code: 9 } });
+  await context.route(/\/rest\/1\.0\/(traffic\/details|settings)/, denied);
+  const locked = await open(context, `${manager}#/account`, `manager account browser sign-in ${theme}`, theme);
+  await locked.getByRole("button", { name: "Connect token" }).waitFor();
+  await locked.getByText("ddownload.com").waitFor();
+  await shoot(locked, `manager-account-browser-sign-in-${theme}`);
+  await locked.getByRole("button", { name: "Connect token" }).click();
+  await locked.getByRole("dialog", { name: "Connect an API token" }).waitFor();
+  await shoot(locked, `manager-token-dialog-${theme}`);
+  await locked.close();
+  await context.unroute(/\/rest\/1\.0\/(traffic\/details|settings)/, denied);
 
   const settings = await open(context, `${manager}#/settings`, `manager settings ${theme}`, theme);
   await settings.getByText("Adding torrents").waitFor();

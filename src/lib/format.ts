@@ -1,4 +1,4 @@
-import type { TorrentStatus } from "./rd/types";
+import type { HostTraffic, TorrentStatus } from "./rd/types";
 
 const UNITS = ["B", "KB", "MB", "GB", "TB"];
 
@@ -63,4 +63,19 @@ export function isActive(status: TorrentStatus): boolean {
 
 export function isFailed(status: TorrentStatus): boolean {
   return STATUS[status].tone === "danger";
+}
+
+/** For "gigabytes" hosts RD reports `left` in bytes but `limit` in GB. */
+export function hostUsage(info: HostTraffic): { used: number; text: string } {
+  if (info.type === "links") {
+    return {
+      used: info.limit ? (1 - info.left / info.limit) * 100 : 0,
+      text: `${info.left} of ${info.limit} links left`,
+    };
+  }
+  const limit = info.type === "gigabytes" ? info.limit * 1024 ** 3 : info.limit;
+  return {
+    used: limit ? Math.max(0, 1 - info.left / limit) * 100 : 0,
+    text: `${formatBytes(info.left)} of ${formatBytes(limit)} left`,
+  };
 }

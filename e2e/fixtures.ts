@@ -392,6 +392,7 @@ export const traffic: Traffic = {
   "real-debrid.com": { left: 0, bytes: 412 * GB, links: 318, limit: 0, type: "gigabytes", extra: 0, reset: "daily" },
   "1fichier.com": { left: 62 * GB, bytes: 38 * GB, links: 7, limit: 100 * GB, type: "bytes", extra: 0, reset: "daily" },
   "rapidgator.net": { left: 18, bytes: 4.2 * GB, links: 2, limit: 20, type: "links", extra: 0, reset: "daily" },
+  "ddownload.com": { left: 0.4 * 1024 ** 3, bytes: 0.6 * GB, links: 3, limit: 1, type: "gigabytes", extra: 0, reset: "daily" },
   "uptobox.com": { left: 0, bytes: 3.4 * GB, links: 1, limit: 0, type: "gigabytes", extra: 0, reset: "daily" },
 };
 

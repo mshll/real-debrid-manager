@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
 import { Button, Kbd } from "@/components/ui/button";
-import { Input } from "@/components/ui/field";
 import { Group, Row } from "@/components/ui/group";
 import { Segmented } from "@/components/ui/segmented";
 import { Select } from "@/components/ui/select";
@@ -13,10 +12,10 @@ import { useSettings } from "@/hooks/use-settings";
 import { useStorageItem } from "@/hooks/use-storage";
 import { disableIntercept, enableIntercept } from "@/lib/intercept";
 import { canDownload } from "@/lib/outputs";
-import { signInWithToken } from "@/lib/rd/auth";
 import { errorMessage } from "@/lib/rd/errors";
 import { authItem, type FileSelection, type Player, type PrimaryAction } from "@/lib/storage";
 
+import { API_TOKEN_URL, TokenDialog } from "./token-dialog";
 import { Page } from "./toolbar";
 
 const IS_SAFARI = import.meta.env.BROWSER === "safari";
@@ -218,23 +217,10 @@ export function SettingsView(): ReactNode {
 
 function ConnectionGroup(): ReactNode {
   const auth = useStorageItem(authItem);
-  const [token, setToken] = useState("");
-
-  const save = (): void => {
-    signInWithToken(token.trim())
-      .then(() => {
-        setToken("");
-        toast.success("Now using your API token");
-      })
-      .catch((error: unknown) => toast.error(errorMessage(error)));
-  };
+  const [connecting, setConnecting] = useState(false);
 
   return (
-    <Group
-      title="Connection"
-      description="How this browser signs in to Real-Debrid"
-      footer="Browser sign-in may not have access to traffic stats or Real-Debrid settings. A private API token covers everything and never expires."
-    >
+    <Group title="Connection" description="How this browser signs in to Real-Debrid">
       <Row label="Signed in with">
         <span className="flex items-center gap-1.5 text-[13px] text-fg-2">
           <CheckCircleIcon weight="fill" className="size-4 text-accent" />
@@ -242,20 +228,29 @@ function ConnectionGroup(): ReactNode {
         </span>
       </Row>
       {auth?.kind !== "token" && (
-        <Row label="Use an API token" description="Find it at real-debrid.com/apitoken.">
-          <Input
-            type="password"
-            aria-label="Private API token"
-            placeholder="Paste token"
-            className="w-56"
-            value={token}
-            onChange={(event) => setToken(event.target.value)}
-          />
-          <Button size="sm" className="h-8" disabled={!token.trim()} onClick={save}>
-            Save
+        <Row
+          label="API token"
+          description={
+            <>
+              Unlocks traffic stats and Real-Debrid settings, and never expires. Get it at{" "}
+              <a
+                href={API_TOKEN_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-fg-2 underline decoration-border-strong underline-offset-2 hover:text-fg"
+              >
+                real-debrid.com/apitoken
+              </a>
+              .
+            </>
+          }
+        >
+          <Button size="sm" onClick={() => setConnecting(true)}>
+            Connect token
           </Button>
         </Row>
       )}
+      <TokenDialog open={connecting} onOpenChange={setConnecting} />
     </Group>
   );
 }

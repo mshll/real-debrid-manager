@@ -19,14 +19,15 @@ import { Card, Group, Row } from "@/components/ui/group";
 import { Progress, Skeleton } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
 import { useSettings } from "@/hooks/use-settings";
-import { daysLeft, formatBytes, formatDate } from "@/lib/format";
+import { daysLeft, formatBytes, formatDate, hostUsage } from "@/lib/format";
 import { keys, useLibrary, useRdSettings, useTraffic, useTrafficDetails, useUser } from "@/lib/queries";
 import { convertPoints, updateRdSetting } from "@/lib/rd/api";
 import { signOut } from "@/lib/rd/auth";
 import { errorMessage, RdError } from "@/lib/rd/errors";
-import type { HostTraffic, RdSettingName, RdSettings, TrafficDetails } from "@/lib/rd/types";
+import type { RdSettingName, RdSettings, TrafficDetails } from "@/lib/rd/types";
 
 import { navigate } from "./router";
+import { TokenDialog } from "./token-dialog";
 import { Page } from "./toolbar";
 
 const WEBSITE_LINKS = [
@@ -43,6 +44,10 @@ export function AccountView(): ReactNode {
   const [settings] = useSettings();
   const queryClient = useQueryClient();
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
+  const [connecting, setConnecting] = useState(false);
+  const range = useTrafficRange();
+  const trafficLocked = needsToken(useTrafficDetails(range.start, range.end).error);
+  const settingsLocked = needsToken(useRdSettings().error);
 
   if (isLoading || !user) {
     return (
@@ -128,11 +133,20 @@ export function AccountView(): ReactNode {
         <LibraryCard />
       </div>
 
-      <TrafficSection />
+      {(trafficLocked || settingsLocked) && (
+        <TokenBanner
+          missing={[trafficLocked && "traffic stats", settingsLocked && "Real-Debrid settings"]
+            .filter(Boolean)
+            .join(" and ")}
+          onConnect={() => setConnecting(true)}
+        />
+      )}
 
-      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-6">
+      {!trafficLocked && <TrafficSection range={range} />}
+
+      <div className={clsx("grid items-start gap-10 lg:gap-6", !settingsLocked && "lg:grid-cols-2")}>
         <HostLimits />
-        <RdSettingsSection />
+        {!settingsLocked && <RdSettingsSection />}
       </div>
 
       <section>
@@ -157,6 +171,7 @@ export function AccountView(): ReactNode {
         </div>
       </section>
       <Confirm request={confirm} onClose={() => setConfirm(null)} />
+      <TokenDialog open={connecting} onOpenChange={setConnecting} />
     </Page>
   );
 }
@@ -205,7 +220,8 @@ function useTrafficRange(): { start: string; end: string } {
   }, []);
 }
 
-function trafficUnavailable(error: unknown): boolean {
+/** Browser (device-flow) sign-in gets permission denied on traffic and settings; a private token doesn't. */
+function needsToken(error: unknown): boolean {
   return error instanceof RdError && (error.status === 403 || error.code === 9);
 }
 
@@ -226,17 +242,27 @@ function LibraryCard(): ReactNode {
   );
 }
 
-function TrafficSection(): ReactNode {
-  const range = useTrafficRange();
-  const details = useTrafficDetails(range.start, range.end);
+function TokenBanner({ missing, onConnect }: { missing: string; onConnect: () => void }): ReactNode {
+  return (
+    <Card className="flex items-center gap-4 p-5">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent-soft text-accent">
+        <KeyIcon className="size-5" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <h2 className="text-[14px] font-medium">Connect an API token to see {missing}</h2>
+        <p className="mt-0.5 text-[13px] text-fg-3">
+          Browser sign-in can't access these. Your private token can, and it never expires.
+        </p>
+      </div>
+      <Button variant="primary" onClick={onConnect}>
+        Connect token
+      </Button>
+    </Card>
+  );
+}
 
-  if (trafficUnavailable(details.error)) {
-    return (
-      <Group title="Traffic" footer="Sign in with a private API token in Settings to see traffic stats.">
-        <Row label="Not available with browser sign-in" />
-      </Group>
-    );
-  }
+function TrafficSection({ range }: { range: { start: string; end: string } }): ReactNode {
+  const details = useTrafficDetails(range.start, range.end);
   return (
     <section>
       <div className="mb-3">
@@ -304,15 +330,6 @@ function TrafficChart({ details, start }: { details: TrafficDetails; start: stri
       </div>
     </div>
   );
-}
-
-function hostUsage(info: HostTraffic): { used: number; text: string } {
-  const used = info.limit ? 1 - info.left / info.limit : 0;
-  const text =
-    info.type === "links"
-      ? `${info.left} of ${info.limit} links left`
-      : `${formatBytes(info.left)} of ${formatBytes(info.limit)} left`;
-  return { used: used * 100, text };
 }
 
 function HostLimits(): ReactNode {
@@ -388,8 +405,8 @@ function RdSettingsSection(): ReactNode {
 
   if (error) {
     return (
-      <Group title="Real-Debrid settings" footer="Sign in with a private API token in Settings to change these.">
-        <Row label="Not available with browser sign-in" />
+      <Group title="Real-Debrid settings">
+        <Row label="Couldn't load settings" description={errorMessage(error)} />
       </Group>
     );
   }
