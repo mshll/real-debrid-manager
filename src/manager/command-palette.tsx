@@ -58,7 +58,7 @@ export function CommandPalette({
                 className="h-13 flex-1 bg-transparent text-[16px] outline-none placeholder:text-fg-3"
               />
             </div>
-            <Command.List className="max-h-[400px] scroll-py-2 overflow-y-auto px-2 pb-2">
+            <Command.List className="scroll-fade max-h-[400px] scroll-py-2 overflow-y-auto px-2 pb-2">
               <Command.Empty className="px-3 py-10 text-center text-[13px] text-fg-3">No results</Command.Empty>
               <Command.Group heading="Actions" className={GROUP}>
                 <Command.Item className={ITEM} onSelect={() => go(onAdd)}>

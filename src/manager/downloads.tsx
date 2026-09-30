@@ -104,7 +104,7 @@ export function DownloadsView(): ReactNode {
             <span className={COLUMNS.actions} />
           </div>
         )}
-        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto pb-24">
+        <div ref={scrollRef} className="scroll-fade min-h-0 flex-1 overflow-y-auto pb-24">
           {isLoading ? (
             <div>
               {[58, 44, 67, 51, 62].map((width, index) => (

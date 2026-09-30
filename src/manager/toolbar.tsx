@@ -38,7 +38,7 @@ export function Page({
   children: ReactNode;
 }): ReactNode {
   return (
-    <section className="min-w-0 flex-1 overflow-y-auto">
+    <section className="scroll-fade min-w-0 flex-1 overflow-y-auto">
       <div className={`mx-auto flex flex-col gap-10 px-8 pt-12 pb-16 ${width}`}>
         <div className="flex items-center gap-4">
           {leading}

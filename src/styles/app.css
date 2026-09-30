@@ -160,6 +160,56 @@
   }
 }
 
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fade-start {
+  to {
+    --fade-start: 24px;
+  }
+}
+
+@keyframes fade-end {
+  from {
+    --fade-end: 24px;
+  }
+  to {
+    --fade-end: 0px;
+  }
+}
+
+/* Edge fades appear only once the area can scroll that way; browsers without scroll timelines get none. */
+.scroll-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation:
+      fade-start linear both,
+      fade-end linear both;
+    animation-timeline: scroll(self), scroll(self);
+    animation-range:
+      0 24px,
+      calc(100% - 24px) 100%;
+  }
+}
+
 @keyframes shimmer {
   from {
     background-position: 100% 0;
@@ -181,6 +231,12 @@
   *::after {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-fade {
+      animation-duration: auto !important;
+    }
   }
 }
 

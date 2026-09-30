@@ -46,7 +46,7 @@ export function Dialog({
               <XIcon className="size-4" />
             </BaseDialog.Close>
           </div>
-          {children && <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-1 pb-5">{children}</div>}
+          {children && <div className="scroll-fade min-h-0 flex-1 overflow-y-auto px-5 pt-1 pb-5">{children}</div>}
           {footer && (
             <div className="flex items-center justify-end gap-2 border-t border-border bg-subtle px-5 py-3 dark:bg-surface">
               {footer}

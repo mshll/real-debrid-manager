@@ -45,7 +45,7 @@ export function Sidebar({
     <aside className="flex w-64 shrink-0 flex-col px-3 pt-4 pb-3">
       <div className="flex h-10 items-center gap-3 px-2.5">
         <Logo className="size-7" />
-        <span className="text-[15px] font-semibold tracking-[-0.01em]">Real-Debrid</span>
+        <span className="text-[15px] font-semibold tracking-[-0.01em]">RD Manager</span>
       </div>
 
       <button
@@ -54,7 +54,7 @@ export function Sidebar({
         className="press mt-5 flex h-10 items-center gap-3 rounded-[8px] bg-surface px-3 text-[14px] font-medium text-fg shadow-panel hover:bg-subtle dark:hover:bg-raised"
       >
         <PlusIcon className="size-[18px] text-fg-2" />
-        Add torrents
+        Add links
         <Kbd className="ml-auto">N</Kbd>
       </button>
 

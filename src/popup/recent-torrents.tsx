@@ -9,18 +9,19 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
 import { StatusIcon } from "@/components/status-icon";
-import { isTransferring, TorrentMeta } from "@/components/torrent-meta";
+import { isTransferring, TONE_TEXT } from "@/components/torrent-meta";
 import { IconButton } from "@/components/ui/button";
 import { Menu } from "@/components/ui/menu";
-import { Progress, Skeleton } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/progress";
 import { useActions } from "@/hooks/use-actions";
 import { useReinsert } from "@/hooks/use-torrent-mutations";
-import { isFailed } from "@/lib/format";
+import { formatBytes, formatSpeed, isFailed, STATUS } from "@/lib/format";
 import { managerUrl } from "@/lib/pages";
 import { keys, useRecentTorrents } from "@/lib/queries";
 import { deleteTorrent } from "@/lib/rd/api";
@@ -32,14 +33,11 @@ export function RecentTorrents({ onChooseFiles }: { onChooseFiles: (id: string) 
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-4 px-2 py-3">
+      <div className="flex flex-col">
         {[70, 55, 80, 60].map((width) => (
-          <div key={width} className="flex items-center gap-3">
+          <div key={width} className="flex h-9 items-center gap-3 px-2">
             <Skeleton className="size-3.5 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <Skeleton style={{ width: `${width}%` }} />
-              <Skeleton className="h-2.5 w-1/3" />
-            </div>
+            <Skeleton style={{ width: `${width}%` }} />
           </div>
         ))}
       </div>
@@ -85,29 +83,39 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
   };
 
   return (
-    <div className="group flex items-center gap-3 rounded-[8px] px-2 py-2 transition-colors duration-150 hover:bg-fill">
+    <div className="group flex h-9 items-center gap-3 rounded-[8px] px-2 transition-colors duration-150 hover:bg-fill">
       <StatusIcon status={torrent.status} progress={torrent.progress} />
-      <button type="button" className="min-w-0 flex-1 text-left" onClick={open}>
-        <div className="truncate text-[13px] leading-tight font-medium" title={torrent.filename}>
-          {torrent.filename || "Fetching info"}
-        </div>
-        <TorrentMeta torrent={torrent} className="mt-1" />
-        {isTransferring(torrent) && <Progress value={torrent.progress} tone="info" className="mt-1.5" />}
+      <button
+        type="button"
+        className="flex min-w-0 flex-1 items-center gap-3 self-stretch text-left"
+        title={torrent.filename}
+        onClick={open}
+      >
+        <span className="min-w-0 flex-1 truncate text-[13px]">
+          {torrent.filename || <span className="text-fg-3">Fetching info</span>}
+        </span>
+        <Meta torrent={torrent} />
       </button>
       <div className="flex shrink-0 items-center gap-0.5">
         {torrent.status === "waiting_files_selection" && (
-          <IconButton label="Choose files" className="text-warning!" onClick={() => onChooseFiles(torrent.id)}>
+          <IconButton
+            size="sm"
+            label="Choose files"
+            className="text-warning!"
+            onClick={() => onChooseFiles(torrent.id)}
+          >
             <ListChecksIcon />
           </IconButton>
         )}
         {ready && (
-          <IconButton label="Download" onClick={() => actions.torrents([torrent], "download")}>
+          <IconButton size="sm" label="Download" onClick={() => actions.torrents([torrent], "download")}>
             <DownloadSimpleIcon />
           </IconButton>
         )}
         <Menu
           trigger={
             <IconButton
+              size="sm"
               label="More"
               className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
             >
@@ -135,4 +143,23 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
       </div>
     </div>
   );
+}
+
+function Meta({ torrent }: { torrent: Torrent }): ReactNode {
+  if (isTransferring(torrent)) {
+    return (
+      <span className="tabular shrink-0 text-[12px] text-info">
+        {Math.round(torrent.progress)}%
+        {torrent.speed ? <span className="text-fg-3"> · {formatSpeed(torrent.speed)}</span> : null}
+      </span>
+    );
+  }
+  const status = STATUS[torrent.status];
+  if (torrent.status === "downloaded") {
+    return torrent.bytes ? (
+      <span className="tabular shrink-0 text-[12px] text-fg-3">{formatBytes(torrent.bytes)}</span>
+    ) : null;
+  }
+  if (torrent.status === "waiting_files_selection" || !torrent.filename) return null;
+  return <span className={clsx("shrink-0 text-[12px]", TONE_TEXT[status.tone])}>{status.label}</span>;
 }

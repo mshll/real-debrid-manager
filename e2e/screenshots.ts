@@ -90,8 +90,15 @@ async function removeStorage(worker: Worker, area: "local" | "sync", key: string
   await worker.evaluate(({ area, key }) => chrome.storage[area].remove(key), { area, key });
 }
 
-async function open(context: BrowserContext, url: string, label: string, theme: Theme): Promise<Page> {
+async function open(
+  context: BrowserContext,
+  url: string,
+  label: string,
+  theme: Theme,
+  init?: () => void,
+): Promise<Page> {
   const page = await context.newPage();
+  if (init) await page.addInitScript(init);
   watch(page, label);
   page.on("pageerror", (error) =>
     problems.push({ source: label, kind: "pageerror", text: error.stack ?? error.message }),
@@ -99,6 +106,20 @@ async function open(context: BrowserContext, url: string, label: string, theme: 
   await page.goto(url);
   await page.locator(`html[data-theme="${theme}"]`).waitFor();
   return page;
+}
+
+/** The popup tab has no scannable page behind it, so the scan sees a fake one. */
+function fakePageScan(): void {
+  const hrefs = [
+    "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Dune.Part.Two.2024.2160p.WEB-DL.DDP5.1",
+    "magnet:?xt=urn:btih:89abcdef0123456789abcdef0123456789abcdef&dn=The.Last.of.Us.S02.1080p.WEB-DL",
+    "https://1fichier.com/?k9x2m4p7q1&af=1",
+    "https://1fichier.com/?b3v8n1z5c6",
+    "https://rapidgator.net/?file/4f2a9c/Arcane.S02E01.mkv.html",
+  ];
+  // Object.assign sidesteps the full Tab and InjectionResult shapes the stubs don't need.
+  Object.assign(chrome.tabs, { query: async () => [{ id: 1, url: "https://example.com/" }] });
+  Object.assign(chrome.scripting, { executeScript: async () => [{ result: { hrefs, text: "" } }] });
 }
 
 async function shoot(page: Page, name: string): Promise<void> {
@@ -159,6 +180,35 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await popup.getByText("Scanning page").waitFor({ state: "detached" });
   await shootPopup(popup, `popup-${theme}`);
   await popup.close();
+
+  const scanned = await open(context, `${base}/popup.html`, `popup page links ${theme}`, theme, fakePageScan);
+  await scanned.getByText("On this page").waitFor();
+  await scanned.getByText("Add all").waitFor();
+  await scanned.getByText(torrents[0]!.filename).waitFor();
+  await shootPopup(scanned, `popup-page-links-${theme}`);
+  if (theme === "light") {
+    await check("scroll fades follow the scroll position", async () => {
+      const fades = (): Promise<string> =>
+        scanned.evaluate(async () => {
+          const list = document.querySelector("section .scroll-fade");
+          if (!list) return "missing";
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          const style = getComputedStyle(list);
+          return `${style.getPropertyValue("--fade-start")}/${style.getPropertyValue("--fade-end")}`;
+        });
+      const top = await fades();
+      await scanned.evaluate(() =>
+        document.querySelector("section .scroll-fade")?.scrollTo({ top: 1e4, behavior: "instant" }),
+      );
+      const bottom = await fades();
+      assert(
+        top.startsWith("0px/") && !top.endsWith("/0px") && bottom.endsWith("/0px") && !bottom.startsWith("0px/"),
+        `start/end fades: top ${top}, bottom ${bottom}`,
+      );
+      return `top ${top}, scrolled to end ${bottom}`;
+    });
+  }
+  await scanned.close();
 
   const list = await open(context, `${manager}#/torrents`, `manager torrents ${theme}`, theme);
   await waitForLibrary(list);

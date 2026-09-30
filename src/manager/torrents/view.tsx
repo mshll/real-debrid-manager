@@ -279,7 +279,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
               <span className={COLUMNS.actions} />
             </div>
           )}
-          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto pb-24">
+          <div ref={scrollRef} className="scroll-fade min-h-0 flex-1 overflow-y-auto pb-24">
             {isLoading ? (
               <LoadingRows />
             ) : error ? (
@@ -311,7 +311,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                   description="Add a magnet, drop a .torrent file anywhere on this page, or right-click any link on the web."
                 >
                   <Button variant="primary" icon={<PlusIcon />} onClick={onAdd}>
-                    Add torrent
+                    Add links
                   </Button>
                 </EmptyState>
               )
