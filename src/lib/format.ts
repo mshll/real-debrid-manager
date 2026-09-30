@@ -44,7 +44,7 @@ export type Tone = "accent" | "info" | "warning" | "danger" | "neutral";
 export const STATUS: Record<TorrentStatus, { label: string; tone: Tone; active: boolean }> = {
   magnet_conversion: { label: "Fetching info", tone: "info", active: true },
   waiting_files_selection: { label: "Choose files", tone: "warning", active: true },
-  queued: { label: "Queued", tone: "info", active: true },
+  queued: { label: "Queued", tone: "neutral", active: true },
   downloading: { label: "Downloading", tone: "info", active: true },
   compressing: { label: "Compressing", tone: "info", active: true },
   uploading: { label: "Uploading", tone: "info", active: true },

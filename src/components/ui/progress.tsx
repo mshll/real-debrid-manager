@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export function Progress({
   value,
@@ -13,7 +13,7 @@ export function Progress({
   const fill = { accent: "bg-accent", info: "bg-info", danger: "bg-danger" }[tone];
   return (
     <div
-      className={clsx("h-[3px] overflow-hidden rounded-full bg-fill", className)}
+      className={clsx("h-1 overflow-hidden rounded-full bg-fill-strong", className)}
       role="progressbar"
       aria-valuenow={value}
       aria-valuemin={0}
@@ -34,4 +34,8 @@ export function Spinner({ className }: { className?: string }): ReactNode {
       <path d="M8 1.5a6.5 6.5 0 0 1 6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
+}
+
+export function Skeleton({ className, style }: { className?: string; style?: CSSProperties }): ReactNode {
+  return <div aria-hidden className={clsx("skeleton h-3", className)} style={style} />;
 }

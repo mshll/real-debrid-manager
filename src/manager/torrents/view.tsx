@@ -1,18 +1,33 @@
+import {
+  ArrowClockwiseIcon,
+  BroomIcon,
+  CopyIcon,
+  DownloadSimpleIcon,
+  MagnetStraightIcon,
+  MagnifyingGlassIcon,
+  PaperPlaneTiltIcon,
+  PlayIcon,
+  PlusIcon,
+  SortAscendingIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ArrowDownUp, Copy, Download, Eraser, Play, Plus, RotateCw, Send, Trash2 } from "lucide-react";
+import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import { Confirm, type ConfirmRequest } from "@/components/confirm";
+import { EmptyState } from "@/components/empty-state";
 import { FilePicker } from "@/components/file-picker";
 import { Button, IconButton } from "@/components/ui/button";
-import { Menu, type MenuAction } from "@/components/ui/menu";
-import { Spinner } from "@/components/ui/progress";
-import { Segmented } from "@/components/ui/segmented";
+import { CheckMark } from "@/components/ui/checkbox";
+import { Menu, type MenuEntry } from "@/components/ui/menu";
+import { Skeleton } from "@/components/ui/progress";
+import { Tabs } from "@/components/ui/tabs";
 import { useActions } from "@/hooks/use-actions";
 import { reinsertTorrent, useReinsert } from "@/hooks/use-torrent-mutations";
-import { formatBytes, isActive, isFailed } from "@/lib/format";
+import { formatBytes, formatSpeed, isActive, isFailed } from "@/lib/format";
 import { keys, useLibrary } from "@/lib/queries";
 import { deleteTorrent } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
@@ -23,7 +38,7 @@ import { SearchField, SelectionBar, Toolbar } from "../toolbar";
 import { useSelection } from "../use-selection";
 import { duplicateTorrents, failedTorrents } from "./cleanup";
 import { TorrentDetail } from "./detail";
-import { ROW_HEIGHT, TorrentRow } from "./row";
+import { COLUMNS, ROW_HEIGHT, TorrentRow } from "./row";
 
 type Filter = "all" | "active" | "ready" | "failed";
 type Sort = "added" | "name" | "size";
@@ -35,11 +50,11 @@ const FILTERS: Record<Filter, (torrent: Torrent) => boolean> = {
   failed: (t) => isFailed(t.status),
 };
 
-const SORTERS: Record<Sort, (a: Torrent, b: Torrent) => number> = {
-  added: (a, b) => Date.parse(b.added) - Date.parse(a.added),
-  name: (a, b) => a.filename.localeCompare(b.filename),
-  size: (a, b) => b.bytes - a.bytes,
-};
+const SORTS: { value: Sort; label: string; compare: (a: Torrent, b: Torrent) => number }[] = [
+  { value: "added", label: "Newest first", compare: (a, b) => Date.parse(b.added) - Date.parse(a.added) },
+  { value: "name", label: "Name", compare: (a, b) => a.filename.localeCompare(b.filename) },
+  { value: "size", label: "Largest first", compare: (a, b) => b.bytes - a.bytes },
+];
 
 export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onAdd: () => void }): ReactNode {
   const { torrents, isLoading, error } = useLibrary();
@@ -49,27 +64,35 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("added");
+  const [rawCursor, setCursor] = useState<number | null>(null);
   const [picking, setPicking] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const compact = Boolean(detailId);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
+    const compare = SORTS.find((option) => option.value === sort)?.compare;
     return torrents
       .filter(FILTERS[filter])
       .filter((t) => !needle || t.filename.toLowerCase().includes(needle) || t.hash === needle)
-      .sort(SORTERS[sort]);
+      .sort(compare);
   }, [torrents, filter, query, sort]);
   const ids = useMemo(() => visible.map((t) => t.id), [visible]);
+  const cursor = rawCursor !== null && rawCursor < ids.length ? rawCursor : null;
   const selection = useSelection(ids);
   const selected = visible.filter((t) => selection.has(t.id));
 
-  const counts = useMemo(
-    () => ({ active: torrents.filter(FILTERS.active).length, failed: torrents.filter(FILTERS.failed).length }),
-    [torrents],
-  );
+  const stats = useMemo(() => {
+    const active = torrents.filter(FILTERS.active);
+    return {
+      active: active.length,
+      ready: torrents.filter(FILTERS.ready).length,
+      failed: torrents.filter(FILTERS.failed).length,
+      downloading: active.filter((t) => t.status === "downloading").length,
+      speed: active.reduce((sum, t) => sum + (t.speed ?? 0), 0),
+    };
+  }, [torrents]);
   const failed = useMemo(() => failedTorrents(torrents), [torrents]);
   const duplicates = useMemo(() => duplicateTorrents(torrents), [torrents]);
 
@@ -82,34 +105,52 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent): void => {
-      const typing = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement;
-      if (event.key === "/" && !typing) {
+      const target = event.target;
+      const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+      if (typing || document.querySelector("[role=dialog],[role=menu]")) return;
+      if ((event.metaKey || event.ctrlKey || event.altKey) && event.key !== "a") return;
+      const move = (delta: number): void => {
+        event.preventDefault();
+        const from = cursor ?? (detailId ? ids.indexOf(detailId) : -1);
+        const next = Math.max(0, Math.min(ids.length - 1, from + delta));
+        setCursor(next);
+        virtualizer.scrollToIndex(next);
+        const id = ids[next];
+        if (detailId && id) navigate(`/torrents/${id}`);
+      };
+      if (event.key === "/") {
         event.preventDefault();
         searchRef.current?.focus();
-      } else if ((event.metaKey || event.ctrlKey) && event.key === "a" && !typing) {
+      } else if ((event.metaKey || event.ctrlKey) && event.key === "a") {
         event.preventDefault();
         selection.setAll(true);
-      } else if (event.key === "Escape" && !typing) {
+      } else if (event.key === "ArrowDown" || event.key === "j") move(1);
+      else if (event.key === "ArrowUp" || event.key === "k") move(-1);
+      else if (event.key === "Enter" && cursor !== null && ids[cursor]) navigate(`/torrents/${ids[cursor]}`);
+      else if (event.key === "x" && cursor !== null && ids[cursor]) selection.toggle(ids[cursor], cursor, false);
+      else if (event.key === "Escape") {
         if (selection.count) selection.clear();
         else if (detailId) navigate("/torrents");
+        else setCursor(null);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selection, detailId]);
+  }, [selection, detailId, cursor, ids, virtualizer]);
 
   const removeMany = (list: Torrent[], label: string): void => {
     setConfirm({
-      title: `Delete ${list.length} torrent${list.length === 1 ? "" : "s"}?`,
-      description: `${label} This can't be undone.`,
+      title: list.length === 1 ? "Delete this torrent?" : `Delete ${list.length} torrents?`,
+      description: `${label} This can't be undone.`.trim(),
       action: "Delete",
       onConfirm: () => {
         const id = toast.loading(`Deleting ${list.length}`);
         (async () => {
           for (const torrent of list) await deleteTorrent(torrent.id);
           selection.clear();
+          if (detailId && list.some((torrent) => torrent.id === detailId)) navigate("/torrents");
           await queryClient.invalidateQueries({ queryKey: keys.torrents });
-          toast.success(`Deleted ${list.length}`, { id });
+          toast.success(list.length === 1 ? "Deleted" : `Deleted ${list.length}`, { id });
         })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
       },
     });
@@ -125,140 +166,218 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
     })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
   };
 
-  const rowMenu = (torrent: Torrent): (MenuAction | "separator")[] => {
+  const rowMenu = (torrent: Torrent): MenuEntry[] => {
     const ready = torrent.status === "downloaded" && torrent.links.length > 0;
     return [
       ...(ready
         ? [
-            { label: "Download", icon: <Download />, onSelect: () => actions.download(torrent.links) },
-            { label: "Stream", icon: <Play />, onSelect: () => torrent.links[0] && actions.stream(torrent.links[0]) },
-            { label: "Copy links", icon: <Copy />, onSelect: () => actions.copy(torrent.links) },
-            { label: "Send to aria2", icon: <Send />, onSelect: () => actions.aria2(torrent.links) },
+            { label: "Download", icon: <DownloadSimpleIcon />, onSelect: () => actions.download(torrent.links) },
+            {
+              label: "Stream",
+              icon: <PlayIcon />,
+              onSelect: () => torrent.links[0] && actions.stream(torrent.links[0]),
+            },
+            { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.copy(torrent.links) },
+            { label: "Send to aria2", icon: <PaperPlaneTiltIcon />, onSelect: () => actions.aria2(torrent.links) },
             "separator" as const,
           ]
         : []),
-      { label: "Copy magnet", icon: <Copy />, onSelect: () => copyText(`magnet:?xt=urn:btih:${torrent.hash}`) },
-      { label: "Reinsert", icon: <RotateCw />, onSelect: () => reinsert(torrent) },
+      {
+        label: "Copy magnet",
+        icon: <MagnetStraightIcon />,
+        onSelect: () => copyText(`magnet:?xt=urn:btih:${torrent.hash}`),
+      },
+      { label: "Reinsert", icon: <ArrowClockwiseIcon />, onSelect: () => reinsert(torrent) },
       "separator",
-      { label: "Delete", icon: <Trash2 />, danger: true, onSelect: () => removeMany([torrent], torrent.filename) },
+      { label: "Delete", icon: <TrashIcon />, danger: true, onSelect: () => removeMany([torrent], torrent.filename) },
     ];
   };
 
   const readyLinks = selected.flatMap((t) => (t.status === "downloaded" ? t.links : []));
+  const allSelected = visible.length > 0 && selection.count === visible.length;
 
   return (
     <div className="flex min-w-0 flex-1">
       <section className="relative flex min-w-0 flex-1 flex-col">
-        <Toolbar
-          title="Torrents"
-          subtitle={torrents.length && !compact ? `${visible.length} of ${torrents.length}` : undefined}
-        >
-          <Segmented
-            value={filter}
-            onChange={setFilter}
-            className={compact ? "w-[236px] shrink-0" : "w-[300px] shrink-0"}
-            options={[
-              { value: "all", label: "All" },
-              { value: "active", label: counts.active && !compact ? `Active ${counts.active}` : "Active" },
-              { value: "ready", label: "Ready" },
-              { value: "failed", label: counts.failed && !compact ? `Failed ${counts.failed}` : "Failed" },
-            ]}
+        <Toolbar title="Torrents" subtitle={torrents.length ? `${visible.length} of ${torrents.length}` : undefined}>
+          <SearchField
+            value={query}
+            onChange={(next) => {
+              setQuery(next);
+              setCursor(null);
+            }}
+            inputRef={searchRef}
+            placeholder="Search torrents"
           />
-          <SearchField value={query} onChange={setQuery} inputRef={searchRef} placeholder="Search torrents" />
           <Menu
             trigger={
-              compact ? (
-                <IconButton label="Sort">
-                  <ArrowDownUp />
-                </IconButton>
-              ) : (
-                <Button variant="ghost" size="sm" icon={<ArrowDownUp className="size-3.5" />}>
-                  {sort === "added" ? "Newest" : sort === "name" ? "Name" : "Size"}
-                </Button>
-              )
+              <Button variant="ghost" size="sm" icon={<SortAscendingIcon />}>
+                <span className="sr-only @3xl:not-sr-only">{SORTS.find((option) => option.value === sort)?.label}</span>
+              </Button>
             }
             items={[
-              { label: "Newest first", onSelect: () => setSort("added") },
-              { label: "Name", onSelect: () => setSort("name") },
-              { label: "Largest first", onSelect: () => setSort("size") },
+              { heading: "Sort by" },
+              ...SORTS.map((option) => ({
+                label: option.label,
+                checked: sort === option.value,
+                onSelect: () => {
+                  setSort(option.value);
+                  setCursor(null);
+                },
+              })),
             ]}
           />
           <Menu
             trigger={
-              compact ? (
-                <IconButton label="Clean up">
-                  <Eraser />
-                </IconButton>
-              ) : (
-                <Button variant="ghost" size="sm" icon={<Eraser className="size-3.5" />}>
-                  Clean up
-                </Button>
-              )
+              <Button variant="ghost" size="sm" icon={<BroomIcon />}>
+                <span className="sr-only @3xl:not-sr-only">Clean up</span>
+              </Button>
             }
             items={[
+              { heading: "Clean up" },
               {
-                label: `Remove failed (${failed.length})`,
+                label: "Remove failed",
+                hint: String(failed.length),
+                icon: <TrashIcon />,
                 disabled: !failed.length,
                 onSelect: () => removeMany(failed, "Failed, dead and errored torrents will be removed."),
               },
               {
-                label: `Remove duplicates (${duplicates.length})`,
+                label: "Remove duplicates",
+                hint: String(duplicates.length),
+                icon: <CopyIcon />,
                 disabled: !duplicates.length,
                 onSelect: () => removeMany(duplicates, "The best copy of each torrent is kept."),
               },
               {
-                label: `Reinsert failed (${failed.length})`,
+                label: "Reinsert failed",
+                hint: String(failed.length),
+                icon: <ArrowClockwiseIcon />,
                 disabled: !failed.length,
                 onSelect: () => reinsertMany(failed),
               },
             ]}
           />
-          <Button variant="primary" size="sm" icon={<Plus className="size-3.5" />} onClick={onAdd}>
+          <Button variant="primary" size="sm" icon={<PlusIcon />} onClick={onAdd}>
             Add
           </Button>
         </Toolbar>
 
-        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto py-1.5">
-          {isLoading ? (
-            <div className="flex h-full items-center justify-center text-fg-3">
-              <Spinner />
-            </div>
-          ) : error ? (
-            <p className="p-10 text-center text-[13px] text-danger">{errorMessage(error)}</p>
-          ) : !visible.length ? (
-            <EmptyState filtered={Boolean(query) || filter !== "all"} onAdd={onAdd} />
-          ) : (
-            <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
-              {virtualizer.getVirtualItems().map((item) => {
-                const torrent = visible[item.index];
-                if (!torrent) return null;
-                return (
-                  <div
-                    key={torrent.id}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      transform: `translateY(${item.start}px)`,
-                    }}
-                  >
-                    <TorrentRow
-                      torrent={torrent}
-                      selected={selection.has(torrent.id)}
-                      selecting={selection.count > 0}
-                      current={torrent.id === detailId}
-                      menu={rowMenu(torrent)}
-                      onToggle={(event) => selection.toggle(torrent.id, item.index, event.shiftKey)}
-                      onOpen={() => navigate(`/torrents/${torrent.id}`)}
-                      onDownload={() => actions.download(torrent.links)}
-                      onChooseFiles={() => setPicking(torrent.id)}
-                    />
-                  </div>
-                );
-              })}
+        <div className="flex h-11 shrink-0 items-center gap-4 border-b border-border px-5">
+          <Tabs
+            value={filter}
+            onChange={(next) => {
+              setFilter(next);
+              setCursor(null);
+            }}
+            options={[
+              { value: "all", label: "All" },
+              { value: "active", label: "Active", count: stats.active },
+              { value: "ready", label: "Ready", count: stats.ready },
+              { value: "failed", label: "Failed", count: stats.failed },
+            ]}
+          />
+          {stats.downloading > 0 && (
+            <span className="tabular ml-auto flex items-center gap-2 truncate text-[12px] text-fg-3">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-info opacity-60" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-info" />
+              </span>
+              {stats.downloading} downloading · {formatSpeed(stats.speed)}
+            </span>
+          )}
+        </div>
+
+        <div className="@container flex min-h-0 flex-1 flex-col">
+          {visible.length > 0 && (
+            <div className="flex h-9 shrink-0 items-center gap-3 border-b border-border px-5 text-[12px] font-medium text-fg-3">
+              <span className={COLUMNS.check}>
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={allSelected}
+                  aria-label="Select all"
+                  onClick={() => selection.setAll(!allSelected)}
+                  className="-m-1.5 flex p-1.5"
+                >
+                  <CheckMark checked={allSelected} indeterminate={selection.count > 0 && !allSelected} />
+                </button>
+              </span>
+              <span className="w-3.5 shrink-0" />
+              <span className="flex-1">Name</span>
+              <span className={COLUMNS.status}>Status</span>
+              <span className={COLUMNS.size}>Size</span>
+              <span className={COLUMNS.added}>Added</span>
+              <span className={COLUMNS.actions} />
             </div>
           )}
+          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto pb-24">
+            {isLoading ? (
+              <LoadingRows />
+            ) : error ? (
+              <EmptyState
+                icon={<MagnetStraightIcon />}
+                title="Couldn't load torrents"
+                description={errorMessage(error)}
+              />
+            ) : !visible.length ? (
+              query || filter !== "all" ? (
+                <EmptyState
+                  icon={<MagnifyingGlassIcon />}
+                  title="No matches"
+                  description={query ? `Nothing matches "${query}".` : "No torrents in this view."}
+                >
+                  <Button
+                    onClick={() => {
+                      setQuery("");
+                      setFilter("all");
+                    }}
+                  >
+                    Clear filters
+                  </Button>
+                </EmptyState>
+              ) : (
+                <EmptyState
+                  icon={<MagnetStraightIcon />}
+                  title="Your library is empty"
+                  description="Add a magnet, drop a .torrent file anywhere on this page, or right-click any link on the web."
+                >
+                  <Button variant="primary" icon={<PlusIcon />} onClick={onAdd}>
+                    Add torrent
+                  </Button>
+                </EmptyState>
+              )
+            ) : (
+              <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
+                {virtualizer.getVirtualItems().map((item) => {
+                  const torrent = visible[item.index];
+                  if (!torrent) return null;
+                  return (
+                    <div
+                      key={torrent.id}
+                      style={{ position: "absolute", inset: "0 0 auto 0", transform: `translateY(${item.start}px)` }}
+                    >
+                      <TorrentRow
+                        torrent={torrent}
+                        selected={selection.has(torrent.id)}
+                        selecting={selection.count > 0}
+                        current={torrent.id === detailId}
+                        cursor={cursor === item.index}
+                        menu={rowMenu(torrent)}
+                        onToggle={(event) => selection.toggle(torrent.id, item.index, event.shiftKey)}
+                        onOpen={() => {
+                          setCursor(item.index);
+                          navigate(`/torrents/${torrent.id}`);
+                        }}
+                        onDownload={() => actions.download(torrent.links)}
+                        onChooseFiles={() => setPicking(torrent.id)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {selection.count > 0 && (
@@ -270,7 +389,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
             <Button
               size="sm"
               variant="ghost"
-              icon={<Download className="size-3.5" />}
+              icon={<DownloadSimpleIcon />}
               disabled={!readyLinks.length}
               onClick={() => actions.download(readyLinks)}
             >
@@ -279,26 +398,16 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
             <Button
               size="sm"
               variant="ghost"
-              icon={<Copy className="size-3.5" />}
+              icon={<CopyIcon />}
               disabled={!readyLinks.length}
               onClick={() => actions.copy(readyLinks)}
             >
               Copy links
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              icon={<RotateCw className="size-3.5" />}
-              onClick={() => reinsertMany(selected)}
-            >
+            <Button size="sm" variant="ghost" icon={<ArrowClockwiseIcon />} onClick={() => reinsertMany(selected)}>
               Reinsert
             </Button>
-            <Button
-              size="sm"
-              variant="danger"
-              icon={<Trash2 className="size-3.5" />}
-              onClick={() => removeMany(selected, "")}
-            >
+            <Button size="sm" variant="danger" icon={<TrashIcon />} onClick={() => removeMany(selected, "")}>
               Delete
             </Button>
           </SelectionBar>
@@ -314,17 +423,17 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
   );
 }
 
-function EmptyState({ filtered, onAdd }: { filtered: boolean; onAdd: () => void }): ReactNode {
-  if (filtered) return <p className="p-16 text-center text-[13px] text-fg-3">No torrents match.</p>;
+function LoadingRows(): ReactNode {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 p-16 text-center">
-      <p className="text-[14px] font-medium">Your library is empty</p>
-      <p className="max-w-72 text-[12.5px] text-fg-2">
-        Add a magnet, drop a .torrent file anywhere on this page, or right-click any link on the web.
-      </p>
-      <Button variant="primary" icon={<Plus className="size-4" />} onClick={onAdd}>
-        Add torrent
-      </Button>
+    <div>
+      {[62, 48, 71, 55, 66, 40, 58, 52].map((width, index) => (
+        <div key={index} className="flex items-center gap-3 border-b border-border px-5" style={{ height: ROW_HEIGHT }}>
+          <span className="w-5" />
+          <Skeleton className="size-3.5 rounded-full" />
+          <Skeleton style={{ width: `${width}%` }} />
+          <Skeleton className="ml-auto w-16" />
+        </div>
+      ))}
     </div>
   );
 }

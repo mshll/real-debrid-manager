@@ -1,45 +1,66 @@
+import {
+  ArrowUpRightIcon,
+  CreditCardIcon,
+  DevicesIcon,
+  GlobeHemisphereWestIcon,
+  KeyIcon,
+  LockKeyIcon,
+  ReceiptIcon,
+  SignOutIcon,
+} from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowUpRight, LogOut } from "lucide-react";
+import clsx from "clsx";
 import { useMemo, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import { Confirm, type ConfirmRequest } from "@/components/confirm";
 import { Button } from "@/components/ui/button";
-import { Group, Row } from "@/components/ui/group";
-import { Spinner } from "@/components/ui/progress";
+import { Card, Group, Row } from "@/components/ui/group";
+import { Progress, Skeleton } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
+import { useSettings } from "@/hooks/use-settings";
 import { daysLeft, formatBytes, formatDate } from "@/lib/format";
-import { keys, useRdSettings, useTraffic, useTrafficDetails, useUser } from "@/lib/queries";
+import { keys, useLibrary, useRdSettings, useTraffic, useTrafficDetails, useUser } from "@/lib/queries";
 import { convertPoints, updateRdSetting } from "@/lib/rd/api";
 import { signOut } from "@/lib/rd/auth";
 import { errorMessage, RdError } from "@/lib/rd/errors";
-import type { RdSettingName, TrafficDetails } from "@/lib/rd/types";
+import type { HostTraffic, RdSettingName, RdSettings, TrafficDetails } from "@/lib/rd/types";
 
-import { Toolbar } from "./toolbar";
+import { navigate } from "./router";
+import { Page } from "./toolbar";
 
 const WEBSITE_LINKS = [
-  { label: "Buy or extend premium", href: "https://real-debrid.com/premium" },
-  { label: "Devices and connected apps", href: "https://real-debrid.com/devices" },
-  { label: "Password and two-factor", href: "https://real-debrid.com/account" },
-  { label: "Payment history", href: "https://real-debrid.com/payments-history" },
-  { label: "VPN and IP check", href: "https://real-debrid.com/vpn" },
-  { label: "Private API token", href: "https://real-debrid.com/apitoken" },
+  { label: "Buy or extend premium", href: "https://real-debrid.com/premium", icon: CreditCardIcon },
+  { label: "Devices and apps", href: "https://real-debrid.com/devices", icon: DevicesIcon },
+  { label: "Password and 2FA", href: "https://real-debrid.com/account", icon: LockKeyIcon },
+  { label: "Payment history", href: "https://real-debrid.com/payments-history", icon: ReceiptIcon },
+  { label: "VPN and IP check", href: "https://real-debrid.com/vpn", icon: GlobeHemisphereWestIcon },
+  { label: "Private API token", href: "https://real-debrid.com/apitoken", icon: KeyIcon },
 ];
 
 export function AccountView(): ReactNode {
   const { data: user, isLoading } = useUser();
+  const [settings] = useSettings();
   const queryClient = useQueryClient();
   const [confirm, setConfirm] = useState<ConfirmRequest | null>(null);
 
   if (isLoading || !user) {
     return (
-      <section className="flex flex-1 items-center justify-center text-fg-3">
-        <Spinner />
-      </section>
+      <Page title="Account" width="max-w-5xl">
+        <div className="grid grid-cols-3 gap-4">
+          {[0, 1, 2].map((index) => (
+            <Card key={index} className="h-36 p-5">
+              <Skeleton className="w-1/3" />
+              <Skeleton className="mt-4 h-7 w-1/2" />
+            </Card>
+          ))}
+        </div>
+      </Page>
     );
   }
 
   const days = daysLeft(user.premium);
+  const premium = user.type === "premium";
   const convert = (): void =>
     setConfirm({
       title: `Convert ${user.points.toLocaleString()} points?`,
@@ -60,103 +81,115 @@ export function AccountView(): ReactNode {
     });
 
   return (
-    <section className="flex min-w-0 flex-1 flex-col">
-      <Toolbar title="Account" />
-      <div className="min-h-0 flex-1 overflow-y-auto bg-grouped">
-        <div className="mx-auto flex max-w-2xl flex-col gap-7 px-6 py-7">
-          <div className="flex items-center gap-4">
-            <img src={user.avatar} alt="" className="size-14 rounded-full bg-fill" />
-            <div className="min-w-0">
-              <h2 className="text-[17px] font-semibold tracking-[-0.01em]">{user.username}</h2>
-              <p className="text-[12.5px] text-fg-2">{user.email}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Stat
-              label="Premium"
-              value={user.type === "premium" ? `${days} days` : "Inactive"}
-              detail={user.type === "premium" ? `Until ${formatDate(user.expiration)}` : "Free account"}
-              action={
-                <a
-                  href="https://real-debrid.com/premium"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[12px] font-medium text-accent hover:underline"
-                >
-                  Extend
-                </a>
-              }
-            />
-            <Stat
-              label="Fidelity points"
-              value={user.points.toLocaleString()}
-              detail="Earned with every purchase"
-              action={
-                <button type="button" onClick={convert} className="text-[12px] font-medium text-accent hover:underline">
-                  Convert
-                </button>
-              }
-            />
-          </div>
-
-          <TrafficSection />
-          <RdSettingsSection />
-
-          <Group
-            title="On real-debrid.com"
-            footer="These aren't available through Real-Debrid's API, so they open the website."
-          >
-            {WEBSITE_LINKS.map((link) => (
-              <Row key={link.href} label={link.label} onClick={() => window.open(link.href, "_blank")}>
-                <ArrowUpRight className="size-3.5 text-fg-3" />
-              </Row>
-            ))}
-          </Group>
-
-          <div>
-            <Button
-              variant="danger"
-              icon={<LogOut className="size-3.5" />}
-              onClick={() =>
-                setConfirm({
-                  title: "Sign out?",
-                  description: "You can sign back in any time.",
-                  action: "Sign out",
-                  onConfirm: () => signOut().catch(console.error),
-                })
-              }
-            >
-              Sign out
+    <Page
+      title={user.username}
+      description={user.email}
+      width="max-w-5xl"
+      leading={<img src={user.avatar} alt="" className="size-14 rounded-full bg-fill shadow-panel" />}
+      action={
+        <Button
+          variant="ghost"
+          icon={<SignOutIcon />}
+          onClick={() =>
+            setConfirm({
+              title: "Sign out?",
+              description: "You can sign back in any time.",
+              action: "Sign out",
+              onConfirm: () => signOut().catch(console.error),
+            })
+          }
+        >
+          Sign out
+        </Button>
+      }
+    >
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          label="Premium"
+          tone={premium && days > settings.expiryReminderDays ? undefined : "warning"}
+          value={premium ? `${days} days` : "Inactive"}
+          detail={premium ? `Until ${formatDate(user.expiration)}` : "Free account"}
+          action={
+            <Button size="sm" onClick={() => window.open("https://real-debrid.com/premium", "_blank")}>
+              Extend
             </Button>
-          </div>
-        </div>
+          }
+        />
+        <StatCard
+          label="Fidelity points"
+          value={user.points.toLocaleString()}
+          detail="Convert them into premium days"
+          action={
+            <Button size="sm" disabled={!user.points} onClick={convert}>
+              Convert
+            </Button>
+          }
+        />
+        <LibraryCard />
       </div>
+
+      <TrafficSection />
+
+      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-6">
+        <HostLimits />
+        <RdSettingsSection />
+      </div>
+
+      <section>
+        <h2 className="text-[15px] font-semibold tracking-[-0.01em]">On real-debrid.com</h2>
+        <p className="mt-0.5 text-[13px] text-fg-3">Real-Debrid's API can't manage these, so they open the website.</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {WEBSITE_LINKS.map(({ label, href, icon: Icon }) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="press group flex items-center gap-3 rounded-[12px] bg-surface p-3 shadow-panel hover:bg-subtle dark:hover:bg-raised"
+            >
+              <span className="flex size-8 items-center justify-center rounded-[8px] bg-fill text-fg-2">
+                <Icon className="size-4" />
+              </span>
+              <span className="flex-1 text-[13px] font-medium">{label}</span>
+              <ArrowUpRightIcon className="size-3.5 text-fg-4 transition-colors group-hover:text-fg-2" />
+            </a>
+          ))}
+        </div>
+      </section>
       <Confirm request={confirm} onClose={() => setConfirm(null)} />
-    </section>
+    </Page>
   );
 }
 
-function Stat({
+function StatCard({
   label,
   value,
   detail,
   action,
+  tone,
 }: {
   label: string;
   value: string;
   detail: string;
   action?: ReactNode;
+  tone?: "warning";
 }): ReactNode {
   return (
-    <div className="rounded-[12px] bg-surface p-4 shadow-card">
-      <div className="flex items-center justify-between">
-        <span className="text-[12px] text-fg-2">{label}</span>
+    <Card className="flex flex-col p-5">
+      <div className="flex h-7 items-center justify-between">
+        <span className="text-[13px] font-medium text-fg-3">{label}</span>
         {action}
       </div>
-      <div className="tabular mt-1.5 text-[24px] font-semibold tracking-[-0.02em]">{value}</div>
-      <div className="text-[12px] text-fg-3">{detail}</div>
-    </div>
+      <div
+        className={clsx(
+          "tabular mt-3 text-[28px] leading-none font-semibold tracking-[-0.02em]",
+          tone === "warning" && "text-warning",
+        )}
+      >
+        {value}
+      </div>
+      <div className="mt-2 text-[13px] text-fg-3">{detail}</div>
+    </Card>
   );
 }
 
@@ -164,40 +197,56 @@ function isoDay(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-function TrafficSection(): ReactNode {
-  const range = useMemo(() => {
+function useTrafficRange(): { start: string; end: string } {
+  return useMemo(() => {
     const end = new Date();
     const start = new Date(end.getTime() - 30 * 86400_000);
     return { start: isoDay(start), end: isoDay(end) };
   }, []);
-  const details = useTrafficDetails(range.start, range.end);
-  const traffic = useTraffic();
+}
 
-  if (details.error instanceof RdError && (details.error.status === 403 || details.error.code === 9)) {
+function trafficUnavailable(error: unknown): boolean {
+  return error instanceof RdError && (error.status === 403 || error.code === 9);
+}
+
+function LibraryCard(): ReactNode {
+  const { torrents } = useLibrary();
+  const bytes = torrents.reduce((sum, torrent) => sum + torrent.bytes, 0);
+  return (
+    <StatCard
+      label="Library"
+      value={formatBytes(bytes)}
+      detail={`${torrents.length} torrent${torrents.length === 1 ? "" : "s"}`}
+      action={
+        <Button size="sm" onClick={() => navigate("/torrents")}>
+          Open
+        </Button>
+      }
+    />
+  );
+}
+
+function TrafficSection(): ReactNode {
+  const range = useTrafficRange();
+  const details = useTrafficDetails(range.start, range.end);
+
+  if (trafficUnavailable(details.error)) {
     return (
       <Group title="Traffic" footer="Sign in with a private API token in Settings to see traffic stats.">
         <Row label="Not available with browser sign-in" />
       </Group>
     );
   }
-
-  const limited = Object.entries(traffic.data ?? {}).filter(([, host]) => host.limit > 0);
-
   return (
-    <Group title="Traffic · last 31 days">
-      <div className="p-4">
-        {details.data ? <TrafficChart details={details.data} start={range.start} /> : <div className="h-36" />}
+    <section>
+      <div className="mb-3">
+        <h2 className="text-[15px] font-semibold tracking-[-0.01em]">Traffic</h2>
+        <p className="mt-0.5 text-[13px] text-fg-3">Daily downloads over the last 31 days</p>
       </div>
-      {limited.map(([host, info]) => (
-        <Row key={host} label={host} description={`Resets ${info.reset}`}>
-          <span className="tabular text-[12px]">
-            {info.type === "links"
-              ? `${info.left} of ${info.limit} links left`
-              : `${formatBytes(info.left)} of ${formatBytes(info.limit)} left`}
-          </span>
-        </Row>
-      ))}
-    </Group>
+      <Card className="p-5">
+        {details.data ? <TrafficChart details={details.data} start={range.start} /> : <div className="h-52" />}
+      </Card>
+    </section>
   );
 }
 
@@ -215,30 +264,30 @@ function TrafficChart({ details, start }: { details: TrafficDetails; start: stri
   const max = Math.max(1, ...days.map((d) => d.bytes));
   const total = days.reduce((sum, d) => sum + d.bytes, 0);
   const active = hover !== null ? days[hover] : undefined;
+  const label = (day: string): string =>
+    new Date(`${day}T00:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
 
   return (
     <div>
-      <div className="mb-3 flex items-baseline justify-between">
+      <div className="mb-5 flex items-end justify-between">
         <div>
-          <div className="tabular text-[20px] font-semibold tracking-[-0.02em]">
+          <div className="tabular text-[22px] font-semibold tracking-[-0.02em]">
             {formatBytes(active?.bytes ?? total)}
           </div>
-          <div className="text-[12px] text-fg-3">
-            {active
-              ? `${new Date(`${active.day}T00:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" })}${active.topHost ? ` · mostly ${active.topHost}` : ""}`
-              : "Total downloaded"}
+          <div className="mt-0.5 text-[13px] text-fg-3">
+            {active ? `${label(active.day)}${active.topHost ? ` · mostly ${active.topHost}` : ""}` : "Total"}
           </div>
         </div>
-        <span className="tabular text-[11px] text-fg-3">peak {formatBytes(max)}</span>
+        <span className="tabular text-[12px] text-fg-3">Peak {formatBytes(max)}</span>
       </div>
-      <div className="relative h-28" onMouseLeave={() => setHover(null)}>
-        <div className="absolute inset-x-0 top-0 h-px bg-separator" />
-        <div className="absolute inset-x-0 top-1/2 h-px bg-separator" />
-        <div className="absolute inset-0 flex items-end gap-[2px]">
+      <div className="relative h-40" onMouseLeave={() => setHover(null)}>
+        <div className="absolute inset-x-0 top-0 border-t border-dashed border-border" />
+        <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-border" />
+        <div className="absolute inset-0 flex items-end gap-[3px]">
           {days.map((d, index) => (
             <div key={d.day} className="flex h-full flex-1 items-end" onMouseEnter={() => setHover(index)}>
               <div
-                className="w-full rounded-t-[3px] bg-chart transition-opacity"
+                className="w-full rounded-t-[3px] bg-chart transition-opacity duration-150"
                 style={{
                   height: d.bytes ? `${Math.max(2, (d.bytes / max) * 100)}%` : 0,
                   opacity: hover === null || hover === index ? 1 : 0.35,
@@ -247,20 +296,60 @@ function TrafficChart({ details, start }: { details: TrafficDetails; start: stri
             </div>
           ))}
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-px bg-fg-3/40" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-border-strong" />
       </div>
-      <div className="mt-1.5 flex justify-between text-[11px] text-fg-3">
-        <span>30 days ago</span>
+      <div className="tabular mt-2 flex justify-between text-[12px] text-fg-3">
+        <span>{label(days[0]?.day ?? start)}</span>
         <span>Today</span>
       </div>
     </div>
   );
 }
 
-const SETTING_LABELS: {
+function hostUsage(info: HostTraffic): { used: number; text: string } {
+  const used = info.limit ? 1 - info.left / info.limit : 0;
+  const text =
+    info.type === "links"
+      ? `${info.left} of ${info.limit} links left`
+      : `${formatBytes(info.left)} of ${formatBytes(info.limit)} left`;
+  return { used: used * 100, text };
+}
+
+function HostLimits(): ReactNode {
+  const traffic = useTraffic();
+  const limited = Object.entries(traffic.data ?? {}).filter(([, host]) => host.limit > 0);
+
+  return (
+    <Group title="Host limits" description="Hosters with a daily or monthly cap">
+      {traffic.isLoading ? (
+        <div className="p-4">
+          <Skeleton className="w-2/3" />
+        </div>
+      ) : limited.length ? (
+        limited.map(([host, info]) => {
+          const usage = hostUsage(info);
+          return (
+            <div key={host} className="px-4 py-3">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="truncate text-[14px]">{host}</span>
+                <span className="tabular shrink-0 text-[12px] text-fg-3">{usage.text}</span>
+              </div>
+              <Progress value={usage.used} tone={usage.used > 90 ? "danger" : "accent"} className="mt-2" />
+              <div className="mt-1.5 text-[12px] text-fg-3">Resets {info.reset}</div>
+            </div>
+          );
+        })
+      ) : (
+        <Row label="No limits on your hosters" />
+      )}
+    </Group>
+  );
+}
+
+const SETTINGS: {
   name: RdSettingName;
   label: string;
-  options: (s: NonNullable<ReturnType<typeof useRdSettings>["data"]>) => { value: string; label: string }[];
+  options: (s: RdSettings) => { value: string; label: string }[];
 }[] = [
   {
     name: "streaming_quality",
@@ -325,15 +414,15 @@ function RdSettingsSection(): ReactNode {
   };
 
   return (
-    <Group title="Real-Debrid settings">
-      {SETTING_LABELS.map((setting) => (
-        <Row key={setting.name} label={setting.label}>
+    <Group title="Real-Debrid settings" description="Saved to your account, used everywhere">
+      {SETTINGS.map((setting) => (
+        <Row key={setting.name} label={setting.label} className="min-h-13 py-2">
           <Select
             label={setting.label}
             value={current[setting.name]}
             options={setting.options(settings)}
             onChange={(value) => save(setting.name, value)}
-            className="w-44"
+            className="w-40"
           />
         </Row>
       ))}

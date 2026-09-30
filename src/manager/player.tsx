@@ -1,6 +1,6 @@
+import { ArrowLeftIcon, CopyIcon, DownloadSimpleIcon, FilmSlateIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import Hls from "hls.js";
-import { ArrowLeft, Copy, Download } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -87,11 +87,11 @@ export function PlayerView({ id }: { id: string }): ReactNode {
 
   return (
     <div data-theme="dark" className="flex h-screen flex-col bg-black text-fg">
-      <header className="flex h-12 shrink-0 items-center gap-3 px-4">
-        <Button variant="ghost" size="sm" icon={<ArrowLeft className="size-3.5" />} onClick={() => history.back()}>
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-4">
+        <Button variant="ghost" size="sm" icon={<ArrowLeftIcon />} onClick={() => history.back()}>
           Back
         </Button>
-        <h1 className="min-w-0 flex-1 truncate text-[13px] font-medium">{title}</h1>
+        <h1 className="min-w-0 flex-1 truncate text-[14px] font-medium">{title}</h1>
         {audioTracks.length > 1 && (
           <Select
             label="Audio"
@@ -123,18 +123,13 @@ export function PlayerView({ id }: { id: string }): ReactNode {
         )}
         {original && (
           <>
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<Copy className="size-3.5" />}
-              onClick={() => actions.copy([original.download])}
-            >
+            <Button variant="ghost" size="sm" icon={<CopyIcon />} onClick={() => actions.copy([original.download])}>
               Copy link
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              icon={<Download className="size-3.5" />}
+              icon={<DownloadSimpleIcon />}
               onClick={() => actions.download([original.download])}
             >
               Download
@@ -144,9 +139,21 @@ export function PlayerView({ id }: { id: string }): ReactNode {
       </header>
       <div className="flex min-h-0 flex-1 items-center justify-center">
         {error ? (
-          <div className="max-w-sm text-center">
-            <p className="text-[14px] font-medium">Can't stream this file</p>
-            <p className="mt-1 text-[12.5px] text-fg-2">{errorMessage(error)}</p>
+          <div className="flex max-w-sm flex-col items-center text-center">
+            <span className="flex size-12 items-center justify-center rounded-[12px] bg-surface text-fg-3 shadow-panel">
+              <FilmSlateIcon className="size-6" />
+            </span>
+            <p className="mt-4 text-[15px] font-semibold">Can't stream this file</p>
+            <p className="mt-1 text-[13px] text-fg-3">{errorMessage(error)}</p>
+            {original && (
+              <Button
+                className="mt-5"
+                icon={<DownloadSimpleIcon />}
+                onClick={() => actions.download([original.download])}
+              >
+                Download instead
+              </Button>
+            )}
           </div>
         ) : (
           <video ref={videoRef} controls className="max-h-full w-full" poster={media.data?.backdrop_path} />

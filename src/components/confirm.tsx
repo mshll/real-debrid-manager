@@ -17,7 +17,7 @@ export function Confirm({ request, onClose }: { request: ConfirmRequest | null; 
       onOpenChange={(open) => !open && onClose()}
       title={request?.title}
       description={request?.description}
-      className="max-w-sm"
+      className="max-w-md"
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>

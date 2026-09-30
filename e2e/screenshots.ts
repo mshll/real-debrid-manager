@@ -14,7 +14,7 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const EXTENSION = path.join(ROOT, ".output/chrome-mv3");
 const OUT = path.join(ROOT, "e2e/screenshots");
 const MANAGER = { width: 1280, height: 800 };
-const POPUP_WIDTH = 380;
+const POPUP_WIDTH = 400;
 
 const STATUS_LABELS: Record<string, string> = {
   magnet_error: "Magnet error",
@@ -187,8 +187,8 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await downloads.close();
 
   const account = await open(context, `${manager}#/account`, `manager account ${theme}`, theme);
-  await account.getByText("Traffic · last 31 days").waitFor();
-  await account.getByText("peak ").waitFor();
+  await account.getByText("Daily downloads over the last 31 days").waitFor();
+  await account.getByText("Peak ").waitFor();
   await account.getByText("Streaming quality", { exact: true }).waitFor();
   await account.getByText("rapidgator.net").waitFor();
   await shoot(account, `manager-account-${theme}`);
@@ -207,7 +207,7 @@ async function smokeChecks(context: BrowserContext, worker: Worker, base: string
   const rows = page.getByRole("row");
 
   await check("selecting two rows shows the selection bar", async () => {
-    const boxes = page.getByRole("checkbox", { name: "Select" });
+    const boxes = page.getByRole("checkbox", { name: "Select", exact: true });
     await boxes.nth(0).click();
     await boxes.nth(1).click();
     await page.getByText("2 selected").waitFor({ timeout: 3000 });

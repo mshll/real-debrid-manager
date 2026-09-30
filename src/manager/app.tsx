@@ -1,3 +1,4 @@
+import { FileArrowUpIcon } from "@phosphor-icons/react";
 import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -31,8 +32,8 @@ export function ManagerApp(): ReactNode {
   if (auth === undefined) return null;
   if (!auth) {
     return (
-      <div className="flex h-screen items-center justify-center bg-grouped">
-        <div className="h-[480px] w-[400px] rounded-[16px] bg-bg shadow-popover">
+      <div className="flex h-screen items-center justify-center bg-bg p-6">
+        <div className="h-[560px] w-[420px] rounded-[16px] bg-panel shadow-panel">
           <SignIn />
         </div>
       </div>
@@ -65,6 +66,23 @@ function Shell({ route }: { route: string[] }): ReactNode {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
         setSearching((open) => !open);
+        return;
+      }
+      const target = event.target;
+      const typing =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement;
+      if (
+        event.key === "n" &&
+        !typing &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        !document.querySelector("[role=dialog]")
+      ) {
+        event.preventDefault();
+        setAdding(true);
       }
     };
     // Pasting anywhere outside a field adds whatever links were pasted.
@@ -123,16 +141,22 @@ function Shell({ route }: { route: string[] }): ReactNode {
         uploadFiles([...event.dataTransfer.files]).catch(console.error);
       }}
     >
-      <Sidebar section={section} onSearch={() => setSearching(true)} />
-      <main className="flex min-w-0 flex-1 bg-bg">
+      <Sidebar section={section} onSearch={() => setSearching(true)} onAdd={() => setAdding(true)} />
+      <main className="my-2 mr-2 flex min-w-0 flex-1 overflow-hidden rounded-[12px] bg-panel shadow-panel">
         {section === "torrents" && <TorrentsView detailId={route[1] ?? null} onAdd={() => setAdding(true)} />}
         {section === "downloads" && <DownloadsView />}
         {section === "account" && <AccountView />}
         {section === "settings" && <SettingsView />}
       </main>
       {dropping && (
-        <div className="pointer-events-none fixed inset-3 z-50 flex items-center justify-center rounded-[16px] border-2 border-dashed border-accent bg-accent-soft backdrop-blur-sm">
-          <span className="text-[15px] font-medium">Drop .torrent files to add</span>
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-bg/70 backdrop-blur-sm">
+          <div className="flex flex-col items-center rounded-[16px] bg-raised px-10 py-8 shadow-popover">
+            <span className="flex size-12 items-center justify-center rounded-[12px] bg-accent-soft text-accent">
+              <FileArrowUpIcon className="size-6" />
+            </span>
+            <span className="mt-4 text-[15px] font-semibold">Drop to add</span>
+            <span className="mt-1 text-[13px] text-fg-3">.torrent files start with your file rules</span>
+          </div>
         </div>
       )}
       <AddDialog open={adding} onOpenChange={setAdding} />

@@ -1,10 +1,10 @@
+import { ClipboardTextIcon, PaperclipIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { ClipboardPaste, Paperclip } from "lucide-react";
 import { useRef, useState, type ReactNode } from "react";
 import { browser } from "wxt/browser";
 
-import { Button, IconButton } from "@/components/ui/button";
+import { Button, IconButton, Kbd } from "@/components/ui/button";
 import { TextArea } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/progress";
 import type { AddOutcome } from "@/lib/add";
@@ -79,8 +79,8 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
   return (
     <div
       className={clsx(
-        "relative rounded-[12px] bg-fill transition-shadow",
-        dragging && "shadow-[0_0_0_2px_var(--accent)]",
+        "relative rounded-[12px] bg-surface shadow-panel transition-shadow duration-150 focus-within:shadow-[0_0_0_1px_var(--border-strong)]",
+        dragging && "shadow-[0_0_0_1px_var(--accent),0_0_0_4px_var(--accent-soft)]",
       )}
       onDragOver={(event) => {
         event.preventDefault();
@@ -95,10 +95,10 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
     >
       <TextArea
         autoFocus
-        rows={text.includes("\n") ? 4 : 2}
+        rows={text.includes("\n") ? 5 : 3}
         value={text}
         placeholder="Paste magnets, hashes or hoster links"
-        className="bg-transparent! px-3 pt-2.5 shadow-none!"
+        className="bg-transparent! px-3.5 pt-3 text-[14px] shadow-none!"
         onChange={(event) => setText(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -107,12 +107,12 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
           }
         }}
       />
-      <div className="flex items-center gap-1 px-1.5 pb-1.5">
-        <IconButton label="Paste" onClick={() => paste().catch(console.error)}>
-          <ClipboardPaste />
+      <div className="flex items-center gap-0.5 px-2 pb-2">
+        <IconButton label="Paste from clipboard" onClick={() => paste().catch(console.error)}>
+          <ClipboardTextIcon />
         </IconButton>
-        <IconButton label="Upload .torrent" onClick={() => fileInput.current?.click()}>
-          <Paperclip />
+        <IconButton label="Upload .torrent files" onClick={() => fileInput.current?.click()}>
+          <PaperclipIcon />
         </IconButton>
         <input
           ref={fileInput}
@@ -125,17 +125,23 @@ export function Composer({ onResult }: { onResult: (outcomes: AddOutcome[]) => v
             event.target.value = "";
           }}
         />
-        <span className="ml-1 truncate text-[11.5px] text-fg-3">
+        <span className={clsx("ml-1.5 truncate text-[12px]", links.length ? "font-medium text-fg-2" : "text-fg-3")}>
           {dragging ? "Drop .torrent files" : links.length ? summarize(links) : text.trim() ? "No supported links" : ""}
         </span>
         <Button
           variant="primary"
           size="sm"
-          className="ml-auto min-w-14"
+          className="ml-auto min-w-16"
           disabled={!links.length || busy}
           onClick={() => submit().catch(console.error)}
         >
-          {busy ? <Spinner className="size-3.5" /> : "Add"}
+          {busy ? (
+            <Spinner className="size-3.5" />
+          ) : (
+            <>
+              Add <Kbd className="h-4 min-w-4 bg-black/10 text-[10px] text-current">⏎</Kbd>
+            </>
+          )}
         </Button>
       </div>
     </div>

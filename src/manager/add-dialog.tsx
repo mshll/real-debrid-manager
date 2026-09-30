@@ -19,6 +19,7 @@ export function AddDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
         }}
         title="Add to Real-Debrid"
         description="Magnets, info hashes, hoster links, folders or .torrent files. Paste as many as you like."
+        className="max-w-xl"
       >
         <div className="flex flex-col gap-2 pb-2">
           <Composer onResult={setOutcomes} />

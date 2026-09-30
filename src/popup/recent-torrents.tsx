@@ -1,17 +1,27 @@
+import {
+  ArrowClockwiseIcon,
+  CopyIcon,
+  DotsThreeIcon,
+  DownloadSimpleIcon,
+  ListChecksIcon,
+  MagnetStraightIcon,
+  PlayIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Copy, Download, ListChecks, MoreHorizontal, Play, RotateCw, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
 
-import { FileIcon } from "@/components/file-icon";
-import { TorrentMeta, TorrentProgress } from "@/components/torrent-meta";
+import { StatusIcon } from "@/components/status-icon";
+import { isTransferring, TorrentMeta } from "@/components/torrent-meta";
 import { IconButton } from "@/components/ui/button";
 import { Menu } from "@/components/ui/menu";
+import { Progress, Skeleton } from "@/components/ui/progress";
 import { useActions } from "@/hooks/use-actions";
-import { managerUrl } from "@/lib/pages";
 import { useReinsert } from "@/hooks/use-torrent-mutations";
 import { isFailed } from "@/lib/format";
+import { managerUrl } from "@/lib/pages";
 import { keys, useRecentTorrents } from "@/lib/queries";
 import { deleteTorrent } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
@@ -20,16 +30,32 @@ import type { Torrent } from "@/lib/rd/types";
 export function RecentTorrents({ onChooseFiles }: { onChooseFiles: (id: string) => void }): ReactNode {
   const { data: torrents, isLoading } = useRecentTorrents(12);
 
-  if (isLoading) return <div className="h-40" />;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 px-2 py-3">
+        {[70, 55, 80, 60].map((width) => (
+          <div key={width} className="flex items-center gap-3">
+            <Skeleton className="size-3.5 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton style={{ width: `${width}%` }} />
+              <Skeleton className="h-2.5 w-1/3" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
   if (!torrents?.length) {
     return (
-      <p className="px-2 py-10 text-center text-[12.5px] text-fg-3">
-        Nothing here yet. Paste a magnet above to get started.
-      </p>
+      <div className="flex flex-col items-center px-6 py-10 text-center">
+        <MagnetStraightIcon className="size-5 text-fg-4" />
+        <p className="mt-2 text-[13px] font-medium">No torrents yet</p>
+        <p className="mt-0.5 text-[12px] text-fg-3">Paste a magnet above, or right-click any link on the web.</p>
+      </div>
     );
   }
   return (
-    <div className="-mx-1.5">
+    <div className="flex flex-col">
       {torrents.map((torrent) => (
         <TorrentRow key={torrent.id} torrent={torrent} onChooseFiles={onChooseFiles} />
       ))}
@@ -59,30 +85,33 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
   };
 
   return (
-    <div className="group flex items-center gap-2.5 rounded-[10px] px-1.5 py-2 hover:bg-fill" onDoubleClick={open}>
-      <FileIcon name={torrent.filename} />
+    <div className="group flex items-center gap-3 rounded-[8px] px-2 py-2 transition-colors duration-150 hover:bg-fill">
+      <StatusIcon status={torrent.status} progress={torrent.progress} />
       <button type="button" className="min-w-0 flex-1 text-left" onClick={open}>
-        <div className="truncate text-[13px] leading-tight" title={torrent.filename}>
+        <div className="truncate text-[13px] leading-tight font-medium" title={torrent.filename}>
           {torrent.filename || "Fetching info"}
         </div>
-        <TorrentMeta torrent={torrent} className="mt-0.5" />
-        <TorrentProgress torrent={torrent} className="mt-1.5" />
+        <TorrentMeta torrent={torrent} className="mt-1" />
+        {isTransferring(torrent) && <Progress value={torrent.progress} tone="info" className="mt-1.5" />}
       </button>
-      <div className="flex shrink-0 items-center">
+      <div className="flex shrink-0 items-center gap-0.5">
         {torrent.status === "waiting_files_selection" && (
-          <IconButton label="Choose files" className="text-warning" onClick={() => onChooseFiles(torrent.id)}>
-            <ListChecks />
+          <IconButton label="Choose files" className="text-warning!" onClick={() => onChooseFiles(torrent.id)}>
+            <ListChecksIcon />
           </IconButton>
         )}
         {ready && (
           <IconButton label="Download" onClick={() => actions.download(torrent.links)}>
-            <Download />
+            <DownloadSimpleIcon />
           </IconButton>
         )}
         <Menu
           trigger={
-            <IconButton label="More" className="opacity-0 group-hover:opacity-100 data-popup-open:opacity-100">
-              <MoreHorizontal />
+            <IconButton
+              label="More"
+              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
+            >
+              <DotsThreeIcon />
             </IconButton>
           }
           items={[
@@ -90,17 +119,17 @@ function TorrentRow({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFile
               ? [
                   {
                     label: "Stream",
-                    icon: <Play />,
+                    icon: <PlayIcon />,
                     onSelect: () => torrent.links[0] && actions.stream(torrent.links[0]),
                   },
-                  { label: "Copy links", icon: <Copy />, onSelect: () => actions.copy(torrent.links) },
+                  { label: "Copy links", icon: <CopyIcon />, onSelect: () => actions.copy(torrent.links) },
                 ]
               : []),
             ...(isFailed(torrent.status) || ready
-              ? [{ label: "Reinsert", icon: <RotateCw />, onSelect: () => reinsert(torrent) }]
+              ? [{ label: "Reinsert", icon: <ArrowClockwiseIcon />, onSelect: () => reinsert(torrent) }]
               : []),
             "separator" as const,
-            { label: "Delete", icon: <Trash2 />, danger: true, onSelect: () => remove().catch(console.error) },
+            { label: "Delete", icon: <TrashIcon />, danger: true, onSelect: () => remove().catch(console.error) },
           ]}
         />
       </div>

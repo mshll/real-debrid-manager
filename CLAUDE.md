@@ -17,7 +17,7 @@ bun run format           # prettier
 
 ## Stack
 
-WXT, React 19, Tailwind v4, Base UI, TanStack Query, sonner, cmdk, hls.js, lucide-react. bun only.
+WXT, React 19, Tailwind v4, Base UI, TanStack Query, sonner, cmdk, hls.js, Phosphor icons, Inter Variable. bun only.
 
 WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser` and helpers from `wxt/utils/*`.
 
@@ -41,7 +41,7 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 
 ## Design
 
-Apple-like, minimal: system font, 13px base, grouped inset lists, hairline separators, segmented controls, no pill buttons. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
+Linear-style: flat sidebar on the window background, content in an inset rounded panel, Inter Variable at a 14px base, borders over shadows, table-style lists with real columns, Linear-like status rings (`components/status-icon.tsx`). Account and settings pages are width-capped (`Page` in `manager/toolbar.tsx`). Icons are Phosphor (`*Icon` exports, bold weight via `IconContext`). No native `<select>`; use `components/ui/select.tsx`. Radius: 6px small controls, 8px buttons and inputs, 12px cards, dialogs and panel. No pill buttons, no cream backgrounds. Tokens live in `src/styles/app.css` (light and dark). Brand green `#B7D995` is the dark-mode accent; light mode uses `#4F8A2B`. Accent blue `#9ED1EC`.
 
 ## API notes
 

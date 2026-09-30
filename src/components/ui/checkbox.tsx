@@ -1,5 +1,5 @@
+import { CheckIcon, MinusIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { Check, Minus } from "lucide-react";
 import type { ReactNode } from "react";
 
 /** Visual only; the clickable row owns role="checkbox" so row and box never double-toggle. */
@@ -17,15 +17,15 @@ export function CheckMark({
     <span
       aria-hidden
       className={clsx(
-        "flex size-4 shrink-0 items-center justify-center rounded-[4.5px] transition-colors",
-        on ? "bg-accent text-accent-fg" : "shadow-[inset_0_0_0_1.25px_var(--fg-3)]",
+        "flex size-4 shrink-0 items-center justify-center rounded-[4px] transition-colors duration-150",
+        on ? "bg-accent text-accent-fg" : "bg-surface shadow-[inset_0_0_0_1px_var(--fg-4)]",
         className,
       )}
     >
       {indeterminate ? (
-        <Minus className="size-3" strokeWidth={3} />
+        <MinusIcon className="size-3" weight="bold" />
       ) : checked ? (
-        <Check className="size-3" strokeWidth={3} />
+        <CheckIcon className="size-3" weight="bold" />
       ) : null}
     </span>
   );

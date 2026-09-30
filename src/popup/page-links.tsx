@@ -1,7 +1,9 @@
+import { CaretRightIcon, ScanIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, ScanSearch } from "lucide-react";
+import clsx from "clsx";
 import { useState, type ReactNode } from "react";
 
+import { summarize } from "@/components/composer";
 import { FileIcon } from "@/components/file-icon";
 import { Button } from "@/components/ui/button";
 import { CheckMark } from "@/components/ui/checkbox";
@@ -10,8 +12,6 @@ import type { AddOutcome } from "@/lib/add";
 import { sendMessage } from "@/lib/messaging";
 import { errorMessage } from "@/lib/rd/errors";
 import { scanActiveTab } from "@/lib/scan";
-
-import { summarize } from "@/components/composer";
 
 export function PageLinks({
   enabled,
@@ -36,15 +36,15 @@ export function PageLinks({
       <button
         type="button"
         onClick={() => setRequested(true)}
-        className="flex h-9 w-full items-center gap-2 rounded-[10px] px-2.5 text-[12.5px] text-fg-2 hover:bg-fill"
+        className="press flex h-9 w-full items-center gap-2 rounded-[8px] px-2.5 text-[13px] text-fg-2 hover:bg-fill hover:text-fg"
       >
-        <ScanSearch className="size-4" /> Find links on this page
+        <ScanIcon className="size-4 text-fg-3" /> Find links on this page
       </button>
     );
   }
   if (isFetching) {
     return (
-      <div className="flex h-9 items-center gap-2 px-2.5 text-[12.5px] text-fg-3">
+      <div className="flex h-9 items-center gap-2 px-2.5 text-[13px] text-fg-3">
         <Spinner className="size-3.5" /> Scanning page
       </div>
     );
@@ -65,19 +65,22 @@ export function PageLinks({
   };
 
   return (
-    <div className="overflow-hidden rounded-[10px] bg-accent-soft">
-      <div className="flex h-10 items-center gap-2 pr-1.5 pl-2.5">
+    <div className="overflow-hidden rounded-[10px] bg-surface shadow-panel">
+      <div className="flex h-12 items-center gap-2 pr-2 pl-3">
         <button
           type="button"
-          className="flex min-w-0 flex-1 items-center gap-2 text-left text-[12.5px]"
+          className="flex min-w-0 flex-1 items-center gap-2.5 text-left text-[13px]"
           onClick={() => setOpen(!open)}
+          aria-expanded={open}
         >
-          <ScanSearch className="size-4 shrink-0 text-accent" />
-          <span className="truncate">
-            <span className="font-medium">{summarize(scan.links)}</span> <span className="text-fg-2">on this page</span>
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-accent-soft text-accent">
+            <ScanIcon className="size-4" />
           </span>
-          <ChevronRight
-            className={`size-3.5 shrink-0 text-fg-3 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+          <span className="truncate">
+            <span className="font-medium">{summarize(scan.links)}</span> <span className="text-fg-3">on this page</span>
+          </span>
+          <CaretRightIcon
+            className={clsx("size-3 shrink-0 text-fg-3 transition-transform duration-200", open && "rotate-90")}
           />
         </button>
         <Button
@@ -96,7 +99,7 @@ export function PageLinks({
         </Button>
       </div>
       {open && (
-        <div className="[&>*+*]:hairline-t max-h-56 overflow-y-auto bg-surface">
+        <div className="max-h-56 divide-y divide-border overflow-y-auto border-t border-border">
           {scan.links.map((link) => (
             <button
               key={link.url}
@@ -109,14 +112,14 @@ export function PageLinks({
                 else next.add(link.url);
                 setExcluded(next);
               }}
-              className="flex h-9 w-full items-center gap-2.5 px-2.5 text-left hover:bg-fill"
+              className="flex h-10 w-full items-center gap-3 px-3 text-left hover:bg-fill"
             >
               <CheckMark checked={!excluded.has(link.url)} />
               <FileIcon
                 name={link.name ?? ""}
                 kind={link.kind === "magnet" ? "magnet" : link.kind === "folder" ? "folder" : undefined}
               />
-              <span className="min-w-0 flex-1 truncate text-[12px]" title={link.url}>
+              <span className="min-w-0 flex-1 truncate text-[13px]" title={link.url}>
                 {link.name ?? link.url}
               </span>
             </button>
