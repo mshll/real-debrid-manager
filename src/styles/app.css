@@ -116,8 +116,11 @@
     outline-offset: 1px;
   }
 
-  button {
-    cursor: default;
+  :is(button, a, summary, [role="row"], [role="menuitem"], [role="option"], [role="radio"], [role="checkbox"]):not(
+    :disabled,
+    [data-disabled]
+  ) {
+    cursor: pointer;
   }
 
   ::-webkit-scrollbar {
@@ -141,9 +144,9 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Lists stay full-bleed (lines, hover) but their content caps at 1400px on wide windows. */
+  /* Lists stay full-bleed (lines, hover) but their content caps at 1120px on wide windows. */
   .gutter {
-    padding-inline: max(20px, calc((100% - 1400px) / 2));
+    padding-inline: max(20px, calc((100% - 1120px) / 2));
   }
 
   .press {

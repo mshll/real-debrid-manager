@@ -31,14 +31,12 @@ import type { Download as DownloadItem } from "@/lib/rd/types";
 import { SearchField, SelectionBar, Toolbar } from "./toolbar";
 import { useSelection } from "./use-selection";
 
-const ROW = 44;
+const ROW = 56;
 
 const COLUMNS = {
   check: "w-5 shrink-0",
-  host: "hidden w-40 shrink-0 truncate @2xl:block",
-  size: "hidden w-20 shrink-0 text-right @xl:block",
-  date: "hidden w-28 shrink-0 text-right @3xl:block",
-  actions: "flex w-24 shrink-0 justify-end gap-0.5",
+  size: "hidden w-20 shrink-0 text-right @lg:block",
+  actions: "flex w-32 shrink-0 items-center justify-end gap-0.5",
 };
 
 export function DownloadsView(): ReactNode {
@@ -105,9 +103,7 @@ export function DownloadsView(): ReactNode {
             </span>
             <span className="w-4 shrink-0" />
             <span className="flex-1">Name</span>
-            <span className={COLUMNS.host}>Host</span>
             <span className={COLUMNS.size}>Size</span>
-            <span className={COLUMNS.date}>Created</span>
             <span className={COLUMNS.actions} />
           </div>
         )}
@@ -160,11 +156,7 @@ export function DownloadsView(): ReactNode {
                         isSelected ? "bg-accent-soft" : "hover:bg-fill",
                       )}
                       style={{ height: ROW }}
-                      onClick={(event) =>
-                        selection.count > 0 || event.metaKey || event.shiftKey
-                          ? selection.toggle(item.id, row.index, event.shiftKey)
-                          : undefined
-                      }
+                      onClick={(event) => selection.toggle(item.id, row.index, event.shiftKey)}
                       onDoubleClick={() => actions.primary([item.download])}
                     >
                       <span className={COLUMNS.check}>
@@ -188,44 +180,37 @@ export function DownloadsView(): ReactNode {
                         </button>
                       </span>
                       <FileIcon name={item.filename} />
-                      <span className="min-w-0 flex-1 truncate text-[13px] font-medium" title={item.filename}>
-                        {item.filename}
-                      </span>
-                      <span className={clsx(COLUMNS.host, "text-[13px] text-fg-2")}>{item.host}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[14px] leading-snug font-medium" title={item.filename}>
+                          {item.filename}
+                        </div>
+                        <div className="tabular mt-0.5 truncate text-[12px] text-fg-3">
+                          <span className="@lg:hidden">{formatBytes(item.filesize)} · </span>
+                          {item.host} · {formatRelative(item.generated)}
+                        </div>
+                      </div>
                       <span className={clsx(COLUMNS.size, "tabular text-[13px] text-fg-2")}>
                         {formatBytes(item.filesize)}
                       </span>
-                      <span className={clsx(COLUMNS.date, "tabular truncate text-[13px] text-fg-3")}>
-                        {formatRelative(item.generated)}
-                      </span>
                       <span className={COLUMNS.actions} onClick={(event) => event.stopPropagation()}>
                         {item.streamable === 1 && (
-                          <IconButton
-                            label="Stream"
-                            className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-                            onClick={() => actions.stream(item.download, item.id)}
-                          >
+                          <IconButton label="Stream" onClick={() => actions.stream(item.download, item.id)}>
                             <PlayIcon />
                           </IconButton>
                         )}
-                        <IconButton
-                          label="Download"
-                          className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-                          onClick={() => actions.download([item.download])}
-                        >
+                        <IconButton label="Copy link" onClick={() => actions.copy([item.download])}>
+                          <CopyIcon />
+                        </IconButton>
+                        <IconButton label="Download" onClick={() => actions.download([item.download])}>
                           <DownloadSimpleIcon />
                         </IconButton>
                         <Menu
                           trigger={
-                            <IconButton
-                              label="More"
-                              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
-                            >
+                            <IconButton label="More">
                               <DotsThreeIcon />
                             </IconButton>
                           }
                           items={[
-                            { label: "Copy link", icon: <CopyIcon />, onSelect: () => actions.copy([item.download]) },
                             {
                               label: "Send to aria2",
                               icon: <PaperPlaneTiltIcon />,

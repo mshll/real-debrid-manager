@@ -1,4 +1,11 @@
-import { DotsThreeIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
+import {
+  ArrowClockwiseIcon,
+  CopyIcon,
+  DotsThreeIcon,
+  DownloadSimpleIcon,
+  ListChecksIcon,
+  PlayIcon,
+} from "@phosphor-icons/react";
 import clsx from "clsx";
 import type { MouseEvent, ReactNode } from "react";
 
@@ -8,19 +15,28 @@ import { Button, IconButton } from "@/components/ui/button";
 import { CheckMark } from "@/components/ui/checkbox";
 import { Menu, type MenuEntry } from "@/components/ui/menu";
 import { Progress } from "@/components/ui/progress";
-import { formatBytes, formatRelative, formatSpeed, STATUS } from "@/lib/format";
+import { formatBytes, formatRelative, formatSpeed, isFailed, STATUS } from "@/lib/format";
 import type { Torrent } from "@/lib/rd/types";
+import { isVideo } from "@/lib/select";
 
-export const ROW_HEIGHT = 44;
+export const ROW_HEIGHT = 56;
 
 /** Shared by the header and rows so the columns line up. */
 export const COLUMNS = {
   check: "w-5 shrink-0",
-  status: "hidden w-52 shrink-0 @2xl:block",
-  size: "hidden w-20 shrink-0 text-right @xl:block",
-  added: "hidden w-28 shrink-0 text-right @4xl:block",
-  actions: "flex w-16 shrink-0 justify-end",
+  size: "hidden w-20 shrink-0 text-right @lg:block",
+  actions: "flex w-32 shrink-0 items-center justify-end gap-0.5",
 };
+
+export interface RowActions {
+  open: () => void;
+  toggle: (event: MouseEvent) => void;
+  download: () => void;
+  copy: () => void;
+  stream: () => void;
+  reinsert: () => void;
+  chooseFiles: () => void;
+}
 
 export function TorrentRow({
   torrent,
@@ -29,10 +45,7 @@ export function TorrentRow({
   current,
   cursor,
   menu,
-  onToggle,
-  onOpen,
-  onDownload,
-  onChooseFiles,
+  actions,
 }: {
   torrent: Torrent;
   selected: boolean;
@@ -40,17 +53,15 @@ export function TorrentRow({
   current: boolean;
   cursor: boolean;
   menu: MenuEntry[];
-  onToggle: (event: MouseEvent) => void;
-  onOpen: () => void;
-  onDownload: () => void;
-  onChooseFiles: () => void;
+  actions: RowActions;
 }): ReactNode {
   const ready = torrent.status === "downloaded" && torrent.links.length > 0;
+  const streamable = ready && torrent.links.length === 1 && isVideo(torrent.filename);
   return (
     <div
       role="row"
       aria-selected={selected}
-      onClick={(event) => (event.metaKey || event.shiftKey || selecting ? onToggle(event) : onOpen())}
+      onClick={(event) => (event.metaKey || event.shiftKey || selecting ? actions.toggle(event) : actions.open())}
       className={clsx(
         "group gutter relative flex items-center gap-3 border-b border-border transition-colors duration-100",
         selected ? "bg-accent-soft" : current ? "bg-fill-strong" : "hover:bg-fill",
@@ -67,7 +78,7 @@ export function TorrentRow({
           aria-label="Select"
           onClick={(event) => {
             event.stopPropagation();
-            onToggle(event);
+            actions.toggle(event);
           }}
           className={clsx(
             "-m-1.5 flex p-1.5 transition-opacity duration-100",
@@ -78,34 +89,49 @@ export function TorrentRow({
         </button>
       </span>
       <StatusIcon status={torrent.status} progress={torrent.progress} />
-      <span className="min-w-0 flex-1 truncate text-[13px] font-medium" title={torrent.filename}>
-        {torrent.filename || <span className="text-fg-3">Fetching info</span>}
-      </span>
-      <span className={COLUMNS.status}>
-        <StatusCell torrent={torrent} onChooseFiles={onChooseFiles} />
-      </span>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-[14px] leading-snug font-medium" title={torrent.filename}>
+          {torrent.filename || <span className="text-fg-3">Fetching info</span>}
+        </div>
+        <Meta torrent={torrent} />
+      </div>
       <span className={clsx(COLUMNS.size, "tabular text-[13px] text-fg-2")}>
         {torrent.bytes ? formatBytes(torrent.bytes) : <span className="text-fg-4">—</span>}
       </span>
-      <span className={clsx(COLUMNS.added, "tabular truncate text-[13px] text-fg-3")}>
-        {formatRelative(torrent.added)}
-      </span>
       <span className={COLUMNS.actions} onClick={(event) => event.stopPropagation()}>
-        {ready && (
-          <IconButton
-            label="Download"
-            className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-            onClick={onDownload}
+        {torrent.status === "waiting_files_selection" && (
+          <Button
+            size="sm"
+            icon={<ListChecksIcon />}
+            className="bg-warning-soft text-warning shadow-none hover:bg-warning-soft hover:brightness-110"
+            onClick={actions.chooseFiles}
           >
-            <DownloadSimpleIcon />
+            Choose files
+          </Button>
+        )}
+        {isFailed(torrent.status) && (
+          <IconButton label="Reinsert" onClick={actions.reinsert}>
+            <ArrowClockwiseIcon />
           </IconButton>
+        )}
+        {streamable && (
+          <IconButton label="Stream" onClick={actions.stream}>
+            <PlayIcon />
+          </IconButton>
+        )}
+        {ready && (
+          <>
+            <IconButton label="Copy links" onClick={actions.copy}>
+              <CopyIcon />
+            </IconButton>
+            <IconButton label="Download" onClick={actions.download}>
+              <DownloadSimpleIcon />
+            </IconButton>
+          </>
         )}
         <Menu
           trigger={
-            <IconButton
-              label="More"
-              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
-            >
+            <IconButton label="More">
               <DotsThreeIcon />
             </IconButton>
           }
@@ -116,42 +142,46 @@ export function TorrentRow({
   );
 }
 
-function StatusCell({ torrent, onChooseFiles }: { torrent: Torrent; onChooseFiles: () => void }): ReactNode {
+function Meta({ torrent }: { torrent: Torrent }): ReactNode {
   const status = STATUS[torrent.status];
-  if (torrent.status === "waiting_files_selection") {
-    return (
-      <Button
-        size="sm"
-        className="h-6 bg-warning-soft px-2 text-[12px] text-warning shadow-none hover:bg-warning-soft hover:brightness-110"
-        onClick={(event) => {
-          event.stopPropagation();
-          onChooseFiles();
-        }}
-      >
-        Choose files
-      </Button>
-    );
-  }
+  const added = formatRelative(torrent.added);
+  const size = torrent.bytes ? (
+    <span className="@lg:hidden">
+      {formatBytes(torrent.bytes)}
+      <Dot />
+    </span>
+  ) : null;
+
   if (isTransferring(torrent)) {
+    const rate = torrent.status !== "downloading" ? status.label : torrent.speed ? formatSpeed(torrent.speed) : null;
     return (
-      <span className="tabular flex items-center gap-2.5 text-[12px] text-fg-2">
-        <Progress value={torrent.progress} tone="info" className="w-16 shrink-0" />
-        <span className="w-8 shrink-0 font-medium text-fg">{Math.round(torrent.progress)}%</span>
-        <span className="truncate text-fg-3">
-          {torrent.status !== "downloading"
-            ? status.label
-            : torrent.speed
-              ? formatSpeed(torrent.speed)
-              : torrent.seeders !== undefined
-                ? `${torrent.seeders} seeders`
-                : ""}
+      <div className="tabular mt-1 flex items-center gap-2 text-[12px] text-fg-3">
+        <Progress value={torrent.progress} tone="info" className="w-20 shrink-0" />
+        <span className="shrink-0 font-medium text-fg-2">{Math.round(torrent.progress)}%</span>
+        <span className="truncate">
+          {rate}
+          {rate && torrent.seeders !== undefined && <Dot />}
+          {torrent.seeders !== undefined && `${torrent.seeders} seeders`}
         </span>
-      </span>
+      </div>
     );
   }
   return (
-    <span className={clsx("text-[13px]", status.tone === "accent" ? "text-fg-2" : TONE_TEXT[status.tone])}>
-      {status.label}
-    </span>
+    <div className="tabular mt-0.5 truncate text-[12px] text-fg-3">
+      {torrent.status !== "downloaded" && (
+        <>
+          <span className={clsx("font-medium", TONE_TEXT[status.tone])}>
+            {torrent.status === "waiting_files_selection" ? "Waiting for file selection" : status.label}
+          </span>
+          <Dot />
+        </>
+      )}
+      {size}
+      {added}
+    </div>
   );
+}
+
+function Dot(): ReactNode {
+  return <span className="mx-1.5 text-fg-4">·</span>;
 }

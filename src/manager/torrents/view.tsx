@@ -305,9 +305,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
               </span>
               <span className="w-3.5 shrink-0" />
               <span className="flex-1">Name</span>
-              <span className={COLUMNS.status}>Status</span>
               <span className={COLUMNS.size}>Size</span>
-              <span className={COLUMNS.added}>Added</span>
               <span className={COLUMNS.actions} />
             </div>
           )}
@@ -364,13 +362,18 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                         current={torrent.id === detailId}
                         cursor={cursor === item.index}
                         menu={rowMenu(torrent)}
-                        onToggle={(event) => selection.toggle(torrent.id, item.index, event.shiftKey)}
-                        onOpen={() => {
-                          setCursor(item.index);
-                          navigate(`/torrents/${torrent.id}`);
+                        actions={{
+                          toggle: (event) => selection.toggle(torrent.id, item.index, event.shiftKey),
+                          open: () => {
+                            setCursor(item.index);
+                            navigate(`/torrents/${torrent.id}`);
+                          },
+                          download: () => actions.download(torrent.links),
+                          copy: () => actions.copy(torrent.links),
+                          stream: () => torrent.links[0] && actions.stream(torrent.links[0]),
+                          reinsert: () => reinsert(torrent),
+                          chooseFiles: () => setPicking(torrent.id),
                         }}
-                        onDownload={() => actions.download(torrent.links)}
-                        onChooseFiles={() => setPicking(torrent.id)}
                       />
                     </div>
                   );
