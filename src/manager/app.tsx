@@ -95,9 +95,13 @@ function Shell({ route }: { route: string[] }): ReactNode {
           const links = extractLinks(text, matchers, { bareHashes: true });
           if (!links.length) return;
           const id = toast.loading(`Adding ${links.length}`);
-          const outcomes = await sendMessage("addLinks", { links });
-          toast.dismiss(id);
-          report(outcomes);
+          try {
+            const outcomes = await sendMessage("addLinks", { links });
+            toast.dismiss(id);
+            report(outcomes);
+          } catch (error) {
+            toast.error(errorMessage(error), { id });
+          }
         })
         .catch((error: unknown) => toast.error(errorMessage(error)));
     };
@@ -133,7 +137,8 @@ function Shell({ route }: { route: string[] }): ReactNode {
         setDropping(true);
       }}
       onDragLeave={(event) => {
-        if (event.currentTarget === event.target) setDropping(false);
+        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)))
+          setDropping(false);
       }}
       onDrop={(event) => {
         event.preventDefault();

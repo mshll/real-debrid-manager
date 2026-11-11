@@ -1,11 +1,12 @@
 import { IconContext } from "@phosphor-icons/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import { useThemeSync } from "@/hooks/use-theme";
 import { useLibraryStampSync } from "@/lib/queries";
 import { RdError } from "@/lib/rd/errors";
+import { authItem } from "@/lib/storage";
 
 import { TooltipProvider } from "./ui/tooltip";
 
@@ -28,6 +29,13 @@ export function bootstrapTheme(): void {
 function Sync(): null {
   useThemeSync();
   useLibraryStampSync();
+  useEffect(
+    () =>
+      authItem.watch((auth) => {
+        if (!auth) queryClient.clear();
+      }),
+    [],
+  );
   return null;
 }
 

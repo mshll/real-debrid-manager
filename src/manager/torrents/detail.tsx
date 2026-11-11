@@ -60,7 +60,7 @@ export function TorrentDetail({
               >
                 <MagnetStraightIcon />
               </IconButton>
-              <IconButton label="Reinsert" onClick={() => reinsert(torrent)}>
+              <IconButton label="Reinsert" onClick={() => reinsert(torrent, (next) => navigate(`/torrents/${next}`))}>
                 <ArrowClockwiseIcon />
               </IconButton>
               <IconButton label="Delete" className="hover:text-danger!" onClick={() => onDelete(torrent)}>

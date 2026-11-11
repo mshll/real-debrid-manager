@@ -30,6 +30,7 @@ import { deleteTorrent } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 import type { Torrent } from "@/lib/rd/types";
 
+import { reportBulk, runEach } from "../bulk";
 import { navigate } from "../router";
 import { SearchField, SelectionBar, Toolbar } from "../toolbar";
 import { useSelection } from "../use-selection";
@@ -143,11 +144,11 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
       onConfirm: () => {
         const id = toast.loading(`Deleting ${list.length}`);
         (async () => {
-          for (const torrent of list) await deleteTorrent(torrent.id);
+          const failed = await runEach(list, (torrent) => deleteTorrent(torrent.id));
           selection.clear();
           if (detailId && list.some((torrent) => torrent.id === detailId)) navigate("/torrents");
+          reportBulk(id, "Deleted", list.length, failed);
           await queryClient.invalidateQueries({ queryKey: keys.torrents });
-          toast.success(list.length === 1 ? "Deleted" : `Deleted ${list.length}`, { id });
         })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
       },
     });
@@ -156,10 +157,11 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
   const reinsertMany = (list: Torrent[]): void => {
     const id = toast.loading(`Reinserting ${list.length}`);
     (async () => {
-      for (const torrent of list) await reinsertTorrent(torrent);
+      const failed = await runEach(list, reinsertTorrent);
       selection.clear();
+      if (detailId && list.some((torrent) => torrent.id === detailId)) navigate("/torrents");
+      reportBulk(id, "Reinserted", list.length, failed);
       await queryClient.invalidateQueries({ queryKey: keys.torrents });
-      toast.success(`Reinserted ${list.length}`, { id });
     })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
   };
 
@@ -340,7 +342,10 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                           download: () => actions.torrents([torrent], "download"),
                           copy: () => actions.torrents([torrent], "copy"),
                           stream: () => actions.torrents([torrent], "stream"),
-                          reinsert: () => reinsert(torrent),
+                          reinsert: () =>
+                            reinsert(torrent, (next) => {
+                              if (detailId === torrent.id) navigate(`/torrents/${next}`);
+                            }),
                           chooseFiles: () => setPicking(torrent.id),
                           remove: () => removeMany([torrent], torrent.filename),
                         }}

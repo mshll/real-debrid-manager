@@ -10,6 +10,8 @@ import { useDownloads } from "@/lib/queries";
 import { getMediaInfos, getTranscode } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 
+import { navigate } from "./router";
+
 interface Track {
   id: number;
   name: string;
@@ -88,7 +90,12 @@ export function PlayerView({ id }: { id: string }): ReactNode {
   return (
     <div data-theme="dark" className="flex h-screen flex-col bg-black text-fg">
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-4">
-        <Button variant="ghost" size="sm" icon={<ArrowLeftIcon />} onClick={() => history.back()}>
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<ArrowLeftIcon />}
+          onClick={() => (history.length > 1 ? history.back() : navigate("/downloads"))}
+        >
           Back
         </Button>
         <h1 className="min-w-0 flex-1 truncate text-[14px] font-medium">{title}</h1>

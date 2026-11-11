@@ -25,6 +25,7 @@ import { deleteDownload } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 import type { Download as DownloadItem } from "@/lib/rd/types";
 
+import { reportBulk, runEach } from "./bulk";
 import { SearchField, SelectionBar, Toolbar } from "./toolbar";
 import { useSelection } from "./use-selection";
 
@@ -68,10 +69,10 @@ export function DownloadsView(): ReactNode {
       onConfirm: () => {
         const id = toast.loading("Removing");
         (async () => {
-          for (const item of list) await deleteDownload(item.id);
+          const failed = await runEach(list, (item) => deleteDownload(item.id));
           selection.clear();
+          reportBulk(id, "Removed", list.length, failed);
           await queryClient.invalidateQueries({ queryKey: keys.downloads });
-          toast.success(`Removed ${list.length}`, { id });
         })().catch((err: unknown) => toast.error(errorMessage(err), { id }));
       },
     });
