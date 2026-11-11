@@ -3,11 +3,10 @@ import { sendMessage } from "./messaging";
 
 /** Hands .torrent files to the worker, so the upload finishes even if the popup closes. */
 export async function uploadTorrentFiles(files: File[]): Promise<AddOutcome[]> {
-  const outcomes: AddOutcome[] = [];
-  for (const file of files) {
-    outcomes.push(await sendMessage("uploadTorrent", { name: file.name, data: toBase64(await file.arrayBuffer()) }));
-  }
-  return outcomes;
+  const encoded = await Promise.all(
+    files.map(async (file) => ({ name: file.name, data: toBase64(await file.arrayBuffer()) })),
+  );
+  return sendMessage("uploadTorrents", { files: encoded });
 }
 
 export function isTorrentFile(file: File): boolean {

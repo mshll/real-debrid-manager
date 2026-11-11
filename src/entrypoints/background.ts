@@ -5,7 +5,7 @@ import { captureAndReport, createMenus, handleMenuClick } from "@/background/cap
 import { resumeLogin, startLogin } from "@/background/login";
 import { handleNotificationClick } from "@/background/notify";
 import { checkExpiry, DAILY_ALARM, sync, SYNC_ALARM } from "@/background/sync";
-import { addLinks, addUploadedTorrent } from "@/lib/add";
+import { addLinks, addUploadedTorrent, type AddOutcome } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
 import { reconcileIntercept } from "@/lib/intercept";
 import { extractLinks } from "@/lib/links";
@@ -66,10 +66,12 @@ export default defineBackground(() => {
     return outcomes;
   });
   onMessage("capture", ({ data, sender }) => captureAndReport(data.links, sender.tab?.id));
-  onMessage("uploadTorrent", async ({ data }) => {
-    const outcome = await addUploadedTorrent(data.name, new Blob([fromBase64(data.data)]));
+  onMessage("uploadTorrents", async ({ data }) => {
+    const outcomes: AddOutcome[] = [];
+    for (const file of data.files)
+      outcomes.push(await addUploadedTorrent(file.name, new Blob([fromBase64(file.data)])));
     await sync().catch((error: unknown) => console.error("[sync]", error));
-    return outcome;
+    return outcomes;
   });
   onMessage("reinsert", async ({ data }) => {
     const id = await reinsertTorrent(data);

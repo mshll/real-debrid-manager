@@ -31,7 +31,7 @@ import { errorMessage } from "@/lib/rd/errors";
 import type { Torrent } from "@/lib/rd/types";
 
 import { reportBulk, runEach } from "../bulk";
-import { navigate } from "../router";
+import { isRoute, navigate } from "../router";
 import { SearchField, SelectionBar, Toolbar } from "../toolbar";
 import { useSelection } from "../use-selection";
 import { duplicateTorrents, failedTorrents } from "./cleanup";
@@ -344,7 +344,7 @@ export function TorrentsView({ detailId, onAdd }: { detailId: string | null; onA
                           stream: () => actions.torrents([torrent], "stream"),
                           reinsert: () =>
                             reinsert(torrent, (next) => {
-                              if (detailId === torrent.id) navigate(`/torrents/${next}`);
+                              if (isRoute(`/torrents/${torrent.id}`)) navigate(`/torrents/${next}`);
                             }),
                           chooseFiles: () => setPicking(torrent.id),
                           remove: () => removeMany([torrent], torrent.filename),

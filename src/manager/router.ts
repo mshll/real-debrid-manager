@@ -10,6 +10,10 @@ export function useRoute(): string[] {
   return hash.replace(/^#\/?/, "").split("/").filter(Boolean);
 }
 
+export function isRoute(path: string): boolean {
+  return window.location.hash.replace(/^#/, "") === path;
+}
+
 export function navigate(path: string): void {
   window.location.hash = path;
 }

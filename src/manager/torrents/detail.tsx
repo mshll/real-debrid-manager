@@ -25,7 +25,7 @@ import { useTorrent } from "@/lib/queries";
 import type { Torrent, TorrentFile } from "@/lib/rd/types";
 import { fileName, isAudio, isVideo } from "@/lib/select";
 
-import { navigate } from "../router";
+import { isRoute, navigate } from "../router";
 
 export function TorrentDetail({
   id,
@@ -60,7 +60,14 @@ export function TorrentDetail({
               >
                 <MagnetStraightIcon />
               </IconButton>
-              <IconButton label="Reinsert" onClick={() => reinsert(torrent, (next) => navigate(`/torrents/${next}`))}>
+              <IconButton
+                label="Reinsert"
+                onClick={() =>
+                  reinsert(torrent, (next) => {
+                    if (isRoute(`/torrents/${torrent.id}`)) navigate(`/torrents/${next}`);
+                  })
+                }
+              >
                 <ArrowClockwiseIcon />
               </IconButton>
               <IconButton label="Delete" className="hover:text-danger!" onClick={() => onDelete(torrent)}>
