@@ -17,7 +17,15 @@ export const MENU = {
   manager: "rd-manager",
 } as const;
 
-export async function createMenus(): Promise<void> {
+let menusReady: Promise<void> = Promise.resolve();
+
+/** Serialized: onInstalled and onStartup can fire together, and interleaved rebuilds create duplicate ids. */
+export function createMenus(): Promise<void> {
+  menusReady = menusReady.then(buildMenus, buildMenus);
+  return menusReady;
+}
+
+async function buildMenus(): Promise<void> {
   await browser.contextMenus.removeAll();
   browser.contextMenus.create({ id: MENU.link, title: "Send to Real-Debrid", contexts: ["link"] });
   browser.contextMenus.create({ id: MENU.selection, title: "Send selection to Real-Debrid", contexts: ["selection"] });
