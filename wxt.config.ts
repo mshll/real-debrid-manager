@@ -7,6 +7,9 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react", "@wxt-dev/auto-icons"],
   autoIcons: { developmentIndicator: "overlay" },
   vite: () => ({ plugins: [tailwindcss()] }),
+  zip: {
+    excludeSources: ["reference/**", "safari-extension/**", "store/**", "e2e/screenshots/**", "AGENTS.md", "TASKS.md"],
+  },
   manifest: ({ browser }) => ({
     name: "Real-Debrid Manager",
     description: "Capture links, manage torrents, and run your Real-Debrid account from the browser",
