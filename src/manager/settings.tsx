@@ -215,7 +215,12 @@ export function SettingsView(): ReactNode {
 
       <ConnectionGroup />
 
-      <p className="text-center text-[12px] text-fg-4">Real-Debrid Manager {browser.runtime.getManifest().version}</p>
+      <p className="text-center text-[12px] text-fg-4">
+        Real-Debrid Manager {browser.runtime.getManifest().version} ·{" "}
+        <a href="https://meshal.me" target="_blank" rel="noreferrer" className="hover:text-fg-2">
+          crafted by meshal.me
+        </a>
+      </p>
     </Page>
   );
 }

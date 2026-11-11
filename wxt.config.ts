@@ -10,6 +10,7 @@ export default defineConfig({
   manifest: ({ browser }) => ({
     name: "Real-Debrid Manager",
     description: "Capture links, manage torrents, and run your Real-Debrid account from the browser",
+    homepage_url: "https://meshal.me",
     permissions: [
       "storage",
       "alarms",
