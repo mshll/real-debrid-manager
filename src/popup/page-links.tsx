@@ -54,7 +54,8 @@ export function usePageLinks(
   onResult: (outcomes: AddOutcome[]) => void,
 ): PageLinksState {
   const queryClient = useQueryClient();
-  const [requested, setRequested] = useState(enabled);
+  const [manual, setManual] = useState(false);
+  const requested = manual || enabled;
   const { data: scan, isFetching } = useQuery({
     queryKey: SCAN_KEY,
     queryFn: scanActiveTab,
@@ -70,7 +71,7 @@ export function usePageLinks(
       return { ...base, ...patch(base) };
     });
   const [busy, setBusy] = useState<string | null>(null);
-  const anchor = useRef<number | null>(null);
+  const anchor = useRef<string | null>(null);
 
   useEffect(() => {
     if (!follow) return;
@@ -115,16 +116,17 @@ export function usePageLinks(
 
   const toggle = (link: ParsedLink, event: MouseEvent): void => {
     const index = visible.indexOf(link);
+    const anchorIndex = event.shiftKey ? visible.findIndex((item) => item.url === anchor.current) : -1;
     const next = new Set(current.selected);
     const on = !next.has(link.url);
-    const from = event.shiftKey && anchor.current !== null ? Math.min(anchor.current, index) : index;
-    const to = event.shiftKey && anchor.current !== null ? Math.max(anchor.current, index) : index;
+    const from = anchorIndex >= 0 ? Math.min(anchorIndex, index) : index;
+    const to = anchorIndex >= 0 ? Math.max(anchorIndex, index) : index;
     for (const item of visible.slice(from, to + 1)) {
       if (current.added.has(item.url)) continue;
       if (on) next.add(item.url);
       else next.delete(item.url);
     }
-    anchor.current = index;
+    anchor.current = link.url;
     update(() => ({ selected: next }));
   };
 
@@ -138,18 +140,24 @@ export function usePageLinks(
 
   return {
     requested,
-    request: () => setRequested(true),
+    request: () => setManual(true),
     scanning: isFetching,
     scan,
     links,
     visible,
     remaining: visible.filter((link) => !current.added.has(link.url)),
     filter: current.filter,
-    setFilter: (filter) => update(() => ({ filter, selected: new Set() })),
+    setFilter: (filter) => {
+      anchor.current = null;
+      update(() => ({ filter, selected: new Set() }));
+    },
     added: current.added,
     selected: current.selected,
     toggle,
-    clearSelection: () => update(() => ({ selected: new Set() })),
+    clearSelection: () => {
+      anchor.current = null;
+      update(() => ({ selected: new Set() }));
+    },
     busy,
     add: (batch, busyKey) => add(batch, busyKey).catch(console.error),
     grant,
@@ -175,11 +183,15 @@ export function PageLinks({ state }: { state: PageLinksState }): ReactNode {
     return (
       <ListEmpty
         icon={<LockKeyIcon />}
-        title={`Allow access to ${state.scan.host}`}
-        description="The side panel needs your permission to read links on this site."
+        title={state.scan.host ? `Allow access to ${state.scan.host}` : "Allow access to pages"}
+        description={
+          state.scan.host
+            ? "The side panel needs your permission to read links on this site."
+            : "The side panel needs your permission to read links on the pages you visit."
+        }
       >
         <Button size="sm" variant="primary" onClick={state.grant}>
-          Allow on {state.scan.host}
+          {state.scan.host ? `Allow on ${state.scan.host}` : "Allow on all sites"}
         </Button>
       </ListEmpty>
     );
@@ -226,7 +238,9 @@ export function PageLinks({ state }: { state: PageLinksState }): ReactNode {
                   }
             }
             onClick={(event) =>
-              selecting || event.shiftKey || event.metaKey ? state.toggle(link, event) : state.add([link], link.url)
+              selecting || event.shiftKey || event.metaKey || event.ctrlKey
+                ? state.toggle(link, event)
+                : state.add([link], link.url)
             }
             meta={
               state.busy === link.url || (state.busy === "selected" && state.selected.has(link.url)) ? (

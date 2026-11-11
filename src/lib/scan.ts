@@ -10,13 +10,18 @@ export type PageScan =
   /** Browser pages, the web store and similar, which no extension can read. */
   | { status: "restricted" }
   /** Readable once the user grants this site; the side panel has no activeTab grant. */
-  | { status: "no-access"; origin: string; host: string };
+  | { status: "no-access"; origin: string; host: string | null };
 
 /** The popup gets activeTab when it opens; the side panel needs a host permission instead. */
 export async function scanActiveTab(): Promise<PageScan> {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   if (tab?.id === undefined || !/^https?:/.test(tab.url ?? "https:")) return { status: "restricted" };
-  const url = tab.url ?? "";
+  // Without a grant for this tab the browser hides its URL, so the site can't be named.
+  if (tab.url === undefined) {
+    const all = await browser.permissions.contains({ origins: ["<all_urls>"] });
+    return all ? { status: "restricted" } : { status: "no-access", origin: "<all_urls>", host: null };
+  }
+  const url = tab.url;
   let frames;
   try {
     frames = await browser.scripting.executeScript({

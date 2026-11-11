@@ -64,7 +64,7 @@ function Home({ surface }: { surface: Surface }): ReactNode {
       .catch(console.error);
   };
 
-  const [settings] = useSettings();
+  const [settings, , settingsLoaded] = useSettings();
   const { data: user } = useUser();
   const { data: recent } = useRecentTorrents(30);
   const queryClient = useQueryClient();
@@ -96,7 +96,9 @@ function Home({ surface }: { surface: Surface }): ReactNode {
     const needsFiles = next.find((outcome) => outcome.ok && outcome.status === "choose-files");
     if (needsFiles?.ok && needsFiles.torrentId && next.length === 1) setPicking(needsFiles.torrentId);
   };
-  const page = usePageLinks(settings.scanOnOpen, surface === "panel", (next) => handleResult(next, "page"));
+  const page = usePageLinks(settingsLoaded && settings.scanOnOpen, surface === "panel", (next) =>
+    handleResult(next, "page"),
+  );
   // Until a tab is picked, open where the work is: the page's links when it has any.
   const tab = chosen ?? (page.links?.length ? "page" : "torrents");
 

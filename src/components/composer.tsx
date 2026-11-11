@@ -14,6 +14,8 @@ import { sendMessage } from "@/lib/messaging";
 import { addTorrentFile } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 
+const CAN_REQUEST_CLIPBOARD = import.meta.env.BROWSER !== "safari";
+
 export function summarize(links: ParsedLink[]): string {
   const magnets = links.filter((link) => link.kind === "magnet" || link.kind === "torrent").length;
   const others = links.length - magnets;
@@ -75,7 +77,7 @@ export function Composer({
 
   const paste = async (): Promise<void> => {
     try {
-      if (browser.permissions && !(await browser.permissions.request({ permissions: ["clipboardRead"] }))) return;
+      if (CAN_REQUEST_CLIPBOARD && !(await browser.permissions.request({ permissions: ["clipboardRead"] }))) return;
       const clip = await navigator.clipboard.readText();
       setText((current) => (current ? `${current}\n${clip}` : clip));
     } catch (error) {
