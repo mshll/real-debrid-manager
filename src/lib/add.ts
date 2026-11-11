@@ -105,9 +105,10 @@ export async function addLinks(links: ParsedLink[], options: AddOptions = {}): P
 }
 
 /** For .torrent files uploaded directly from a UI page. */
-export async function startUploadedTorrent(id: string, name: string): Promise<AddOutcome> {
+export async function addUploadedTorrent(name: string, file: Blob): Promise<AddOutcome> {
   const settings = await getSettings();
   try {
+    const { id } = await addTorrentFile(file);
     const started = await startTorrent(id, settings.fileSelection, settings.onlyCached);
     await touchLibrary();
     return { ok: true, kind: "torrent", title: started.title ?? name, status: started.status, torrentId: id };

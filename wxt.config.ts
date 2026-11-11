@@ -28,10 +28,6 @@ export default defineConfig({
       _execute_action: {
         suggested_key: { default: "Alt+Shift+R" },
       },
-      "scan-page": {
-        suggested_key: { default: "Alt+Shift+S" },
-        description: "Scan page for links",
-      },
       ...(browser === "chrome" && {
         "open-side-panel": {
           suggested_key: { default: "Alt+Shift+P" },

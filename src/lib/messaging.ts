@@ -7,7 +7,8 @@ interface Protocol {
   addLinks(data: { links: ParsedLink[]; options?: AddOptions }): AddOutcome[];
   /** Adds from a page with no extension UI open; reports via notification. */
   capture(data: { links: ParsedLink[] }): AddOutcome[];
-  startUploadedTorrent(data: { id: string; name: string }): AddOutcome;
+  /** `data` is the .torrent file in base64; runtime messages only carry JSON. */
+  uploadTorrent(data: { name: string; data: string }): AddOutcome;
   /** Resolves to the new torrent id. */
   reinsert(data: { id: string; hash: string }): string;
   startLogin(): void;

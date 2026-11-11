@@ -119,11 +119,6 @@ export function SettingsView(): ReactNode {
               <span className="flex items-center gap-1">
                 <Kbd>⌥</Kbd>
                 <Kbd>⇧</Kbd>
-                <Kbd>S</Kbd> scan
-              </span>
-              <span className="flex items-center gap-1">
-                <Kbd>⌥</Kbd>
-                <Kbd>⇧</Kbd>
                 <Kbd>P</Kbd> side panel
               </span>
             </span>

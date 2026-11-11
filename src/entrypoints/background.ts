@@ -5,41 +5,26 @@ import { captureAndReport, createMenus, handleMenuClick } from "@/background/cap
 import { resumeLogin, startLogin } from "@/background/login";
 import { handleNotificationClick } from "@/background/notify";
 import { checkExpiry, DAILY_ALARM, sync, SYNC_ALARM } from "@/background/sync";
-import { addLinks, startUploadedTorrent } from "@/lib/add";
+import { addLinks, addUploadedTorrent } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
 import { reconcileIntercept } from "@/lib/intercept";
 import { extractLinks } from "@/lib/links";
 import { onMessage } from "@/lib/messaging";
 import { reinsertTorrent } from "@/lib/reinsert";
 import { authItem, getSettings, settingsItem } from "@/lib/storage";
+import { fromBase64 } from "@/lib/upload";
 
 // Every listener is registered synchronously on worker start so the browser
 // can wake the worker for a context-menu click without the popup being opened.
 export default defineBackground(() => {
-  browser.runtime.onInstalled.addListener(() => {
-    run("setup", async () => {
-      await createMenus();
-      await ensureDailyAlarm();
-      await reconcileIntercept((await getSettings()).interceptMagnets);
-      await sync();
-    });
-  });
-
-  browser.runtime.onStartup.addListener(() => {
-    run("startup", async () => {
-      await createMenus();
-      await ensureDailyAlarm();
-      await reconcileIntercept((await getSettings()).interceptMagnets);
-      await sync();
-    });
-  });
+  browser.runtime.onInstalled.addListener(setUp);
+  browser.runtime.onStartup.addListener(setUp);
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
     run("menu", () => handleMenuClick(info, tab?.id));
   });
 
   browser.commands.onCommand.addListener((command, tab) => {
-    if (command === "scan-page") run("command", () => browser.action.openPopup());
     // sidePanel.open must run inside the shortcut's user gesture, before any await.
     if (command === "open-side-panel" && tab?.windowId !== undefined) {
       browser.sidePanel.open({ windowId: tab.windowId }).catch(console.error);
@@ -81,8 +66,8 @@ export default defineBackground(() => {
     return outcomes;
   });
   onMessage("capture", ({ data, sender }) => captureAndReport(data.links, sender.tab?.id));
-  onMessage("startUploadedTorrent", async ({ data }) => {
-    const outcome = await startUploadedTorrent(data.id, data.name);
+  onMessage("uploadTorrent", async ({ data }) => {
+    const outcome = await addUploadedTorrent(data.name, new Blob([fromBase64(data.data)]));
     await sync().catch((error: unknown) => console.error("[sync]", error));
     return outcome;
   });
@@ -95,6 +80,14 @@ export default defineBackground(() => {
   onMessage("resumeLogin", () => resumeLogin());
   onMessage("sync", () => sync());
 });
+
+/** Each step runs on its own so one failing (say, a menu context Safari rejects) can't block the rest. */
+function setUp(): void {
+  run("menus", createMenus);
+  run("alarm", ensureDailyAlarm);
+  run("intercept", async () => reconcileIntercept((await getSettings()).interceptMagnets));
+  run("sync", sync);
+}
 
 /** Alarms may not survive a browser restart. */
 async function ensureDailyAlarm(): Promise<void> {

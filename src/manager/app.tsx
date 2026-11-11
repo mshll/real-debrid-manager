@@ -9,15 +9,15 @@ import { getHostMatchers } from "@/lib/hosts";
 import { extractLinks } from "@/lib/links";
 import { sendMessage } from "@/lib/messaging";
 import { describeOutcomes } from "@/lib/outcome";
-import { addTorrentFile } from "@/lib/rd/api";
 import { errorMessage } from "@/lib/rd/errors";
 import { authItem } from "@/lib/storage";
+import { isTorrentFile, uploadTorrentFiles } from "@/lib/upload";
 
 import { AccountView } from "./account";
 import { AddDialog } from "./add-dialog";
 import { CommandPalette } from "./command-palette";
 import { DownloadsView } from "./downloads";
-import { useRoute } from "./router";
+import { navigate, useRoute } from "./router";
 import { SettingsView } from "./settings";
 import { Sidebar, type Section } from "./sidebar";
 import { TorrentsView } from "./torrents/view";
@@ -60,6 +60,12 @@ function Shell({ route }: { route: string[] }): ReactNode {
   const [adding, setAdding] = useState(false);
   const [searching, setSearching] = useState(false);
   const [dropping, setDropping] = useState(false);
+
+  useEffect(() => {
+    if (route[0] !== "add") return;
+    setAdding(true);
+    navigate("/torrents");
+  }, [route[0]]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent): void => {
@@ -114,18 +120,13 @@ function Shell({ route }: { route: string[] }): ReactNode {
   }, []);
 
   const uploadFiles = async (files: File[]): Promise<void> => {
-    const torrents = files.filter((file) => file.name.toLowerCase().endsWith(".torrent"));
+    const torrents = files.filter(isTorrentFile);
     if (!torrents.length) return;
-    const outcomes: AddOutcome[] = [];
-    for (const file of torrents) {
-      try {
-        const added = await addTorrentFile(file);
-        outcomes.push(await sendMessage("startUploadedTorrent", { id: added.id, name: file.name }));
-      } catch (error) {
-        outcomes.push({ ok: false, kind: "torrent", title: file.name, error: errorMessage(error) });
-      }
+    try {
+      report(await uploadTorrentFiles(torrents));
+    } catch (error) {
+      toast.error(errorMessage(error));
     }
-    report(outcomes);
   };
 
   return (

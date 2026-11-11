@@ -11,10 +11,13 @@ import type { AddOutcome } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
 import { extractLinks, type ParsedLink } from "@/lib/links";
 import { sendMessage } from "@/lib/messaging";
-import { addTorrentFile } from "@/lib/rd/api";
+import { managerUrl } from "@/lib/pages";
 import { errorMessage } from "@/lib/rd/errors";
+import { isTorrentFile, uploadTorrentFiles } from "@/lib/upload";
 
 const CAN_REQUEST_CLIPBOARD = import.meta.env.BROWSER !== "safari";
+// Firefox closes the popup when a file chooser opens, so the popup hands uploads to the manager.
+const PICKER_CLOSES_POPUP = import.meta.env.BROWSER === "firefox";
 
 export function summarize(links: ParsedLink[]): string {
   const magnets = links.filter((link) => link.kind === "magnet" || link.kind === "torrent").length;
@@ -59,20 +62,16 @@ export function Composer({
   };
 
   const upload = async (files: FileList | File[]): Promise<void> => {
-    const torrents = [...files].filter((file) => file.name.toLowerCase().endsWith(".torrent"));
+    const torrents = [...files].filter(isTorrentFile);
     if (!torrents.length) return;
     setBusy(true);
-    const outcomes: AddOutcome[] = [];
-    for (const file of torrents) {
-      try {
-        const added = await addTorrentFile(file);
-        outcomes.push(await sendMessage("startUploadedTorrent", { id: added.id, name: file.name }));
-      } catch (error) {
-        outcomes.push({ ok: false, kind: "torrent", title: file.name, error: errorMessage(error) });
-      }
+    try {
+      onResult(await uploadTorrentFiles(torrents));
+    } catch (error) {
+      onResult([{ ok: false, kind: "torrent", title: "Upload failed", error: errorMessage(error) }]);
+    } finally {
+      setBusy(false);
     }
-    onResult(outcomes);
-    setBusy(false);
   };
 
   const paste = async (): Promise<void> => {
@@ -90,7 +89,14 @@ export function Composer({
       <IconButton label="Paste from clipboard" onClick={() => paste().catch(console.error)}>
         <ClipboardTextIcon />
       </IconButton>
-      <IconButton label="Upload .torrent files" onClick={() => fileInput.current?.click()}>
+      <IconButton
+        label="Upload .torrent files"
+        onClick={() =>
+          compact && PICKER_CLOSES_POPUP
+            ? browser.tabs.create({ url: managerUrl("/add") }).catch(console.error)
+            : fileInput.current?.click()
+        }
+      >
         <PaperclipIcon />
       </IconButton>
       <input

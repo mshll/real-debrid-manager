@@ -33,12 +33,12 @@ WXT auto-imports are off (`imports: false`); import `browser` from `wxt/browser`
 ## Rules
 
 - Register every worker listener synchronously in `defineBackground`. Context menus are created in `onInstalled`/`onStartup`. Never make a feature depend on the popup having been opened.
-- UI pages call the API directly (host permission bypasses CORS; RD sends no CORS headers). Anything that must survive the popup closing (adding, auto-select, login polling) runs in the worker via `lib/messaging.ts`.
+- UI pages call the API directly (host permission bypasses CORS; RD sends no CORS headers). Anything that must survive the popup closing (adding, .torrent uploads, reinsert, auto-select, login polling) runs in the worker via `lib/messaging.ts`.
 - Token refresh goes through `refreshAccessToken`, serialized with a Web Lock. Only clear auth after a refresh actually fails.
 - Adds are sequential; RD rate-limits parallel adds (250 req/min).
 - `<all_urls>` stays optional. Magnet interception requests it at opt-in time.
 - No aria2 or external downloader support; it was removed on purpose.
-- Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs. The side panel has no activeTab grant, so page scans there ask for the site's host permission.
+- Safari lacks notifications, downloads, omnibox and side panel. Guard those APIs. The side panel has no activeTab grant and can't see the tab URL without one, so page scans there ask for all-sites access (the optional `<all_urls>`). Firefox closes the popup when a file chooser opens, so popup uploads there open the manager (`#/add`).
 
 ## Design
 
