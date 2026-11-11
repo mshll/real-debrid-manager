@@ -68,7 +68,8 @@ async function runSync(): Promise<void> {
   const changed = await startWaitingTorrents(
     torrents,
     fetchedAt,
-    settings.autoStartExternal ? { rule: settings.fileSelection, onlyCached: settings.onlyCached } : null,
+    // Torrents another app added are started, never deleted, even with only-cached on.
+    settings.autoStartExternal ? { rule: settings.fileSelection, onlyCached: false } : null,
   );
 
   const previous = await torrentSnapshotItem.getValue();
