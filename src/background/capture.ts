@@ -53,7 +53,7 @@ export async function captureAndReport(links: ParsedLink[], tabId?: number): Pro
   const summary = describeOutcomes(outcomes);
   const torrentId = outcomes.length === 1 && outcomes[0]?.ok ? outcomes[0].torrentId : undefined;
   await runPrimaryAction(outcomes);
-  await sync();
+  await sync().catch((error: unknown) => console.error("[sync]", error));
   const shown = await notify(torrentId ? `torrent:${torrentId}` : "added", summary.title, summary.message);
   if (!shown) await flashBadge(summary.ok);
   return outcomes;

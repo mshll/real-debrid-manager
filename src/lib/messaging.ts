@@ -8,6 +8,8 @@ interface Protocol {
   /** Adds from a page with no extension UI open; reports via notification. */
   capture(data: { links: ParsedLink[] }): AddOutcome[];
   startUploadedTorrent(data: { id: string; name: string }): AddOutcome;
+  /** Resolves to the new torrent id. */
+  reinsert(data: { id: string; hash: string }): string;
   startLogin(): void;
   resumeLogin(): void;
   sync(): void;

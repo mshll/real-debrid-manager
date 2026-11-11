@@ -7,10 +7,11 @@ import { handleNotificationClick } from "@/background/notify";
 import { checkExpiry, DAILY_ALARM, sync, SYNC_ALARM } from "@/background/sync";
 import { addLinks, startUploadedTorrent } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
-import { registerIntercept } from "@/lib/intercept";
+import { reconcileIntercept } from "@/lib/intercept";
 import { extractLinks } from "@/lib/links";
 import { onMessage } from "@/lib/messaging";
-import { authItem, getSettings } from "@/lib/storage";
+import { reinsertTorrent } from "@/lib/reinsert";
+import { authItem, getSettings, settingsItem } from "@/lib/storage";
 
 // Every listener is registered synchronously on worker start so the browser
 // can wake the worker for a context-menu click without the popup being opened.
@@ -19,7 +20,7 @@ export default defineBackground(() => {
     run("setup", async () => {
       await createMenus();
       await ensureDailyAlarm();
-      if ((await getSettings()).interceptMagnets) await registerIntercept();
+      await reconcileIntercept((await getSettings()).interceptMagnets);
       await sync();
     });
   });
@@ -28,7 +29,7 @@ export default defineBackground(() => {
     run("startup", async () => {
       await createMenus();
       await ensureDailyAlarm();
-      if ((await getSettings()).interceptMagnets) await registerIntercept();
+      await reconcileIntercept((await getSettings()).interceptMagnets);
       await sync();
     });
   });
@@ -69,17 +70,26 @@ export default defineBackground(() => {
   }
 
   authItem.watch(() => run("auth", sync));
+  settingsItem.watch((next, previous) => {
+    if (next.interceptMagnets === previous.interceptMagnets) return;
+    run("intercept", async () => reconcileIntercept((await getSettings()).interceptMagnets));
+  });
 
   onMessage("addLinks", async ({ data }) => {
     const outcomes = await addLinks(data.links, data.options);
-    await sync();
+    await sync().catch((error: unknown) => console.error("[sync]", error));
     return outcomes;
   });
   onMessage("capture", ({ data, sender }) => captureAndReport(data.links, sender.tab?.id));
   onMessage("startUploadedTorrent", async ({ data }) => {
     const outcome = await startUploadedTorrent(data.id, data.name);
-    await sync();
+    await sync().catch((error: unknown) => console.error("[sync]", error));
     return outcome;
+  });
+  onMessage("reinsert", async ({ data }) => {
+    const id = await reinsertTorrent(data);
+    await sync().catch((error: unknown) => console.error("[sync]", error));
+    return id;
   });
   onMessage("startLogin", () => startLogin());
   onMessage("resumeLogin", () => resumeLogin());

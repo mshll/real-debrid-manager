@@ -146,7 +146,7 @@ async function startTorrent(
         return { status: "not-cached", title };
       }
       await handOff(id);
-      return { status: "waiting-metadata", title };
+      return { status: rule === "ask" ? "choose-files" : "waiting-metadata", title };
     }
     if (info.status !== "waiting_files_selection") {
       const status = await verifyCached(id, onlyCached);
@@ -209,9 +209,10 @@ async function fetchTorrentFile(url: string, tabId?: number): Promise<Blob> {
     const res = await fetch(url, { credentials: "include" });
     if (res.ok) return await res.blob();
   } catch (error) {
-    if (tabId === undefined) throw error;
+    console.info("Direct .torrent fetch failed", error);
   }
-  if (tabId === undefined) throw new Error("Couldn't download the .torrent file");
+  if (tabId === undefined)
+    throw new Error("Couldn't download the .torrent file. Add it from the link's right-click menu.");
 
   const [result] = await browser.scripting.executeScript({
     target: { tabId },

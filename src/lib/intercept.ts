@@ -29,3 +29,9 @@ export async function disableIntercept(): Promise<void> {
   const existing = await browser.scripting.getRegisteredContentScripts({ ids: [SCRIPT_ID] });
   if (existing.length) await browser.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
 }
+
+/** Settings sync across devices but the registration is per device, so it follows the setting and this device's grant. */
+export async function reconcileIntercept(enabled: boolean): Promise<void> {
+  if (enabled && (await browser.permissions.contains({ origins: ["<all_urls>"] }))) await registerIntercept();
+  else await disableIntercept();
+}
