@@ -366,6 +366,13 @@ const DOWNLOAD_SPECS: [string, string, string, number, number][] = [
   ["Agent.327.Operation.Barbershop.2017.1080p.WEB-DL.x264.mkv", "real-debrid.com", "video/x-matroska", 5.3 * GB, 501],
 ];
 
+/** File names the hoster links on the fake scanned page unlock to. */
+const UNLOCKED_NAMES: Record<string, string> = {
+  "https://1fichier.com/?k9x2m4p7q1&af=1": "debian-12.7.0-amd64-DVD-1.iso",
+  "https://1fichier.com/?b3v8n1z5c6": "Charge.2022.2160p.WEB-DL.x265.mkv",
+  "https://rapidgator.net/?file/4f2a9c/Tears.of.Steel.2012.mkv.html": "Tears.of.Steel.2012.1080p.WEB-DL.x264.mkv",
+};
+
 export const downloads: Download[] = DOWNLOAD_SPECS.map(([filename, host, mimeType, filesize, ageHours]) => {
   const id = rdId();
   return {
@@ -511,7 +518,7 @@ export function handleRd(log: MockLog) {
         const id = link.split("/").pop() ?? "LINK";
         return json(route, {
           id,
-          filename: `${id}.mkv`,
+          filename: UNLOCKED_NAMES[link] ?? `${id}.mkv`,
           mimeType: "video/x-matroska",
           filesize: 1024 ** 3,
           link,
