@@ -1,5 +1,6 @@
 @import "@fontsource-variable/inter/opsz.css";
-@import "tailwindcss";
+@import "tailwindcss" source("../");
+@source not "../lib/__tests__";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
