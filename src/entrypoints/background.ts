@@ -8,6 +8,7 @@ import { checkExpiry, DAILY_ALARM, sync, SYNC_ALARM } from "@/background/sync";
 import { addLinks, addUploadedTorrent, type AddOutcome } from "@/lib/add";
 import { getHostMatchers } from "@/lib/hosts";
 import { reconcileIntercept } from "@/lib/intercept";
+import { migrateLegacyAuth } from "@/lib/legacy";
 import { extractLinks } from "@/lib/links";
 import { onMessage } from "@/lib/messaging";
 import { reinsertTorrent } from "@/lib/reinsert";
@@ -85,6 +86,7 @@ export default defineBackground(() => {
 
 /** Each step runs on its own so one failing (say, a menu context Safari rejects) can't block the rest. */
 function setUp(): void {
+  run("legacy auth", migrateLegacyAuth);
   run("menus", createMenus);
   run("alarm", ensureDailyAlarm);
   run("intercept", async () => reconcileIntercept((await getSettings()).interceptMagnets));
