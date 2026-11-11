@@ -61,70 +61,76 @@ interface Spec {
   hash?: string;
 }
 
-const SEVERANCE = "Severance.S02.1080p.ATVP.WEB-DL.DDP5.1.H.264-NTb";
-const severanceFiles = [
-  ...Array.from({ length: 10 }, (_, i) => ({
-    path: `/${SEVERANCE}/Severance.S02E${String(i + 1).padStart(2, "0")}.1080p.ATVP.WEB-DL.DDP5.1.H.264-NTb.mkv`,
+const PACK = "Blender.Open.Movies.Collection.1080p.WEB-DL.x264";
+const PACK_TITLES = [
+  "Elephants.Dream.2006",
+  "Big.Buck.Bunny.2008",
+  "Sintel.2010",
+  "Tears.of.Steel.2012",
+  "Cosmos.Laundromat.2015",
+  "Caminandes.Llamigos.2016",
+  "Agent.327.2017",
+  "Spring.2019",
+  "Coffee.Run.2020",
+  "Sprite.Fright.2021",
+];
+const packFiles = [
+  ...PACK_TITLES.map((title, i) => ({
+    path: `/${PACK}/Blender.Open.Movies.E${String(i + 1).padStart(2, "0")}.${title}.1080p.WEB-DL.x264.mkv`,
     bytes: Math.round(3.4 * GB * (0.85 + random() * 0.3)),
   })),
-  { path: `/${SEVERANCE}/Sample/severance.s02e01.sample.mkv`, bytes: 48 * MB, selected: 0 as const },
-  { path: `/${SEVERANCE}/Severance.S02.1080p.ATVP.WEB-DL.DDP5.1.H.264-NTb.nfo`, bytes: 6_214, selected: 0 as const },
+  { path: `/${PACK}/Sample/elephants.dream.sample.mkv`, bytes: 48 * MB, selected: 0 as const },
+  { path: `/${PACK}/${PACK}.nfo`, bytes: 6_214, selected: 0 as const },
 ];
 
-const ARCANE = "Arcane.S02.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX";
-const arcaneFiles = [
+const EARTH = "NASA.Earth.Views.S01.2160p.WEB-DL.HDR.x265";
+const earthFiles = [
   ...Array.from({ length: 9 }, (_, i) => ({
-    path: `/${ARCANE}/Arcane.S02E${String(i + 1).padStart(2, "0")}.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv`,
+    path: `/${EARTH}/NASA.Earth.Views.S01E${String(i + 1).padStart(2, "0")}.2160p.WEB-DL.HDR.x265.mkv`,
     bytes: Math.round(6.1 * GB * (0.9 + random() * 0.2)),
   })),
-  {
-    path: `/${ARCANE}/Arcane.S02.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.nfo`,
-    bytes: 4_882,
-    selected: 0 as const,
-  },
+  { path: `/${EARTH}/${EARTH}.nfo`, bytes: 4_882, selected: 0 as const },
 ];
 
-const OKC = "Radiohead - OK Computer OKNOTOK 1997 2017 (2017) [FLAC 24-96]";
-const okcTracks = [
-  "Airbag",
-  "Paranoid Android",
-  "Subterranean Homesick Alien",
-  "Exit Music (For a Film)",
-  "Let Down",
-  "Karma Police",
-  "Fitter Happier",
-  "Electioneering",
-  "Climbing Up the Walls",
-  "No Surprises",
-  "Lucky",
-  "The Tourist",
+const ALBUM = "Nine Inch Nails - The Slip (2008) [FLAC 24-96]";
+const albumTracks = [
+  "999,999",
+  "1,000,000",
+  "Letting You",
+  "Discipline",
+  "Echoplex",
+  "Head Down",
+  "Lights in the Sky",
+  "Corona Radiata",
+  "The Four of Us Are Dying",
+  "Demon Seed",
 ];
-const okcFiles = [
-  ...okcTracks.map((track, i) => ({
-    path: `/${OKC}/CD1/${String(i + 1).padStart(2, "0")}. ${track}.flac`,
+const albumFiles = [
+  ...albumTracks.map((track, i) => ({
+    path: `/${ALBUM}/${String(i + 1).padStart(2, "0")}. ${track}.flac`,
     bytes: Math.round(95 * MB * (0.6 + random() * 0.8)),
   })),
-  { path: `/${OKC}/cover.jpg`, bytes: 2_431_882 },
-  { path: `/${OKC}/Radiohead - OK Computer.log`, bytes: 8_312 },
-  { path: `/${OKC}/Radiohead - OK Computer.cue`, bytes: 1_904 },
+  { path: `/${ALBUM}/cover.jpg`, bytes: 2_431_882 },
+  { path: `/${ALBUM}/Nine Inch Nails - The Slip.log`, bytes: 8_312 },
+  { path: `/${ALBUM}/Nine Inch Nails - The Slip.cue`, bytes: 1_904 },
 ];
 
-const OPPENHEIMER = "Oppenheimer.2023.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265";
-const oppenheimerFiles = [
-  { path: `/${OPPENHEIMER}/${OPPENHEIMER}.mkv`, bytes: 5.87 * GB, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/Sample/sample.mkv`, bytes: 31 * MB, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/Subs/English.srt`, bytes: 162_401, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/Subs/French.srt`, bytes: 171_022, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/Subs/Spanish.srt`, bytes: 168_774, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/GalaxyRG.txt`, bytes: 1_204, selected: 0 as const },
-  { path: `/${OPPENHEIMER}/${OPPENHEIMER}.nfo`, bytes: 9_822, selected: 0 as const },
+const NOTLD = "Night.of.the.Living.Dead.1968.1080p.BluRay.x264";
+const notldFiles = [
+  { path: `/${NOTLD}/${NOTLD}.mkv`, bytes: 5.87 * GB, selected: 0 as const },
+  { path: `/${NOTLD}/Sample/sample.mkv`, bytes: 31 * MB, selected: 0 as const },
+  { path: `/${NOTLD}/Subs/English.srt`, bytes: 162_401, selected: 0 as const },
+  { path: `/${NOTLD}/Subs/French.srt`, bytes: 171_022, selected: 0 as const },
+  { path: `/${NOTLD}/Subs/Spanish.srt`, bytes: 168_774, selected: 0 as const },
+  { path: `/${NOTLD}/README.txt`, bytes: 1_204, selected: 0 as const },
+  { path: `/${NOTLD}/${NOTLD}.nfo`, bytes: 9_822, selected: 0 as const },
 ];
 
-const INTERSTELLAR_HASH = hash();
+const BUNNY_HASH = hash();
 
 const SPECS: Spec[] = [
   {
-    filename: "The.Bear.S03E01.Tomorrow.1080p.DSNP.WEB-DL.DDP5.1.H.264-FLUX.mkv",
+    filename: "Sintel.2010.2160p.WEB-DL.x265.mkv",
     status: "downloading",
     ageHours: 0.3,
     bytes: 2.41 * GB,
@@ -133,7 +139,7 @@ const SPECS: Spec[] = [
     seeders: 142,
   },
   {
-    filename: "Shogun.2024.S01.2160p.DSNP.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX",
+    filename: "Cosmos.Laundromat.2015.2160p.WEB-DL.HDR.x265",
     status: "downloading",
     ageHours: 0.6,
     bytes: 58.2 * GB,
@@ -142,83 +148,83 @@ const SPECS: Spec[] = [
     seeders: 38,
   },
   {
-    filename: "Blade.Runner.2049.2017.1080p.BluRay.x265-RARBG",
+    filename: "Metropolis.1927.Restored.1080p.BluRay.x265",
     status: "magnet_conversion",
     ageHours: 0.1,
     bytes: 0,
     progress: 0,
   },
-  { filename: OPPENHEIMER, status: "waiting_files_selection", ageHours: 0.9, bytes: 0, files: oppenheimerFiles },
+  { filename: NOTLD, status: "waiting_files_selection", ageHours: 0.9, bytes: 0, files: notldFiles },
   { filename: "ubuntu-24.04.1-desktop-amd64.iso", status: "queued", ageHours: 1.2, bytes: 6.11 * GB, progress: 0 },
   {
-    filename: "Furiosa.A.Mad.Max.Saga.2024.2160p.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv",
+    filename: "Tears.of.Steel.2012.2160p.WEB-DL.HDR.x265.mkv",
     status: "compressing",
     ageHours: 1.5,
     bytes: 22.7 * GB,
     progress: 64,
   },
-  { filename: SEVERANCE, status: "downloaded", ageHours: 3, files: severanceFiles, links: 10 },
+  { filename: PACK, status: "downloaded", ageHours: 3, files: packFiles, links: 10 },
   {
-    filename: "Dune.Part.Two.2024.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.TrueHD.Atmos.7.1-FGT.mkv",
+    filename: "Nosferatu.1922.REMASTERED.2160p.UHD.BluRay.REMUX.HEVC.mkv",
     status: "downloaded",
     ageHours: 7,
     bytes: 74.3 * GB,
     links: 1,
   },
   {
-    filename: "The.Office.US.S01-S09.COMPLETE.720p.WEB-DL.x264-GROUP",
+    filename: "Prelinger.Archives.Collection.720p.WEB-DL.x264",
     status: "error",
     ageHours: 11,
     bytes: 118 * GB,
     progress: 3,
   },
-  { filename: ARCANE, status: "downloaded", ageHours: 26, files: arcaneFiles, links: 9 },
+  { filename: EARTH, status: "downloaded", ageHours: 26, files: earthFiles, links: 9 },
   {
-    filename: "Godzilla.Minus.One.2023.JAPANESE.1080p.BluRay.x264.DTS-HD.MA.5.1-FGT.mkv",
+    filename: "The.General.1926.1080p.BluRay.x264.FLAC.mkv",
     status: "downloaded",
     ageHours: 30,
     bytes: 14.2 * GB,
     links: 1,
   },
   {
-    filename: "Interstellar.2014.IMAX.1080p.BluRay.x264.DTS-HD.MA.5.1-SPARKS.mkv",
+    filename: "Big.Buck.Bunny.2008.2160p.60fps.WEB-DL.x264.mkv",
     status: "downloaded",
     ageHours: 40,
     bytes: 17.9 * GB,
     links: 1,
-    hash: INTERSTELLAR_HASH,
+    hash: BUNNY_HASH,
   },
   {
-    filename: "Old.Boy.2003.REMASTERED.1080p.BluRay.x264-DiAMOND",
+    filename: "Plan.9.from.Outer.Space.1957.1080p.BluRay.x264",
     status: "dead",
     ageHours: 52,
     bytes: 9.4 * GB,
     progress: 0,
   },
-  { filename: OKC, status: "downloaded", ageHours: 60, files: okcFiles, links: 1 },
+  { filename: ALBUM, status: "downloaded", ageHours: 60, files: albumFiles, links: 1 },
   {
-    filename: "Fallout.S01E01.The.End.2160p.AMZN.WEB-DL.DDP5.1.HDR.H.265-FLUX.mkv",
+    filename: "Elephants.Dream.2006.2160p.WEB-DL.x265.mkv",
     status: "downloaded",
     ageHours: 75,
     bytes: 8.3 * GB,
     links: 1,
   },
   {
-    filename: "Adobe.Photoshop.2024.v25.0.x64.Multilingual.Pre-Activated",
+    filename: "Fedora-Workstation-Live-x86_64-41",
     status: "virus",
     ageHours: 90,
     bytes: 3.9 * GB,
     progress: 100,
   },
   {
-    filename: "House.of.the.Dragon.S02E01.1080p.MAX.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv",
+    filename: "Spring.2019.2160p.WEB-DL.x265.mkv",
     status: "downloaded",
     ageHours: 120,
     bytes: 4.7 * GB,
     links: 1,
   },
   {
-    filename: "Civil.War.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv",
+    filename: "Charge.2022.1080p.WEB-DL.x264.mkv",
     status: "downloaded",
     ageHours: 150,
     bytes: 6.4 * GB,
@@ -226,7 +232,7 @@ const SPECS: Spec[] = [
   },
   { filename: "", status: "magnet_error", ageHours: 170, bytes: 0, progress: 0 },
   {
-    filename: "Poor.Things.2023.1080p.BluRay.x264-SPRiNTER.mkv",
+    filename: "His.Girl.Friday.1940.1080p.BluRay.x264.mkv",
     status: "downloaded",
     ageHours: 200,
     bytes: 11.1 * GB,
@@ -234,29 +240,29 @@ const SPECS: Spec[] = [
   },
   { filename: "blender-4.2.1-linux-x64.tar.xz", status: "downloaded", ageHours: 260, bytes: 341 * MB, links: 1 },
   {
-    filename: "Interstellar.2014.IMAX.1080p.BluRay.x264.DTS-HD.MA.5.1-SPARKS.mkv",
+    filename: "Big.Buck.Bunny.2008.2160p.60fps.WEB-DL.x264.mkv",
     status: "downloaded",
     ageHours: 300,
     bytes: 17.9 * GB,
     links: 1,
-    hash: INTERSTELLAR_HASH,
+    hash: BUNNY_HASH,
   },
   {
-    filename: "The.Boys.S04E08.Assembling.an.Army.2160p.AMZN.WEB-DL.DDP5.1.HDR.H.265-NTb.mkv",
+    filename: "Caminandes.Llamigos.2016.2160p.WEB-DL.x265.mkv",
     status: "downloaded",
     ageHours: 380,
     bytes: 7.6 * GB,
     links: 1,
   },
   {
-    filename: "Past.Lives.2023.1080p.WEB-DL.DDP5.1.H.264-EniaHD.mkv",
+    filename: "Agent.327.Operation.Barbershop.2017.1080p.WEB-DL.x264.mkv",
     status: "downloaded",
     ageHours: 500,
     bytes: 5.3 * GB,
     links: 1,
   },
   {
-    filename: "The.Last.of.Us.S01E03.Long.Long.Time.2160p.HMAX.WEB-DL.DDP5.1.Atmos.DV.HDR.HEVC-CMRG.mkv",
+    filename: "Sprite.Fright.2021.2160p.WEB-DL.HDR.x265.mkv",
     status: "downloaded",
     ageHours: 900,
     bytes: 9.8 * GB,
@@ -308,7 +314,7 @@ export const torrents: Torrent[] = torrentInfos.map(
 );
 
 export const ids = {
-  seasonPack: torrentInfos.find((t) => t.filename === SEVERANCE)!.id,
+  seasonPack: torrentInfos.find((t) => t.filename === PACK)!.id,
   waiting: torrentInfos.find((t) => t.status === "waiting_files_selection")!.id,
 };
 
@@ -325,51 +331,39 @@ const ACTIVE_STATUSES: TorrentStatus[] = [
 export const activeTorrents = torrents.filter((t) => ACTIVE_STATUSES.includes(t.status));
 
 const DOWNLOAD_SPECS: [string, string, string, number, number][] = [
-  ["Severance.S02E10.1080p.ATVP.WEB-DL.DDP5.1.H.264-NTb.mkv", "real-debrid.com", "video/x-matroska", 3.6 * GB, 3.2],
-  ["Severance.S02E09.1080p.ATVP.WEB-DL.DDP5.1.H.264-NTb.mkv", "real-debrid.com", "video/x-matroska", 3.3 * GB, 3.2],
   [
-    "Dune.Part.Two.2024.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.TrueHD.Atmos.7.1-FGT.mkv",
+    "Blender.Open.Movies.E10.Sprite.Fright.2021.1080p.WEB-DL.x264.mkv",
     "real-debrid.com",
     "video/x-matroska",
-    74.3 * GB,
-    7.5,
+    3.6 * GB,
+    3.2,
   ],
+  [
+    "Blender.Open.Movies.E09.Coffee.Run.2020.1080p.WEB-DL.x264.mkv",
+    "real-debrid.com",
+    "video/x-matroska",
+    3.3 * GB,
+    3.2,
+  ],
+  ["Nosferatu.1922.REMASTERED.2160p.UHD.BluRay.REMUX.HEVC.mkv", "real-debrid.com", "video/x-matroska", 74.3 * GB, 7.5],
   ["Proxmox-VE-8.2-ISO-Installer.iso", "1fichier.com", "application/x-iso9660-image", 1.34 * GB, 9],
+  ["NASA.Earth.Views.S01E03.2160p.WEB-DL.HDR.x265.mkv", "real-debrid.com", "video/x-matroska", 6.2 * GB, 26],
+  ["Blender_Studio_Textures_2024.zip", "rapidgator.net", "application/zip", 812 * MB, 29],
+  ["The.General.1926.1080p.BluRay.x264.FLAC.mkv", "real-debrid.com", "video/x-matroska", 14.2 * GB, 31],
   [
-    "Arcane.S02E03.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv",
-    "real-debrid.com",
-    "video/x-matroska",
-    6.2 * GB,
-    26,
-  ],
-  ["Lightroom_Presets_Pack_2024.zip", "rapidgator.net", "application/zip", 812 * MB, 29],
-  [
-    "Godzilla.Minus.One.2023.JAPANESE.1080p.BluRay.x264.DTS-HD.MA.5.1-FGT.mkv",
-    "real-debrid.com",
-    "video/x-matroska",
-    14.2 * GB,
-    31,
-  ],
-  [
-    "Radiohead - OK Computer OKNOTOK 1997 2017 (2017) [FLAC 24-96].rar",
+    "Nine Inch Nails - The Slip (2008) [FLAC 24-96].rar",
     "real-debrid.com",
     "application/x-rar-compressed",
     1.72 * GB,
     61,
   ],
-  ["Kurzgesagt.Wallpapers.4K.part1.rar", "mega.nz", "application/x-rar-compressed", 2.1 * GB, 70],
-  ["Kurzgesagt.Wallpapers.4K.part2.rar", "mega.nz", "application/x-rar-compressed", 1.4 * GB, 70.1],
-  [
-    "Fallout.S01E01.The.End.2160p.AMZN.WEB-DL.DDP5.1.HDR.H.265-FLUX.mkv",
-    "real-debrid.com",
-    "video/x-matroska",
-    8.3 * GB,
-    76,
-  ],
-  ["DaVinci_Resolve_Studio_19.0_Mac.dmg", "uptobox.com", "application/x-apple-diskimage", 3.4 * GB, 102],
-  ["Civil.War.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv", "real-debrid.com", "video/x-matroska", 6.4 * GB, 151],
-  ["The_Art_of_Computer_Programming_Vol1-4.pdf", "1fichier.com", "application/pdf", 88 * MB, 240],
-  ["Past.Lives.2023.1080p.WEB-DL.DDP5.1.H.264-EniaHD.mkv", "real-debrid.com", "video/x-matroska", 5.3 * GB, 501],
+  ["NASA.Hubble.Images.4K.part1.rar", "mega.nz", "application/x-rar-compressed", 2.1 * GB, 70],
+  ["NASA.Hubble.Images.4K.part2.rar", "mega.nz", "application/x-rar-compressed", 1.4 * GB, 70.1],
+  ["Elephants.Dream.2006.2160p.WEB-DL.x265.mkv", "real-debrid.com", "video/x-matroska", 8.3 * GB, 76],
+  ["Blender-4.2.1-macos-arm64.dmg", "uptobox.com", "application/x-apple-diskimage", 3.4 * GB, 102],
+  ["Charge.2022.1080p.WEB-DL.x264.mkv", "real-debrid.com", "video/x-matroska", 6.4 * GB, 151],
+  ["NASA_Apollo_11_Press_Kit_1969.pdf", "1fichier.com", "application/pdf", 88 * MB, 240],
+  ["Agent.327.Operation.Barbershop.2017.1080p.WEB-DL.x264.mkv", "real-debrid.com", "video/x-matroska", 5.3 * GB, 501],
 ];
 
 export const downloads: Download[] = DOWNLOAD_SPECS.map(([filename, host, mimeType, filesize, ageHours]) => {
@@ -392,7 +386,15 @@ export const traffic: Traffic = {
   "real-debrid.com": { left: 0, bytes: 412 * GB, links: 318, limit: 0, type: "gigabytes", extra: 0, reset: "daily" },
   "1fichier.com": { left: 62 * GB, bytes: 38 * GB, links: 7, limit: 100 * GB, type: "bytes", extra: 0, reset: "daily" },
   "rapidgator.net": { left: 18, bytes: 4.2 * GB, links: 2, limit: 20, type: "links", extra: 0, reset: "daily" },
-  "ddownload.com": { left: 0.4 * 1024 ** 3, bytes: 0.6 * GB, links: 3, limit: 1, type: "gigabytes", extra: 0, reset: "daily" },
+  "ddownload.com": {
+    left: 0.4 * 1024 ** 3,
+    bytes: 0.6 * GB,
+    links: 3,
+    limit: 1,
+    type: "gigabytes",
+    extra: 0,
+    reset: "daily",
+  },
   "uptobox.com": { left: 0, bytes: 3.4 * GB, links: 1, limit: 0, type: "gigabytes", extra: 0, reset: "daily" },
 };
 

@@ -129,12 +129,12 @@ function fakeHiddenTab(): void {
 
 function fakePageScan(): void {
   const hrefs = [
-    "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Dune.Part.Two.2024.2160p.WEB-DL.DDP5.1",
-    "magnet:?xt=urn:btih:89abcdef0123456789abcdef0123456789abcdef&dn=The.Last.of.Us.S02.1080p.WEB-DL",
+    "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Sintel.2010.2160p.WEB-DL.x265",
+    "magnet:?xt=urn:btih:89abcdef0123456789abcdef0123456789abcdef&dn=archlinux-2024.11.01-x86_64.iso",
     "https://1fichier.com/?k9x2m4p7q1&af=1",
     "https://1fichier.com/?b3v8n1z5c6",
-    "https://rapidgator.net/?file/4f2a9c/Arcane.S02E01.mkv.html",
-    ...["a1", "b2", "c3", "d4", "e5"].map((id) => `https://1fichier.com/?forklift-4-6-${id}`),
+    "https://rapidgator.net/?file/4f2a9c/Tears.of.Steel.2012.mkv.html",
+    ...["a1", "b2", "c3", "d4", "e5"].map((id) => `https://1fichier.com/?ubuntu-24-04-${id}`),
   ];
   // Object.assign sidesteps the full Tab and InjectionResult shapes the stubs don't need.
   Object.assign(chrome.tabs, { query: async () => [{ id: 1, url: "https://example.com/" }] });
@@ -205,14 +205,14 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
   await shootPopup(scanned, `popup-page-links-${theme}`);
   if (theme === "light") {
     await check("popup opens on the page's links, then filter, select and add", async () => {
-      await scanned.getByLabel("Filter links").fill("forklift");
-      const shown = await scanned.getByRole("button", { name: /^1fichier\.com\/\?forklift/ }).count();
-      assert(shown === 5, `filter 'forklift' should leave 5 rows, got ${shown}`);
+      await scanned.getByLabel("Filter links").fill("ubuntu");
+      const shown = await scanned.getByRole("button", { name: /^1fichier\.com\/\?ubuntu/ }).count();
+      assert(shown === 5, `filter 'ubuntu' should leave 5 rows, got ${shown}`);
       await scanned.getByText("Add 5").waitFor();
       await scanned.getByLabel("Clear filter").click();
 
       await scanned.getByRole("button", { name: "1fichier.com/?b3v8n1z5c6" }).click({ modifiers: ["Meta"] });
-      await scanned.getByRole("button", { name: "rapidgator.net/?file/4f2a9c/Arcane.S02E01.mkv.html" }).click();
+      await scanned.getByRole("button", { name: "rapidgator.net/?file/4f2a9c/Tears.of.Steel.2012.mkv.html" }).click();
       await scanned.getByRole("button", { name: "Add 2", exact: true }).waitFor();
       await shootPopup(scanned, "popup-page-select-light");
       await scanned.getByRole("button", { name: "Add 2", exact: true }).click();
@@ -230,7 +230,10 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
       await scanned.getByRole("button", { name: "Download all" }).waitFor();
       await scanned.getByText("Earlier").waitFor();
       await shootPopup(scanned, "popup-downloads-light");
-      await scanned.getByRole("button", { name: /^Severance\.S02E10/ }).first().hover();
+      await scanned
+        .getByRole("button", { name: /^Blender\.Open\.Movies\.E10/ })
+        .first()
+        .hover();
       await scanned.getByRole("button", { name: "Stream" }).first().waitFor();
       await shoot(scanned, "popup-row-hover-light");
       return "3 just unlocked with Download all; hover shows row actions";
@@ -246,9 +249,7 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
         });
       await scanned.getByRole("radio", { name: /Torrents/ }).click();
       const top = await fades();
-      await scanned.evaluate(() =>
-        document.querySelector(".scroll-fade")?.scrollTo({ top: 1e4, behavior: "instant" }),
-      );
+      await scanned.evaluate(() => document.querySelector(".scroll-fade")?.scrollTo({ top: 1e4, behavior: "instant" }));
       const bottom = await fades();
       assert(
         top.startsWith("0px/") && !top.endsWith("/0px") && bottom.endsWith("/0px") && !bottom.startsWith("0px/"),
@@ -309,7 +310,7 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
 
   const detail = await open(context, `${manager}#/torrents/${ids.seasonPack}`, `manager detail ${theme}`, theme);
   await waitForLibrary(detail);
-  await detail.getByText("Severance.S02E01.1080p", { exact: false }).first().waitFor();
+  await detail.getByText("Blender.Open.Movies.E01", { exact: false }).first().waitFor();
   await shoot(detail, `manager-torrent-detail-${theme}`);
   await detail.close();
 
@@ -365,7 +366,7 @@ async function smokeChecks(context: BrowserContext, worker: Worker, base: string
   });
 
   await check("ready torrents get quick actions even when the list has no links", async () => {
-    const row = rows.filter({ hasText: "Severance.S02.1080p" });
+    const row = rows.filter({ hasText: "Blender.Open.Movies.Collection" });
     await row.getByRole("button", { name: "Download" }).waitFor({ timeout: 3000 });
     await row.getByRole("checkbox", { name: "Select", exact: true }).click();
     const bar = page.getByRole("button", { name: "Download", exact: true }).last();
@@ -383,19 +384,19 @@ async function smokeChecks(context: BrowserContext, worker: Worker, base: string
 
   await check("search filters the list", async () => {
     const search = page.getByPlaceholder("Search torrents");
-    await search.fill("interstellar");
+    await search.fill("bunny");
     await page.waitForFunction(() => document.querySelectorAll('[role="row"]').length === 2, null, { timeout: 3000 });
     const names = await rows.allInnerTexts();
     assert(
-      names.every((text) => text.toLowerCase().includes("interstellar")),
+      names.every((text) => text.toLowerCase().includes("bunny")),
       `unexpected rows: ${names.join(" | ")}`,
     );
-    await search.fill("severance");
+    await search.fill("sintel");
     await page.waitForFunction(() => document.querySelectorAll('[role="row"]').length === 1, null, { timeout: 3000 });
     await page.getByText(`1 of ${torrents.length}`).waitFor({ timeout: 3000 });
     await search.fill("");
     await page.waitForFunction((n) => document.querySelectorAll('[role="row"]').length >= n, 15, { timeout: 3000 });
-    return `'interstellar' -> 2 rows, 'severance' -> 1 row ('1 of ${torrents.length}'), cleared -> full list`;
+    return `'bunny' -> 2 rows, 'sintel' -> 1 row ('1 of ${torrents.length}'), cleared -> full list`;
   });
 
   await check("Failed filter shows only failed torrents", async () => {
