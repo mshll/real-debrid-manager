@@ -121,6 +121,12 @@ function fakeBlockedPage(): void {
   Object.assign(chrome.permissions, { contains: async () => false });
 }
 
+/** The usual side panel case: with no grant for the tab, the browser hides its URL. */
+function fakeHiddenTab(): void {
+  Object.assign(chrome.tabs, { query: async () => [{ id: 1 }] });
+  Object.assign(chrome.permissions, { contains: async () => false });
+}
+
 function fakePageScan(): void {
   const hrefs = [
     "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Dune.Part.Two.2024.2160p.WEB-DL.DDP5.1",
@@ -267,6 +273,13 @@ async function signedInShots(context: BrowserContext, worker: Worker, base: stri
       await shoot(blocked, "panel-no-access-light");
       await blocked.close();
       return "shows 'Allow on example.com'";
+    });
+    await check("side panel asks for all-sites access when the tab URL is hidden", async () => {
+      const hidden = await open(context, `${base}/sidepanel.html`, "side panel hidden url", theme, fakeHiddenTab);
+      await hidden.getByRole("radio", { name: /On page/ }).click();
+      await hidden.getByRole("button", { name: "Allow on all sites" }).waitFor();
+      await hidden.close();
+      return "shows 'Allow on all sites'";
     });
   }
 

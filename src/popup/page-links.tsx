@@ -18,12 +18,13 @@ import { PopupRow } from "./row";
 const SCAN_KEY = ["scan"];
 const FILTER_FROM = 8;
 
-interface PageStore {
-  key: string;
+interface PageMemory {
   added: Set<string>;
   selected: Set<string>;
   filter: string;
 }
+
+const EMPTY_PAGE: PageMemory = { added: new Set(), selected: new Set(), filter: "" };
 
 export interface PageLinksState {
   requested: boolean;
@@ -63,31 +64,40 @@ export function usePageLinks(
     staleTime: Infinity,
   });
   const key = scan?.status === "ok" ? `${scan.tabId}:${scan.url}` : "";
-  const [store, setStore] = useState<PageStore>(() => emptyStore(""));
-  const current = store.key === key ? store : emptyStore(key);
-  const update = (patch: (base: PageStore) => Partial<Omit<PageStore, "key">>): void =>
-    setStore((previous) => {
-      const base = previous.key === key ? previous : emptyStore(key);
-      return { ...base, ...patch(base) };
+  const [pages, setPages] = useState<Record<string, PageMemory>>({});
+  const current = pages[key] ?? EMPTY_PAGE;
+  // Keyed by page so an add that finishes after a tab switch lands on the page it came from.
+  const update = (page: string, patch: (base: PageMemory) => Partial<PageMemory>): void =>
+    setPages((previous) => {
+      const base = previous[page] ?? EMPTY_PAGE;
+      return { ...previous, [page]: { ...base, ...patch(base) } };
     });
   const [busy, setBusy] = useState<string | null>(null);
   const anchor = useRef<string | null>(null);
 
   useEffect(() => {
     if (!follow) return;
+    let windowId: number | undefined;
     const rescan = (): void => {
       queryClient.resetQueries({ queryKey: SCAN_KEY }).catch(console.error);
     };
-    const onUpdated = (_id: number, change: { status?: string }, tab: { active: boolean }): void => {
-      if (tab.active && change.status === "complete") rescan();
+    const onActivated = (info: { windowId: number }): void => {
+      if (info.windowId === windowId) rescan();
     };
-    browser.tabs.onActivated.addListener(rescan);
+    const onUpdated = (_id: number, change: { status?: string }, tab: { active: boolean; windowId: number }): void => {
+      if (tab.active && tab.windowId === windowId && change.status === "complete") rescan();
+    };
+    browser.windows
+      .getCurrent()
+      .then((window) => {
+        windowId = window.id;
+      })
+      .catch(console.error);
+    browser.tabs.onActivated.addListener(onActivated);
     browser.tabs.onUpdated.addListener(onUpdated);
-    browser.windows.onFocusChanged.addListener(rescan);
     return () => {
-      browser.tabs.onActivated.removeListener(rescan);
+      browser.tabs.onActivated.removeListener(onActivated);
       browser.tabs.onUpdated.removeListener(onUpdated);
-      browser.windows.onFocusChanged.removeListener(rescan);
     };
   }, [follow, queryClient]);
 
@@ -99,11 +109,12 @@ export function usePageLinks(
 
   const add = async (batch: ParsedLink[], busyKey: string): Promise<void> => {
     if (scan?.status !== "ok") return;
+    const page = key;
     setBusy(busyKey);
     try {
       onResult(await sendMessage("addLinks", { links: batch, options: { tabId: scan.tabId } }));
       const urls = batch.map((link) => link.url);
-      update((base) => ({
+      update(page, (base) => ({
         added: new Set([...base.added, ...urls]),
         selected: new Set([...base.selected].filter((url) => !urls.includes(url))),
       }));
@@ -127,7 +138,7 @@ export function usePageLinks(
       else next.delete(item.url);
     }
     anchor.current = link.url;
-    update(() => ({ selected: next }));
+    update(key, () => ({ selected: next }));
   };
 
   const grant = (): void => {
@@ -149,23 +160,19 @@ export function usePageLinks(
     filter: current.filter,
     setFilter: (filter) => {
       anchor.current = null;
-      update(() => ({ filter, selected: new Set() }));
+      update(key, () => ({ filter, selected: new Set() }));
     },
     added: current.added,
     selected: current.selected,
     toggle,
     clearSelection: () => {
       anchor.current = null;
-      update(() => ({ selected: new Set() }));
+      update(key, () => ({ selected: new Set() }));
     },
     busy,
     add: (batch, busyKey) => add(batch, busyKey).catch(console.error),
     grant,
   };
-}
-
-function emptyStore(key: string): PageStore {
-  return { key, added: new Set(), selected: new Set(), filter: "" };
 }
 
 export function PageLinks({ state }: { state: PageLinksState }): ReactNode {
