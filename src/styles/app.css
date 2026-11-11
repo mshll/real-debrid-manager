@@ -1,0 +1,255 @@
+@import "@fontsource-variable/inter/opsz.css";
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f3f4f6;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --raised: #ffffff;
+  --subtle: #f7f8f9;
+  --fill: rgba(22, 27, 38, 0.045);
+  --fill-strong: rgba(22, 27, 38, 0.08);
+  --border: rgba(22, 27, 38, 0.09);
+  --border-strong: rgba(22, 27, 38, 0.15);
+  --fg: #15171c;
+  --fg-2: #50545c;
+  --fg-3: #80848c;
+  --fg-4: #b3b6bc;
+  --accent: #4f8a2b;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(79, 138, 43, 0.1);
+  --info: #2c7cc0;
+  --info-soft: rgba(44, 124, 192, 0.1);
+  --danger: #d93a32;
+  --danger-soft: rgba(217, 58, 50, 0.09);
+  --warning: #c77608;
+  --warning-soft: rgba(199, 118, 8, 0.1);
+  --chart: #4f8a2b;
+  --shadow-panel: 0 0 0 1px var(--border), 0 1px 2px rgba(22, 27, 38, 0.04);
+  --shadow-popover:
+    0 0 0 1px rgba(22, 27, 38, 0.08), 0 4px 8px -2px rgba(22, 27, 38, 0.08), 0 16px 32px -8px rgba(22, 27, 38, 0.14);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0c0e;
+  --panel: #111214;
+  --surface: #16171a;
+  --raised: #1b1c20;
+  --subtle: #141518;
+  --fill: rgba(255, 255, 255, 0.045);
+  --fill-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.075);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --fg: #eceef1;
+  --fg-2: #a4a7ae;
+  --fg-3: #74777e;
+  --fg-4: #4b4e55;
+  --accent: #b7d995;
+  --accent-fg: #15210c;
+  --accent-soft: rgba(183, 217, 149, 0.11);
+  --info: #9ed1ec;
+  --info-soft: rgba(158, 209, 236, 0.11);
+  --danger: #f2726b;
+  --danger-soft: rgba(242, 114, 107, 0.12);
+  --warning: #f0b35b;
+  --warning-soft: rgba(240, 179, 91, 0.12);
+  --chart: #6fa544;
+  --shadow-panel: 0 0 0 1px var(--border);
+  --shadow-popover: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 16px 40px -8px rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-subtle: var(--subtle);
+  --color-fill: var(--fill);
+  --color-fill-strong: var(--fill-strong);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-fg-4: var(--fg-4);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-chart: var(--chart);
+  --shadow-panel: var(--shadow-panel);
+  --shadow-popover: var(--shadow-popover);
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.45;
+    font-feature-settings: "cv11", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+    outline-offset: 1px;
+  }
+
+  :is(button, a, summary, [role="row"], [role="menuitem"], [role="option"], [role="radio"], [role="checkbox"]):not(
+    :disabled,
+    [data-disabled]
+  ) {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: var(--fill-strong) padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong) padding-box;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Lists stay full-bleed (lines, hover) but their content caps at 960px, like Account on wide windows. */
+  .gutter {
+    padding-inline: max(20px, calc((100% - 960px) / 2));
+  }
+
+  .press {
+    transition-property: background-color, color, box-shadow, transform, opacity;
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease-out);
+  }
+
+  .press:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fade-start {
+  to {
+    --fade-start: 24px;
+  }
+}
+
+@keyframes fade-end {
+  from {
+    --fade-end: 24px;
+  }
+  to {
+    --fade-end: 0px;
+  }
+}
+
+/* Edge fades appear only once the area can scroll that way; browsers without scroll timelines get none. */
+.scroll-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 var(--fade-start),
+    #000 calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation:
+      fade-start linear both,
+      fade-end linear both;
+    animation-timeline: scroll(self), scroll(self);
+    animation-range:
+      0 24px,
+      calc(100% - 24px) 100%;
+  }
+}
+
+/* Hover actions sit over the row's trailing meta; the solid fill matches a hovered row and fades in from the left. */
+.row-actions {
+  padding-left: 28px;
+  background: linear-gradient(var(--fill), var(--fill)), var(--panel);
+  mask-image: linear-gradient(to right, transparent, #000 24px);
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.skeleton {
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--fill) 30%, var(--fill-strong) 50%, var(--fill) 70%) 0 0 / 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-fade {
+      animation-duration: auto !important;
+    }
+  }
+}
+
+html.popup,
+html.popup body,
+html.panel,
+html.panel body {
+  background: var(--panel);
+}

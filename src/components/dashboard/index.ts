@@ -1,5 +1,0 @@
-export { Sidebar, type Section } from "./Sidebar"
-export { AccountSection } from "./AccountSection"
-export { TorrentsSection } from "./TorrentsSection"
-export { DownloadsSection } from "./DownloadsSection"
-export { SettingsSection } from "./SettingsSection"

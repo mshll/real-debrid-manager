@@ -3,271 +3,247 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 110;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5155A9A82F0EE515002373FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9A72F0EE515002373FB /* AppDelegate.swift */; };
-		5155A9AA2F0EE515002373FB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9A92F0EE515002373FB /* SceneDelegate.swift */; };
-		5155A9AD2F0EE515002373FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */; };
-		5155A9B02F0EE515002373FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9AE2F0EE515002373FB /* Main.storyboard */; };
-		5155A9B92F0EE515002373FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A9B82F0EE515002373FB /* AppDelegate.swift */; };
-		5155A9BC2F0EE515002373FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9BA2F0EE515002373FB /* Main.storyboard */; };
-		5155A9C32F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5155A9CD2F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5155A9D22F0EE515002373FB /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9972F0EE513002373FB /* Main.html */; };
-		5155A9D32F0EE515002373FB /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9972F0EE513002373FB /* Main.html */; };
-		5155A9D42F0EE515002373FB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9992F0EE513002373FB /* Icon.png */; };
-		5155A9D52F0EE515002373FB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9992F0EE513002373FB /* Icon.png */; };
-		5155A9D62F0EE515002373FB /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99A2F0EE513002373FB /* Style.css */; };
-		5155A9D72F0EE515002373FB /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99A2F0EE513002373FB /* Style.css */; };
-		5155A9D82F0EE515002373FB /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99B2F0EE513002373FB /* Script.js */; };
-		5155A9D92F0EE515002373FB /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99B2F0EE513002373FB /* Script.js */; };
-		5155A9DA2F0EE515002373FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99C2F0EE513002373FB /* ViewController.swift */; };
-		5155A9DB2F0EE515002373FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99C2F0EE513002373FB /* ViewController.swift */; };
-		5155A9DC2F0EE515002373FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99D2F0EE515002373FB /* Assets.xcassets */; };
-		5155A9DD2F0EE515002373FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5155A99D2F0EE515002373FB /* Assets.xcassets */; };
-		5155A9DE2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */; };
-		5155A9DF2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */; };
-		5155A9FC2F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */; };
-		5155A9FD2F0EE515002373FB /* tabs in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F22F0EE515002373FB /* tabs */; };
-		5155A9FE2F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */; };
-		5155A9FF2F0EE515002373FB /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F42F0EE515002373FB /* popup.html */; };
-		5155AA002F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */; };
-		5155AA012F0EE515002373FB /* popup.c5bdfb9c.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */; };
-		5155AA022F0EE515002373FB /* static in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F72F0EE515002373FB /* static */; };
-		5155AA032F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */; };
-		5155AA042F0EE515002373FB /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F92F0EE515002373FB /* manifest.json */; };
-		5155AA052F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */; };
-		5155AA062F0EE515002373FB /* link-scanner.acf839fe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */; };
-		5155AA072F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */; };
-		5155AA082F0EE515002373FB /* tabs in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F22F0EE515002373FB /* tabs */; };
-		5155AA092F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */; };
-		5155AA0A2F0EE515002373FB /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F42F0EE515002373FB /* popup.html */; };
-		5155AA0B2F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */; };
-		5155AA0C2F0EE515002373FB /* popup.c5bdfb9c.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */; };
-		5155AA0D2F0EE515002373FB /* static in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F72F0EE515002373FB /* static */; };
-		5155AA0E2F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */; };
-		5155AA0F2F0EE515002373FB /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9F92F0EE515002373FB /* manifest.json */; };
-		5155AA102F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */; };
-		5155AA112F0EE515002373FB /* link-scanner.acf839fe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */; };
+		51A68D45306B2C4700AE6283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D44306B2C4700AE6283 /* AppDelegate.swift */; };
+		51A68D47306B2C4700AE6283 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D46306B2C4700AE6283 /* SceneDelegate.swift */; };
+		51A68D4A306B2C4700AE6283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D48306B2C4700AE6283 /* LaunchScreen.storyboard */; };
+		51A68D4D306B2C4700AE6283 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D4B306B2C4700AE6283 /* Main.storyboard */; };
+		51A68D56306B2C4700AE6283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D55306B2C4700AE6283 /* AppDelegate.swift */; };
+		51A68D59306B2C4700AE6283 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D57306B2C4700AE6283 /* Main.storyboard */; };
+		51A68D60306B2C4700AE6283 /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 51A68D5F306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		51A68D6A306B2C4700AE6283 /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 51A68D69306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		51A68D6F306B2C4700AE6283 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D34306B2C4600AE6283 /* Main.html */; };
+		51A68D70306B2C4700AE6283 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D34306B2C4600AE6283 /* Main.html */; };
+		51A68D71306B2C4700AE6283 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D36306B2C4600AE6283 /* Icon.png */; };
+		51A68D72306B2C4700AE6283 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D36306B2C4600AE6283 /* Icon.png */; };
+		51A68D73306B2C4700AE6283 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D37306B2C4600AE6283 /* Style.css */; };
+		51A68D74306B2C4700AE6283 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D37306B2C4600AE6283 /* Style.css */; };
+		51A68D75306B2C4700AE6283 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D38306B2C4600AE6283 /* Script.js */; };
+		51A68D76306B2C4700AE6283 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D38306B2C4600AE6283 /* Script.js */; };
+		51A68D77306B2C4700AE6283 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D39306B2C4600AE6283 /* ViewController.swift */; };
+		51A68D78306B2C4700AE6283 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D39306B2C4600AE6283 /* ViewController.swift */; };
+		51A68D79306B2C4700AE6283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D3A306B2C4700AE6283 /* Assets.xcassets */; };
+		51A68D7A306B2C4700AE6283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D3A306B2C4700AE6283 /* Assets.xcassets */; };
+		51A68D7B306B2C4700AE6283 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D3C306B2C4700AE6283 /* SafariWebExtensionHandler.swift */; };
+		51A68D7C306B2C4700AE6283 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A68D3C306B2C4700AE6283 /* SafariWebExtensionHandler.swift */; };
+		51A68D96306B2C4700AE6283 /* manager.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D8E306B2C4700AE6283 /* manager.html */; };
+		51A68D97306B2C4700AE6283 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D8F306B2C4700AE6283 /* background.js */; };
+		51A68D98306B2C4700AE6283 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D90306B2C4700AE6283 /* popup.html */; };
+		51A68D99306B2C4700AE6283 /* intercept.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D91306B2C4700AE6283 /* intercept.js */; };
+		51A68D9A306B2C4700AE6283 /* chunks in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D92306B2C4700AE6283 /* chunks */; };
+		51A68D9B306B2C4700AE6283 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D93306B2C4700AE6283 /* icons */; };
+		51A68D9C306B2C4700AE6283 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D94306B2C4700AE6283 /* manifest.json */; };
+		51A68D9D306B2C4700AE6283 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D95306B2C4700AE6283 /* assets */; };
+		51A68D9E306B2C4700AE6283 /* manager.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D8E306B2C4700AE6283 /* manager.html */; };
+		51A68D9F306B2C4700AE6283 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D8F306B2C4700AE6283 /* background.js */; };
+		51A68DA0306B2C4700AE6283 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D90306B2C4700AE6283 /* popup.html */; };
+		51A68DA1306B2C4700AE6283 /* intercept.js in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D91306B2C4700AE6283 /* intercept.js */; };
+		51A68DA2306B2C4700AE6283 /* chunks in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D92306B2C4700AE6283 /* chunks */; };
+		51A68DA3306B2C4700AE6283 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D93306B2C4700AE6283 /* icons */; };
+		51A68DA4306B2C4700AE6283 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D94306B2C4700AE6283 /* manifest.json */; };
+		51A68DA5306B2C4700AE6283 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 51A68D95306B2C4700AE6283 /* assets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5155A9C42F0EE515002373FB /* PBXContainerItemProxy */ = {
+		51A68D61306B2C4700AE6283 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 5155A9912F0EE513002373FB /* Project object */;
+			containerPortal = 51A68D2E306B2C4600AE6283 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 5155A9C12F0EE515002373FB;
+			remoteGlobalIDString = 51A68D5E306B2C4700AE6283;
 			remoteInfo = "Real-Debrid Manager Extension (iOS)";
 		};
-		5155A9CE2F0EE515002373FB /* PBXContainerItemProxy */ = {
+		51A68D6B306B2C4700AE6283 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 5155A9912F0EE513002373FB /* Project object */;
+			containerPortal = 51A68D2E306B2C4600AE6283 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 5155A9CB2F0EE515002373FB;
+			remoteGlobalIDString = 51A68D68306B2C4700AE6283;
 			remoteInfo = "Real-Debrid Manager Extension (macOS)";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5155A9E52F0EE515002373FB /* Embed Foundation Extensions */ = {
+		51A68D82306B2C4700AE6283 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
-				5155A9C32F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
+				51A68D60306B2C4700AE6283 /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9EC2F0EE515002373FB /* Embed Foundation Extensions */ = {
+		51A68D89306B2C4700AE6283 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
-				5155A9CD2F0EE515002373FB /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
+				51A68D6A306B2C4700AE6283 /* Real-Debrid Manager Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5155A9982F0EE513002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
-		5155A9992F0EE513002373FB /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		5155A99A2F0EE513002373FB /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
-		5155A99B2F0EE513002373FB /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
-		5155A99C2F0EE513002373FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		5155A99D2F0EE515002373FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
-		5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5155A9A72F0EE515002373FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5155A9A92F0EE515002373FB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		5155A9AC2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		5155A9AF2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		5155A9B12F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5155A9B82F0EE515002373FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5155A9BB2F0EE515002373FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		5155A9BD2F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5155A9C72F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5155A9D12F0EE515002373FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon16.plasmo.3f939841.png; path = "../../../build/safari-mv3-prod/icon16.plasmo.3f939841.png"; sourceTree = "<group>"; };
-		5155A9F22F0EE515002373FB /* tabs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tabs; path = "../../../build/safari-mv3-prod/tabs"; sourceTree = "<group>"; };
-		5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon32.plasmo.b3e782d4.png; path = "../../../build/safari-mv3-prod/icon32.plasmo.b3e782d4.png"; sourceTree = "<group>"; };
-		5155A9F42F0EE515002373FB /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = "../../../build/safari-mv3-prod/popup.html"; sourceTree = "<group>"; };
-		5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon128.plasmo.75675c84.png; path = "../../../build/safari-mv3-prod/icon128.plasmo.75675c84.png"; sourceTree = "<group>"; };
-		5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.c5bdfb9c.js; path = "../../../build/safari-mv3-prod/popup.c5bdfb9c.js"; sourceTree = "<group>"; };
-		5155A9F72F0EE515002373FB /* static */ = {isa = PBXFileReference; lastKnownFileType = folder; name = static; path = "../../../build/safari-mv3-prod/static"; sourceTree = "<group>"; };
-		5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon64.plasmo.2d281304.png; path = "../../../build/safari-mv3-prod/icon64.plasmo.2d281304.png"; sourceTree = "<group>"; };
-		5155A9F92F0EE515002373FB /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../../build/safari-mv3-prod/manifest.json"; sourceTree = "<group>"; };
-		5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon48.plasmo.3cd5ceed.png; path = "../../../build/safari-mv3-prod/icon48.plasmo.3cd5ceed.png"; sourceTree = "<group>"; };
-		5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "link-scanner.acf839fe.js"; path = "../../../build/safari-mv3-prod/link-scanner.acf839fe.js"; sourceTree = "<group>"; };
+		51A68D35306B2C4600AE6283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		51A68D36306B2C4600AE6283 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		51A68D37306B2C4600AE6283 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		51A68D38306B2C4600AE6283 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		51A68D39306B2C4600AE6283 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		51A68D3A306B2C4700AE6283 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		51A68D3C306B2C4700AE6283 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		51A68D41306B2C4700AE6283 /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51A68D44306B2C4700AE6283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		51A68D46306B2C4700AE6283 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		51A68D49306B2C4700AE6283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		51A68D4C306B2C4700AE6283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		51A68D4E306B2C4700AE6283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51A68D53306B2C4700AE6283 /* Real-Debrid Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real-Debrid Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51A68D55306B2C4700AE6283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		51A68D58306B2C4700AE6283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		51A68D5A306B2C4700AE6283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51A68D5F306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51A68D64306B2C4700AE6283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51A68D69306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Real-Debrid Manager Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51A68D6E306B2C4700AE6283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51A68D8E306B2C4700AE6283 /* manager.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = manager.html; path = "../../../.output/safari-mv3/manager.html"; sourceTree = "<group>"; };
+		51A68D8F306B2C4700AE6283 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = "../../../.output/safari-mv3/background.js"; sourceTree = "<group>"; };
+		51A68D90306B2C4700AE6283 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = "../../../.output/safari-mv3/popup.html"; sourceTree = "<group>"; };
+		51A68D91306B2C4700AE6283 /* intercept.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = intercept.js; path = "../../../.output/safari-mv3/intercept.js"; sourceTree = "<group>"; };
+		51A68D92306B2C4700AE6283 /* chunks */ = {isa = PBXFileReference; lastKnownFileType = folder; name = chunks; path = "../../../.output/safari-mv3/chunks"; sourceTree = "<group>"; };
+		51A68D93306B2C4700AE6283 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = "../../../.output/safari-mv3/icons"; sourceTree = "<group>"; };
+		51A68D94306B2C4700AE6283 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../../.output/safari-mv3/manifest.json"; sourceTree = "<group>"; };
+		51A68D95306B2C4700AE6283 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "../../../.output/safari-mv3/assets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		5155A9A12F0EE515002373FB /* Frameworks */ = {
+		51A68D3E306B2C4700AE6283 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9B32F0EE515002373FB /* Frameworks */ = {
+		51A68D50306B2C4700AE6283 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9BF2F0EE515002373FB /* Frameworks */ = {
+		51A68D5C306B2C4700AE6283 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9C92F0EE515002373FB /* Frameworks */ = {
+		51A68D66306B2C4700AE6283 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5155A9902F0EE513002373FB = {
+		51A68D2D306B2C4600AE6283 = {
 			isa = PBXGroup;
 			children = (
-				5155A9952F0EE513002373FB /* Shared (App) */,
-				5155A99E2F0EE515002373FB /* Shared (Extension) */,
-				5155A9A62F0EE515002373FB /* iOS (App) */,
-				5155A9B72F0EE515002373FB /* macOS (App) */,
-				5155A9C62F0EE515002373FB /* iOS (Extension) */,
-				5155A9D02F0EE515002373FB /* macOS (Extension) */,
-				5155A9A52F0EE515002373FB /* Products */,
+				51A68D32306B2C4600AE6283 /* Shared (App) */,
+				51A68D3B306B2C4700AE6283 /* Shared (Extension) */,
+				51A68D43306B2C4700AE6283 /* iOS (App) */,
+				51A68D54306B2C4700AE6283 /* macOS (App) */,
+				51A68D63306B2C4700AE6283 /* iOS (Extension) */,
+				51A68D6D306B2C4700AE6283 /* macOS (Extension) */,
+				51A68D42306B2C4700AE6283 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		5155A9952F0EE513002373FB /* Shared (App) */ = {
+		51A68D32306B2C4600AE6283 /* Shared (App) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A99C2F0EE513002373FB /* ViewController.swift */,
-				5155A99D2F0EE515002373FB /* Assets.xcassets */,
-				5155A9962F0EE513002373FB /* Resources */,
+				51A68D39306B2C4600AE6283 /* ViewController.swift */,
+				51A68D3A306B2C4700AE6283 /* Assets.xcassets */,
+				51A68D33306B2C4600AE6283 /* Resources */,
 			);
 			path = "Shared (App)";
 			sourceTree = "<group>";
 		};
-		5155A9962F0EE513002373FB /* Resources */ = {
+		51A68D33306B2C4600AE6283 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9972F0EE513002373FB /* Main.html */,
-				5155A9992F0EE513002373FB /* Icon.png */,
-				5155A99A2F0EE513002373FB /* Style.css */,
-				5155A99B2F0EE513002373FB /* Script.js */,
+				51A68D34306B2C4600AE6283 /* Main.html */,
+				51A68D36306B2C4600AE6283 /* Icon.png */,
+				51A68D37306B2C4600AE6283 /* Style.css */,
+				51A68D38306B2C4600AE6283 /* Script.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		5155A99E2F0EE515002373FB /* Shared (Extension) */ = {
+		51A68D3B306B2C4700AE6283 /* Shared (Extension) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9F02F0EE515002373FB /* Resources */,
-				5155A99F2F0EE515002373FB /* SafariWebExtensionHandler.swift */,
+				51A68D8D306B2C4700AE6283 /* Resources */,
+				51A68D3C306B2C4700AE6283 /* SafariWebExtensionHandler.swift */,
 			);
 			path = "Shared (Extension)";
 			sourceTree = "<group>";
 		};
-		5155A9A52F0EE515002373FB /* Products */ = {
+		51A68D42306B2C4700AE6283 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */,
-				5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */,
-				5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */,
-				5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */,
+				51A68D41306B2C4700AE6283 /* Real-Debrid Manager.app */,
+				51A68D53306B2C4700AE6283 /* Real-Debrid Manager.app */,
+				51A68D5F306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */,
+				51A68D69306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5155A9A62F0EE515002373FB /* iOS (App) */ = {
+		51A68D43306B2C4700AE6283 /* iOS (App) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9A72F0EE515002373FB /* AppDelegate.swift */,
-				5155A9A92F0EE515002373FB /* SceneDelegate.swift */,
-				5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */,
-				5155A9AE2F0EE515002373FB /* Main.storyboard */,
-				5155A9B12F0EE515002373FB /* Info.plist */,
+				51A68D44306B2C4700AE6283 /* AppDelegate.swift */,
+				51A68D46306B2C4700AE6283 /* SceneDelegate.swift */,
+				51A68D48306B2C4700AE6283 /* LaunchScreen.storyboard */,
+				51A68D4B306B2C4700AE6283 /* Main.storyboard */,
+				51A68D4E306B2C4700AE6283 /* Info.plist */,
 			);
 			path = "iOS (App)";
 			sourceTree = "<group>";
 		};
-		5155A9B72F0EE515002373FB /* macOS (App) */ = {
+		51A68D54306B2C4700AE6283 /* macOS (App) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9B82F0EE515002373FB /* AppDelegate.swift */,
-				5155A9BA2F0EE515002373FB /* Main.storyboard */,
-				5155A9BD2F0EE515002373FB /* Info.plist */,
+				51A68D55306B2C4700AE6283 /* AppDelegate.swift */,
+				51A68D57306B2C4700AE6283 /* Main.storyboard */,
+				51A68D5A306B2C4700AE6283 /* Info.plist */,
 			);
 			path = "macOS (App)";
 			sourceTree = "<group>";
 		};
-		5155A9C62F0EE515002373FB /* iOS (Extension) */ = {
+		51A68D63306B2C4700AE6283 /* iOS (Extension) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9C72F0EE515002373FB /* Info.plist */,
+				51A68D64306B2C4700AE6283 /* Info.plist */,
 			);
 			path = "iOS (Extension)";
 			sourceTree = "<group>";
 		};
-		5155A9D02F0EE515002373FB /* macOS (Extension) */ = {
+		51A68D6D306B2C4700AE6283 /* macOS (Extension) */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9D12F0EE515002373FB /* Info.plist */,
+				51A68D6E306B2C4700AE6283 /* Info.plist */,
 			);
 			path = "macOS (Extension)";
 			sourceTree = "<group>";
 		};
-		5155A9F02F0EE515002373FB /* Resources */ = {
+		51A68D8D306B2C4700AE6283 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5155A9F12F0EE515002373FB /* icon16.plasmo.3f939841.png */,
-				5155A9F22F0EE515002373FB /* tabs */,
-				5155A9F32F0EE515002373FB /* icon32.plasmo.b3e782d4.png */,
-				5155A9F42F0EE515002373FB /* popup.html */,
-				5155A9F52F0EE515002373FB /* icon128.plasmo.75675c84.png */,
-				5155A9F62F0EE515002373FB /* popup.c5bdfb9c.js */,
-				5155A9F72F0EE515002373FB /* static */,
-				5155A9F82F0EE515002373FB /* icon64.plasmo.2d281304.png */,
-				5155A9F92F0EE515002373FB /* manifest.json */,
-				5155A9FA2F0EE515002373FB /* icon48.plasmo.3cd5ceed.png */,
-				5155A9FB2F0EE515002373FB /* link-scanner.acf839fe.js */,
+				51A68D8E306B2C4700AE6283 /* manager.html */,
+				51A68D8F306B2C4700AE6283 /* background.js */,
+				51A68D90306B2C4700AE6283 /* popup.html */,
+				51A68D91306B2C4700AE6283 /* intercept.js */,
+				51A68D92306B2C4700AE6283 /* chunks */,
+				51A68D93306B2C4700AE6283 /* icons */,
+				51A68D94306B2C4700AE6283 /* manifest.json */,
+				51A68D95306B2C4700AE6283 /* assets */,
 			);
 			name = Resources;
 			path = "Shared (Extension)";
@@ -276,278 +252,244 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5155A9A32F0EE515002373FB /* Real-Debrid Manager (iOS) */ = {
+		51A68D40306B2C4700AE6283 /* Real-Debrid Manager (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5155A9E62F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */;
+			buildConfigurationList = 51A68D83306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */;
 			buildPhases = (
-				5155A9A02F0EE515002373FB /* Sources */,
-				5155A9A12F0EE515002373FB /* Frameworks */,
-				5155A9A22F0EE515002373FB /* Resources */,
-				5155A9E52F0EE515002373FB /* Embed Foundation Extensions */,
+				51A68D3D306B2C4700AE6283 /* Sources */,
+				51A68D3E306B2C4700AE6283 /* Frameworks */,
+				51A68D3F306B2C4700AE6283 /* Resources */,
+				51A68D82306B2C4700AE6283 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5155A9C52F0EE515002373FB /* PBXTargetDependency */,
+				51A68D62306B2C4700AE6283 /* PBXTargetDependency */,
 			);
 			name = "Real-Debrid Manager (iOS)";
-			packageProductDependencies = (
-			);
 			productName = "Real-Debrid Manager (iOS)";
-			productReference = 5155A9A42F0EE515002373FB /* Real-Debrid Manager.app */;
+			productReference = 51A68D41306B2C4700AE6283 /* Real-Debrid Manager.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5155A9B52F0EE515002373FB /* Real-Debrid Manager (macOS) */ = {
+		51A68D52306B2C4700AE6283 /* Real-Debrid Manager (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5155A9ED2F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */;
+			buildConfigurationList = 51A68D8A306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */;
 			buildPhases = (
-				5155A9B22F0EE515002373FB /* Sources */,
-				5155A9B32F0EE515002373FB /* Frameworks */,
-				5155A9B42F0EE515002373FB /* Resources */,
-				5155A9EC2F0EE515002373FB /* Embed Foundation Extensions */,
+				51A68D4F306B2C4700AE6283 /* Sources */,
+				51A68D50306B2C4700AE6283 /* Frameworks */,
+				51A68D51306B2C4700AE6283 /* Resources */,
+				51A68D89306B2C4700AE6283 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5155A9CF2F0EE515002373FB /* PBXTargetDependency */,
+				51A68D6C306B2C4700AE6283 /* PBXTargetDependency */,
 			);
 			name = "Real-Debrid Manager (macOS)";
-			packageProductDependencies = (
-			);
 			productName = "Real-Debrid Manager (macOS)";
-			productReference = 5155A9B62F0EE515002373FB /* Real-Debrid Manager.app */;
+			productReference = 51A68D53306B2C4700AE6283 /* Real-Debrid Manager.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */ = {
+		51A68D5E306B2C4700AE6283 /* Real-Debrid Manager Extension (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5155A9E22F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */;
+			buildConfigurationList = 51A68D7F306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */;
 			buildPhases = (
-				5155A9BE2F0EE515002373FB /* Sources */,
-				5155A9BF2F0EE515002373FB /* Frameworks */,
-				5155A9C02F0EE515002373FB /* Resources */,
+				51A68D5B306B2C4700AE6283 /* Sources */,
+				51A68D5C306B2C4700AE6283 /* Frameworks */,
+				51A68D5D306B2C4700AE6283 /* Resources */,
 			);
 			buildRules = (
-			);
-			dependencies = (
 			);
 			name = "Real-Debrid Manager Extension (iOS)";
-			packageProductDependencies = (
-			);
 			productName = "Real-Debrid Manager Extension (iOS)";
-			productReference = 5155A9C22F0EE515002373FB /* Real-Debrid Manager Extension.appex */;
+			productReference = 51A68D5F306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */ = {
+		51A68D68306B2C4700AE6283 /* Real-Debrid Manager Extension (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5155A9E92F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */;
+			buildConfigurationList = 51A68D86306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */;
 			buildPhases = (
-				5155A9C82F0EE515002373FB /* Sources */,
-				5155A9C92F0EE515002373FB /* Frameworks */,
-				5155A9CA2F0EE515002373FB /* Resources */,
+				51A68D65306B2C4700AE6283 /* Sources */,
+				51A68D66306B2C4700AE6283 /* Frameworks */,
+				51A68D67306B2C4700AE6283 /* Resources */,
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = "Real-Debrid Manager Extension (macOS)";
-			packageProductDependencies = (
-			);
 			productName = "Real-Debrid Manager Extension (macOS)";
-			productReference = 5155A9CC2F0EE515002373FB /* Real-Debrid Manager Extension.appex */;
+			productReference = 51A68D69306B2C4700AE6283 /* Real-Debrid Manager Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		5155A9912F0EE513002373FB /* Project object */ = {
+		51A68D2E306B2C4600AE6283 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
-				LastUpgradeCheck = 2620;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
-					5155A9A32F0EE515002373FB = {
-						CreatedOnToolsVersion = 26.2;
+					51A68D40306B2C4700AE6283 = {
+						CreatedOnToolsVersion = 27.0;
 					};
-					5155A9B52F0EE515002373FB = {
-						CreatedOnToolsVersion = 26.2;
+					51A68D52306B2C4700AE6283 = {
+						CreatedOnToolsVersion = 27.0;
 					};
-					5155A9C12F0EE515002373FB = {
-						CreatedOnToolsVersion = 26.2;
+					51A68D5E306B2C4700AE6283 = {
+						CreatedOnToolsVersion = 27.0;
 					};
-					5155A9CB2F0EE515002373FB = {
-						CreatedOnToolsVersion = 26.2;
+					51A68D68306B2C4700AE6283 = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
-			buildConfigurationList = 5155A9942F0EE513002373FB /* Build configuration list for PBXProject "Real-Debrid Manager" */;
+			buildConfigurationList = 51A68D31306B2C4600AE6283 /* Build configuration list for PBXProject "Real-Debrid Manager" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 5155A9902F0EE513002373FB;
+			mainGroup = 51A68D2D306B2C4600AE6283;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 5155A9A52F0EE515002373FB /* Products */;
+			productRefGroup = 51A68D42306B2C4700AE6283 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5155A9A32F0EE515002373FB /* Real-Debrid Manager (iOS) */,
-				5155A9B52F0EE515002373FB /* Real-Debrid Manager (macOS) */,
-				5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */,
-				5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */,
+				51A68D40306B2C4700AE6283 /* Real-Debrid Manager (iOS) */,
+				51A68D52306B2C4700AE6283 /* Real-Debrid Manager (macOS) */,
+				51A68D5E306B2C4700AE6283 /* Real-Debrid Manager Extension (iOS) */,
+				51A68D68306B2C4700AE6283 /* Real-Debrid Manager Extension (macOS) */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		5155A9A22F0EE515002373FB /* Resources */ = {
+		51A68D3F306B2C4700AE6283 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9D42F0EE515002373FB /* Icon.png in Resources */,
-				5155A9AD2F0EE515002373FB /* LaunchScreen.storyboard in Resources */,
-				5155A9D22F0EE515002373FB /* Main.html in Resources */,
-				5155A9D82F0EE515002373FB /* Script.js in Resources */,
-				5155A9DC2F0EE515002373FB /* Assets.xcassets in Resources */,
-				5155A9B02F0EE515002373FB /* Main.storyboard in Resources */,
-				5155A9D62F0EE515002373FB /* Style.css in Resources */,
+				51A68D71306B2C4700AE6283 /* Icon.png in Resources */,
+				51A68D4A306B2C4700AE6283 /* LaunchScreen.storyboard in Resources */,
+				51A68D6F306B2C4700AE6283 /* Main.html in Resources */,
+				51A68D75306B2C4700AE6283 /* Script.js in Resources */,
+				51A68D79306B2C4700AE6283 /* Assets.xcassets in Resources */,
+				51A68D4D306B2C4700AE6283 /* Main.storyboard in Resources */,
+				51A68D73306B2C4700AE6283 /* Style.css in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9B42F0EE515002373FB /* Resources */ = {
+		51A68D51306B2C4700AE6283 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9D52F0EE515002373FB /* Icon.png in Resources */,
-				5155A9D72F0EE515002373FB /* Style.css in Resources */,
-				5155A9BC2F0EE515002373FB /* Main.storyboard in Resources */,
-				5155A9D92F0EE515002373FB /* Script.js in Resources */,
-				5155A9DD2F0EE515002373FB /* Assets.xcassets in Resources */,
-				5155A9D32F0EE515002373FB /* Main.html in Resources */,
+				51A68D72306B2C4700AE6283 /* Icon.png in Resources */,
+				51A68D74306B2C4700AE6283 /* Style.css in Resources */,
+				51A68D59306B2C4700AE6283 /* Main.storyboard in Resources */,
+				51A68D76306B2C4700AE6283 /* Script.js in Resources */,
+				51A68D7A306B2C4700AE6283 /* Assets.xcassets in Resources */,
+				51A68D70306B2C4700AE6283 /* Main.html in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9C02F0EE515002373FB /* Resources */ = {
+		51A68D5D306B2C4700AE6283 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155AA0E2F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */,
-				5155AA0C2F0EE515002373FB /* popup.c5bdfb9c.js in Resources */,
-				5155AA092F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */,
-				5155AA0D2F0EE515002373FB /* static in Resources */,
-				5155AA0F2F0EE515002373FB /* manifest.json in Resources */,
-				5155AA0A2F0EE515002373FB /* popup.html in Resources */,
-				5155AA082F0EE515002373FB /* tabs in Resources */,
-				5155AA072F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */,
-				5155AA102F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */,
-				5155AA0B2F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */,
-				5155AA112F0EE515002373FB /* link-scanner.acf839fe.js in Resources */,
+				51A68DA2306B2C4700AE6283 /* chunks in Resources */,
+				51A68DA5306B2C4700AE6283 /* assets in Resources */,
+				51A68DA4306B2C4700AE6283 /* manifest.json in Resources */,
+				51A68D9F306B2C4700AE6283 /* background.js in Resources */,
+				51A68DA1306B2C4700AE6283 /* intercept.js in Resources */,
+				51A68DA3306B2C4700AE6283 /* icons in Resources */,
+				51A68DA0306B2C4700AE6283 /* popup.html in Resources */,
+				51A68D9E306B2C4700AE6283 /* manager.html in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9CA2F0EE515002373FB /* Resources */ = {
+		51A68D67306B2C4700AE6283 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155AA032F0EE515002373FB /* icon64.plasmo.2d281304.png in Resources */,
-				5155AA012F0EE515002373FB /* popup.c5bdfb9c.js in Resources */,
-				5155A9FE2F0EE515002373FB /* icon32.plasmo.b3e782d4.png in Resources */,
-				5155AA022F0EE515002373FB /* static in Resources */,
-				5155AA042F0EE515002373FB /* manifest.json in Resources */,
-				5155A9FF2F0EE515002373FB /* popup.html in Resources */,
-				5155A9FD2F0EE515002373FB /* tabs in Resources */,
-				5155A9FC2F0EE515002373FB /* icon16.plasmo.3f939841.png in Resources */,
-				5155AA052F0EE515002373FB /* icon48.plasmo.3cd5ceed.png in Resources */,
-				5155AA002F0EE515002373FB /* icon128.plasmo.75675c84.png in Resources */,
-				5155AA062F0EE515002373FB /* link-scanner.acf839fe.js in Resources */,
+				51A68D9A306B2C4700AE6283 /* chunks in Resources */,
+				51A68D9D306B2C4700AE6283 /* assets in Resources */,
+				51A68D9C306B2C4700AE6283 /* manifest.json in Resources */,
+				51A68D97306B2C4700AE6283 /* background.js in Resources */,
+				51A68D99306B2C4700AE6283 /* intercept.js in Resources */,
+				51A68D9B306B2C4700AE6283 /* icons in Resources */,
+				51A68D98306B2C4700AE6283 /* popup.html in Resources */,
+				51A68D96306B2C4700AE6283 /* manager.html in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5155A9A02F0EE515002373FB /* Sources */ = {
+		51A68D3D306B2C4700AE6283 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9DA2F0EE515002373FB /* ViewController.swift in Sources */,
-				5155A9A82F0EE515002373FB /* AppDelegate.swift in Sources */,
-				5155A9AA2F0EE515002373FB /* SceneDelegate.swift in Sources */,
+				51A68D77306B2C4700AE6283 /* ViewController.swift in Sources */,
+				51A68D45306B2C4700AE6283 /* AppDelegate.swift in Sources */,
+				51A68D47306B2C4700AE6283 /* SceneDelegate.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9B22F0EE515002373FB /* Sources */ = {
+		51A68D4F306B2C4700AE6283 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9DB2F0EE515002373FB /* ViewController.swift in Sources */,
-				5155A9B92F0EE515002373FB /* AppDelegate.swift in Sources */,
+				51A68D78306B2C4700AE6283 /* ViewController.swift in Sources */,
+				51A68D56306B2C4700AE6283 /* AppDelegate.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9BE2F0EE515002373FB /* Sources */ = {
+		51A68D5B306B2C4700AE6283 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9DE2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */,
+				51A68D7B306B2C4700AE6283 /* SafariWebExtensionHandler.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5155A9C82F0EE515002373FB /* Sources */ = {
+		51A68D65306B2C4700AE6283 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				5155A9DF2F0EE515002373FB /* SafariWebExtensionHandler.swift in Sources */,
+				51A68D7C306B2C4700AE6283 /* SafariWebExtensionHandler.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5155A9C52F0EE515002373FB /* PBXTargetDependency */ = {
+		51A68D62306B2C4700AE6283 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5155A9C12F0EE515002373FB /* Real-Debrid Manager Extension (iOS) */;
-			targetProxy = 5155A9C42F0EE515002373FB /* PBXContainerItemProxy */;
+			target = 51A68D5E306B2C4700AE6283 /* Real-Debrid Manager Extension (iOS) */;
+			targetProxy = 51A68D61306B2C4700AE6283 /* PBXContainerItemProxy */;
 		};
-		5155A9CF2F0EE515002373FB /* PBXTargetDependency */ = {
+		51A68D6C306B2C4700AE6283 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5155A9CB2F0EE515002373FB /* Real-Debrid Manager Extension (macOS) */;
-			targetProxy = 5155A9CE2F0EE515002373FB /* PBXContainerItemProxy */;
+			target = 51A68D68306B2C4700AE6283 /* Real-Debrid Manager Extension (macOS) */;
+			targetProxy = 51A68D6B306B2C4700AE6283 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		5155A9972F0EE513002373FB /* Main.html */ = {
+		51A68D34306B2C4600AE6283 /* Main.html */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5155A9982F0EE513002373FB /* Base */,
+				51A68D35306B2C4600AE6283 /* Base */,
 			);
 			name = Main.html;
 			sourceTree = "<group>";
 		};
-		5155A9AB2F0EE515002373FB /* LaunchScreen.storyboard */ = {
+		51A68D48306B2C4700AE6283 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5155A9AC2F0EE515002373FB /* Base */,
+				51A68D49306B2C4700AE6283 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		5155A9AE2F0EE515002373FB /* Main.storyboard */ = {
+		51A68D4B306B2C4700AE6283 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5155A9AF2F0EE515002373FB /* Base */,
+				51A68D4C306B2C4700AE6283 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		5155A9BA2F0EE515002373FB /* Main.storyboard */ = {
+		51A68D57306B2C4700AE6283 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5155A9BB2F0EE515002373FB /* Base */,
+				51A68D58306B2C4700AE6283 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -555,7 +497,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		5155A9E02F0EE515002373FB /* Debug */ = {
+		51A68D7D306B2C4700AE6283 /* Debug configuration for PBXProject "Real-Debrid Manager" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -616,7 +558,7 @@
 			};
 			name = Debug;
 		};
-		5155A9E12F0EE515002373FB /* Release */ = {
+		51A68D7E306B2C4700AE6283 /* Release configuration for PBXProject "Real-Debrid Manager" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -669,7 +611,7 @@
 			};
 			name = Release;
 		};
-		5155A9E32F0EE515002373FB /* Debug */ = {
+		51A68D80306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -702,7 +644,7 @@
 			};
 			name = Debug;
 		};
-		5155A9E42F0EE515002373FB /* Release */ = {
+		51A68D81306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -736,14 +678,13 @@
 			};
 			name = Release;
 		};
-		5155A9E72F0EE515002373FB /* Debug */ = {
+		51A68D84306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
@@ -752,7 +693,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -777,14 +718,13 @@
 			};
 			name = Debug;
 		};
-		5155A9E82F0EE515002373FB /* Release */ = {
+		51A68D85306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Real-Debrid Manager";
@@ -793,7 +733,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -819,12 +759,11 @@
 			};
 			name = Release;
 		};
-		5155A9EA2F0EE515002373FB /* Debug */ = {
+		51A68D87306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -837,7 +776,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -855,12 +794,11 @@
 			};
 			name = Debug;
 		};
-		5155A9EB2F0EE515002373FB /* Release */ = {
+		51A68D88306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -873,7 +811,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -891,14 +829,13 @@
 			};
 			name = Release;
 		};
-		5155A9EE2F0EE515002373FB /* Debug */ = {
+		51A68D8B306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager (macOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -912,7 +849,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -933,14 +870,13 @@
 			};
 			name = Debug;
 		};
-		5155A9EF2F0EE515002373FB /* Release */ = {
+		51A68D8C306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager (macOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -954,7 +890,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -978,52 +914,48 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5155A9942F0EE513002373FB /* Build configuration list for PBXProject "Real-Debrid Manager" */ = {
+		51A68D31306B2C4600AE6283 /* Build configuration list for PBXProject "Real-Debrid Manager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5155A9E02F0EE515002373FB /* Debug */,
-				5155A9E12F0EE515002373FB /* Release */,
+				51A68D7D306B2C4700AE6283 /* Debug configuration for PBXProject "Real-Debrid Manager" */,
+				51A68D7E306B2C4700AE6283 /* Release configuration for PBXProject "Real-Debrid Manager" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5155A9E22F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */ = {
+		51A68D7F306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5155A9E32F0EE515002373FB /* Debug */,
-				5155A9E42F0EE515002373FB /* Release */,
+				51A68D80306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */,
+				51A68D81306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager Extension (iOS)" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5155A9E62F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */ = {
+		51A68D83306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5155A9E72F0EE515002373FB /* Debug */,
-				5155A9E82F0EE515002373FB /* Release */,
+				51A68D84306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager (iOS)" */,
+				51A68D85306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager (iOS)" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5155A9E92F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */ = {
+		51A68D86306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5155A9EA2F0EE515002373FB /* Debug */,
-				5155A9EB2F0EE515002373FB /* Release */,
+				51A68D87306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */,
+				51A68D88306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager Extension (macOS)" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5155A9ED2F0EE515002373FB /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */ = {
+		51A68D8A306B2C4700AE6283 /* Build configuration list for PBXNativeTarget "Real-Debrid Manager (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5155A9EE2F0EE515002373FB /* Debug */,
-				5155A9EF2F0EE515002373FB /* Release */,
+				51A68D8B306B2C4700AE6283 /* Debug configuration for PBXNativeTarget "Real-Debrid Manager (macOS)" */,
+				51A68D8C306B2C4700AE6283 /* Release configuration for PBXNativeTarget "Real-Debrid Manager (macOS)" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 5155A9912F0EE513002373FB /* Project object */;
+	rootObject = 51A68D2E306B2C4600AE6283 /* Project object */;
+	validationLevel = 1;
 }
