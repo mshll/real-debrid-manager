@@ -68,9 +68,9 @@ async function launch(): Promise<{ context: BrowserContext; worker: Worker; exte
       "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE localhost",
     ],
   });
-  await context.route("https://api.real-debrid.com/**", handleRd(log));
+  await context.route("https://app.real-debrid.com/**", handleRd(log));
   await context.route(
-    (url) => /^https?:$/.test(url.protocol) && url.hostname !== "api.real-debrid.com",
+    (url) => /^https?:$/.test(url.protocol) && url.hostname !== "app.real-debrid.com",
     (route) => {
       external.push(route.request().url());
       return route.abort("blockedbyclient");

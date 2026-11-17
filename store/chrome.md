@@ -73,7 +73,7 @@ Not affiliated with Real-Debrid.
 | `notifications` | Tells the user when a torrent finishes, when an add from the context menu or address bar succeeds or fails, and when premium is about to expire. Torrent and premium notifications can be turned off in Settings. |
 | `downloads` | Saves files from Real-Debrid through the browser's download manager when the user clicks Download. |
 | `sidePanel` | Offers the same interface in the side panel, so it stays open while the user browses. |
-| Host `https://real-debrid.com/*`, `https://*.real-debrid.com/*` | The Real-Debrid API (`api.real-debrid.com`) and sign-in. RD sends no CORS headers, so the extension needs host access to call it. |
+| Host `https://real-debrid.com/*`, `https://*.real-debrid.com/*` | The Real-Debrid API (`app.real-debrid.com`, with `api.real-debrid.com` as fallback) and sign-in. RD sends no CORS headers, so the extension needs host access to call it. |
 | Optional host `<all_urls>` | Requested only when the user turns on magnet catching (a click handler for magnet links on every site), or allows the side panel to read pages. Not granted at install. |
 | Optional `clipboardRead` | Requested only when the user clicks the paste button in the popup. |
 

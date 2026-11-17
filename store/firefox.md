@@ -47,7 +47,7 @@ Testing
 Permissions
 - <all_urls> is optional and requested only when the user turns on "Catch magnet links on every site" in Settings, or allows the sidebar to read pages.
 - clipboardRead is optional and requested only when the user clicks the paste button.
-- The extension talks only to api.real-debrid.com. No analytics, no remote code.
+- The extension talks only to app.real-debrid.com, falling back to api.real-debrid.com when app. is unreachable. No analytics, no remote code.
 ```
 
 ## Compatibility change

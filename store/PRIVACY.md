@@ -18,7 +18,7 @@ Signing out removes your sign-in. Removing the extension removes everything it s
 
 ## What it sends, and where
 
-The extension talks only to Real-Debrid's official API (`api.real-debrid.com`), directly from your browser. It sends the links, magnets and .torrent files you choose to add, and the requests needed to show your torrents, downloads and account. See [Real-Debrid's privacy policy](https://real-debrid.com/privacy) for how Real-Debrid handles that data.
+The extension talks only to Real-Debrid's official API (`app.real-debrid.com`, or `api.real-debrid.com` when the first is unreachable), directly from your browser. It sends the links, magnets and .torrent files you choose to add, and the requests needed to show your torrents, downloads and account. See [Real-Debrid's privacy policy](https://real-debrid.com/privacy) for how Real-Debrid handles that data.
 
 Two cases fetch from somewhere else, both started by you:
 

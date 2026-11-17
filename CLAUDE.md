@@ -46,7 +46,7 @@ Linear-style: flat sidebar on the window background, content in an inset rounded
 
 ## API notes
 
-- Base `https://api.real-debrid.com/rest/1.0`, OAuth `https://api.real-debrid.com/oauth/v2`, open-source client id `X245A4XAIBGVM`
+- Base `https://app.real-debrid.com/rest/1.0`, OAuth `https://app.real-debrid.com/oauth/v2`, open-source client id `X245A4XAIBGVM`. Call RD through `rdFetch` (`lib/rd/host.ts`), never `fetch` with a full URL: some ISPs block one of `app.`/`api.real-debrid.com`, so a network error falls back to the other host
 - `instantAvailability` is disabled (error 37); the "only cached" setting probes by adding and checking status instead
 - Torrent `links[]` map 1:1 to selected files only when every selected file is media; otherwise RD returns one archive link
 - Old links fail with `hoster_unavailable` (19); fix by reinserting with the same file selection
