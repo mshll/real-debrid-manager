@@ -1,7 +1,8 @@
 import { authItem } from "../storage";
 import { RdError, toRdError } from "./errors";
+import { rdFetch } from "./host";
 
-const OAUTH_URL = "https://api.real-debrid.com/oauth/v2";
+const OAUTH_PATH = "/oauth/v2";
 const OPEN_SOURCE_CLIENT_ID = "X245A4XAIBGVM";
 const DEVICE_GRANT = "http://oauth.net/grant_type/device/1.0";
 const REFRESH_MARGIN_MS = 5 * 60 * 1000;
@@ -16,7 +17,7 @@ export interface DeviceCode {
 }
 
 export async function requestDeviceCode(): Promise<DeviceCode> {
-  const res = await fetch(`${OAUTH_URL}/device/code?client_id=${OPEN_SOURCE_CLIENT_ID}&new_credentials=yes`);
+  const res = await rdFetch(`${OAUTH_PATH}/device/code?client_id=${OPEN_SOURCE_CLIENT_ID}&new_credentials=yes`);
   if (!res.ok) throw await toRdError(res);
   const body: {
     device_code: string;
@@ -40,8 +41,8 @@ export async function requestDeviceCode(): Promise<DeviceCode> {
 export async function pollDeviceCredentials(
   deviceCode: string,
 ): Promise<{ clientId: string; clientSecret: string } | null> {
-  const res = await fetch(
-    `${OAUTH_URL}/device/credentials?client_id=${OPEN_SOURCE_CLIENT_ID}&code=${encodeURIComponent(deviceCode)}`,
+  const res = await rdFetch(
+    `${OAUTH_PATH}/device/credentials?client_id=${OPEN_SOURCE_CLIENT_ID}&code=${encodeURIComponent(deviceCode)}`,
   );
   if (res.status === 403) return null;
   if (!res.ok) throw await toRdError(res);
@@ -55,7 +56,7 @@ export async function completeDeviceLogin(clientId: string, clientSecret: string
 }
 
 export async function signInWithToken(accessToken: string): Promise<void> {
-  const res = await fetch("https://api.real-debrid.com/rest/1.0/user", {
+  const res = await rdFetch("/rest/1.0/user", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   if (!res.ok) throw await toRdError(res);
@@ -68,7 +69,7 @@ export async function signOut(): Promise<void> {
   // A private API token is the user's permanent key; only revoke tokens we minted.
   if (auth?.kind !== "oauth") return;
   try {
-    await fetch("https://api.real-debrid.com/rest/1.0/disable_access_token", {
+    await rdFetch("/rest/1.0/disable_access_token", {
       headers: { Authorization: `Bearer ${auth.accessToken}` },
     });
   } catch (error) {
@@ -116,7 +117,7 @@ async function requestToken(
   clientSecret: string,
   code: string,
 ): Promise<{ accessToken: string; refreshToken: string; expiresAt: number }> {
-  const res = await fetch(`${OAUTH_URL}/token`, {
+  const res = await rdFetch(`${OAUTH_PATH}/token`, {
     method: "POST",
     body: new URLSearchParams({ client_id: clientId, client_secret: clientSecret, code, grant_type: DEVICE_GRANT }),
   });

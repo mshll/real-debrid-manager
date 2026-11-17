@@ -2,8 +2,8 @@
 
 Add-on: https://addons.mozilla.org/firefox/addon/realdebrid-manager/
 Add-on ID: `real-debrid@meshal` (unchanged from 1.x, so this uploads as a new version of the same listing)
-Upload: `.output/real-debrid-manager-2.0.0-firefox.zip` from `bun run zip:firefox`
-Source code: `.output/real-debrid-manager-2.0.0-sources.zip` (same command). AMO asks for it because the build is bundled and minified.
+Upload: `.output/real-debrid-manager-2.0.1-firefox.zip` from `bun run zip:firefox`
+Source code: `.output/real-debrid-manager-2.0.1-sources.zip` (same command). AMO asks for it because the build is bundled and minified.
 
 ## Listing
 
@@ -47,7 +47,7 @@ Testing
 Permissions
 - <all_urls> is optional and requested only when the user turns on "Catch magnet links on every site" in Settings, or allows the sidebar to read pages.
 - clipboardRead is optional and requested only when the user clicks the paste button.
-- The extension talks only to api.real-debrid.com. No analytics, no remote code.
+- The extension talks only to app.real-debrid.com, falling back to api.real-debrid.com when app. is unreachable. No analytics, no remote code.
 ```
 
 ## Compatibility change

@@ -1,7 +1,7 @@
 import { getAccessToken, refreshAccessToken } from "./auth";
 import { RdError, toRdError } from "./errors";
+import { rdFetch } from "./host";
 
-export const API_URL = "https://api.real-debrid.com/rest/1.0";
 const MAX_RATE_LIMIT_RETRIES = 3;
 
 export interface RequestOptions {
@@ -14,10 +14,12 @@ export interface RequestOptions {
 
 export async function rdRequest(path: string, options: RequestOptions = {}): Promise<Response> {
   const { method = "GET", query, form, body, auth = true } = options;
-  const url = new URL(API_URL + path);
+  const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query ?? {})) {
-    if (value !== undefined) url.searchParams.set(key, String(value));
+    if (value !== undefined) params.set(key, String(value));
   }
+  const search = params.toString();
+  const url = `/rest/1.0${path}${search ? `?${search}` : ""}`;
 
   let refreshed = false;
   for (let attempt = 0; ; attempt++) {
@@ -28,7 +30,7 @@ export async function rdRequest(path: string, options: RequestOptions = {}): Pro
       if (!token) throw new RdError("Not signed in", 401, 8);
       headers.Authorization = `Bearer ${token}`;
     }
-    const res = await fetch(url, { method, headers, body: form ? new URLSearchParams(form) : body });
+    const res = await rdFetch(url, { method, headers, body: form ? new URLSearchParams(form) : body });
 
     if (res.status === 401 && token && !refreshed) {
       refreshed = true;
