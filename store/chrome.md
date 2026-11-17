@@ -1,7 +1,7 @@
 # Chrome Web Store listing
 
 Item: `fengaeiifddaadaibopcibcdakiaaian` (update of the existing listing, 1.1.0 to 2.0.0).
-Upload: `.output/real-debrid-manager-2.0.0-chrome.zip` from `bun run zip`.
+Upload: `.output/real-debrid-manager-2.0.1-chrome.zip` from `bun run zip`.
 
 ## Store listing
 

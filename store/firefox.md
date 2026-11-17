@@ -2,8 +2,8 @@
 
 Add-on: https://addons.mozilla.org/firefox/addon/realdebrid-manager/
 Add-on ID: `real-debrid@meshal` (unchanged from 1.x, so this uploads as a new version of the same listing)
-Upload: `.output/real-debrid-manager-2.0.0-firefox.zip` from `bun run zip:firefox`
-Source code: `.output/real-debrid-manager-2.0.0-sources.zip` (same command). AMO asks for it because the build is bundled and minified.
+Upload: `.output/real-debrid-manager-2.0.1-firefox.zip` from `bun run zip:firefox`
+Source code: `.output/real-debrid-manager-2.0.1-sources.zip` (same command). AMO asks for it because the build is bundled and minified.
 
 ## Listing
 
